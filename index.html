@@ -2,7 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover"
+    />
     <title>Logic Vision - Connect Workspace</title>
     <link
       rel="stylesheet"
@@ -411,7 +414,9 @@
         cursor: pointer;
         flex-shrink: 0;
         opacity: 0;
-        transition: opacity 0.15s, background 0.15s;
+        transition:
+          opacity 0.15s,
+          background 0.15s;
       }
 
       .chat-item:hover .chat-item-menu-btn {
@@ -832,7 +837,9 @@
         cursor: pointer;
         font-size: 12px;
         color: var(--text-muted);
-        transition: color 0.15s, background 0.15s;
+        transition:
+          color 0.15s,
+          background 0.15s;
         padding: 6px;
         border-radius: 50%;
         width: 12px;
@@ -1461,7 +1468,11 @@
           <button class="chat-tab-btn active" id="tabMainChats" data-tab="main">
             <i class="fa-solid fa-comments"></i> Chats
           </button>
-          <button class="chat-tab-btn" id="tabArchivedChats" data-tab="archived">
+          <button
+            class="chat-tab-btn"
+            id="tabArchivedChats"
+            data-tab="archived"
+          >
             <i class="fa-solid fa-box-archive"></i> Archived
           </button>
         </div>
@@ -1530,15 +1541,29 @@
               placeholder="Search this conversation..."
             />
             <span class="search-nav-count" id="searchNavCount"></span>
-            <i class="fa-solid fa-chevron-up" id="searchNavUp" title="Previous match"></i>
-            <i class="fa-solid fa-chevron-down" id="searchNavDown" title="Next match"></i>
-            <i class="fa-solid fa-xmark" id="closeInChatSearchBtn" title="Close search"></i>
+            <i
+              class="fa-solid fa-chevron-up"
+              id="searchNavUp"
+              title="Previous match"
+            ></i>
+            <i
+              class="fa-solid fa-chevron-down"
+              id="searchNavDown"
+              title="Next match"
+            ></i>
+            <i
+              class="fa-solid fa-xmark"
+              id="closeInChatSearchBtn"
+              title="Close search"
+            ></i>
           </div>
 
           <div class="chat-messages" id="chatMessagesDisplay"></div>
 
           <div class="typing-indicator-row" id="typingIndicatorRow">
-            <div class="typing-dots"><span></span><span></span><span></span></div>
+            <div class="typing-dots">
+              <span></span><span></span><span></span>
+            </div>
             <span id="typingIndicatorText">typing...</span>
           </div>
 
@@ -1648,7 +1673,11 @@
       <div class="modal-container">
         <div class="modal-header">
           <h3>Forward Message</h3>
-          <i class="fa-solid fa-xmark" id="closeForwardModalBtn" style="cursor: pointer"></i>
+          <i
+            class="fa-solid fa-xmark"
+            id="closeForwardModalBtn"
+            style="cursor: pointer"
+          ></i>
         </div>
         <div class="modal-body" id="forwardChatListPane">
           <p style="color: var(--text-muted); font-size: 13px">
@@ -1663,7 +1692,11 @@
       <div class="modal-container">
         <div class="modal-header">
           <h3>Send Attachment</h3>
-          <i class="fa-solid fa-xmark" id="closeAttachPreviewBtn" style="cursor: pointer"></i>
+          <i
+            class="fa-solid fa-xmark"
+            id="closeAttachPreviewBtn"
+            style="cursor: pointer"
+          ></i>
         </div>
         <div class="modal-body attach-preview-body" id="attachPreviewBody">
           <!-- populated dynamically -->
@@ -1676,7 +1709,11 @@
       <div class="modal-container">
         <div class="modal-header">
           <h3>Starred Messages</h3>
-          <i class="fa-solid fa-xmark" id="closeStarredModalBtn" style="cursor: pointer"></i>
+          <i
+            class="fa-solid fa-xmark"
+            id="closeStarredModalBtn"
+            style="cursor: pointer"
+          ></i>
         </div>
         <div class="modal-body" id="starredListPane" style="max-height: 60vh">
           <p style="color: var(--text-muted); font-size: 13px">
@@ -1698,21 +1735,49 @@
 
     <!-- CHAT ITEM CONTEXT MENU -->
     <div class="dropdown-menu" id="chatItemMenu">
-      <button data-action="pin"><i class="fa-solid fa-thumbtack"></i> <span class="menu-label-pin">Pin Chat</span></button>
-      <button data-action="mute"><i class="fa-solid fa-bell-slash"></i> <span class="menu-label-mute">Mute Notifications</span></button>
-      <button data-action="unread"><i class="fa-solid fa-envelope"></i> Mark as Unread</button>
-      <button data-action="archive"><i class="fa-solid fa-box-archive"></i> <span class="menu-label-archive">Archive Chat</span></button>
-      <button data-action="clear"><i class="fa-solid fa-broom"></i> Clear Messages</button>
-      <button data-action="delete" class="danger"><i class="fa-solid fa-trash"></i> Delete Chat</button>
+      <button data-action="pin">
+        <i class="fa-solid fa-thumbtack"></i>
+        <span class="menu-label-pin">Pin Chat</span>
+      </button>
+      <button data-action="mute">
+        <i class="fa-solid fa-bell-slash"></i>
+        <span class="menu-label-mute">Mute Notifications</span>
+      </button>
+      <button data-action="unread">
+        <i class="fa-solid fa-envelope"></i> Mark as Unread
+      </button>
+      <button data-action="archive">
+        <i class="fa-solid fa-box-archive"></i>
+        <span class="menu-label-archive">Archive Chat</span>
+      </button>
+      <button data-action="clear">
+        <i class="fa-solid fa-broom"></i> Clear Messages
+      </button>
+      <button data-action="delete" class="danger">
+        <i class="fa-solid fa-trash"></i> Delete Chat
+      </button>
     </div>
 
     <!-- HEADER (INSIDE CHAT) OPTIONS MENU -->
     <div class="dropdown-menu" id="chatHeaderMenu">
-      <button data-action="pin"><i class="fa-solid fa-thumbtack"></i> <span class="menu-label-pin-h">Pin Chat</span></button>
-      <button data-action="mute"><i class="fa-solid fa-bell-slash"></i> <span class="menu-label-mute-h">Mute Notifications</span></button>
-      <button data-action="archive"><i class="fa-solid fa-box-archive"></i> <span class="menu-label-archive-h">Archive Chat</span></button>
-      <button data-action="clear"><i class="fa-solid fa-broom"></i> Clear Messages</button>
-      <button data-action="delete" class="danger"><i class="fa-solid fa-trash"></i> Delete Chat</button>
+      <button data-action="pin">
+        <i class="fa-solid fa-thumbtack"></i>
+        <span class="menu-label-pin-h">Pin Chat</span>
+      </button>
+      <button data-action="mute">
+        <i class="fa-solid fa-bell-slash"></i>
+        <span class="menu-label-mute-h">Mute Notifications</span>
+      </button>
+      <button data-action="archive">
+        <i class="fa-solid fa-box-archive"></i>
+        <span class="menu-label-archive-h">Archive Chat</span>
+      </button>
+      <button data-action="clear">
+        <i class="fa-solid fa-broom"></i> Clear Messages
+      </button>
+      <button data-action="delete" class="danger">
+        <i class="fa-solid fa-trash"></i> Delete Chat
+      </button>
     </div>
 
     <!-- IMAGE LIGHTBOX -->
@@ -1774,8 +1839,8 @@
       const storage = getStorage(app);
 
       /* =========================================================
-         STATE HOOKS
-         ========================================================= */
+               STATE HOOKS
+               ========================================================= */
       let currentUserSession = null;
       let currentUserEmailNormalized = null;
       let activeChatId = null;
@@ -1798,15 +1863,51 @@
       let contextMenuTargetChatData = null;
 
       const COMMON_EMOJIS = [
-        "😀","😁","😂","🤣","😊","😍","😘","😎","🤔","😴",
-        "😭","😡","👍","👎","👏","🙏","💪","🔥","🎉","❤️",
-        "💙","💯","✅","❌","⭐","🎂","😢","😮","🙌","🤝",
-        "😅","😇","🥳","😱","🤗","😜","🫡","👋","🤞","✨",
+        "😀",
+        "😁",
+        "😂",
+        "🤣",
+        "😊",
+        "😍",
+        "😘",
+        "😎",
+        "🤔",
+        "😴",
+        "😭",
+        "😡",
+        "👍",
+        "👎",
+        "👏",
+        "🙏",
+        "💪",
+        "🔥",
+        "🎉",
+        "❤️",
+        "💙",
+        "💯",
+        "✅",
+        "❌",
+        "⭐",
+        "🎂",
+        "😢",
+        "😮",
+        "🙌",
+        "🤝",
+        "😅",
+        "😇",
+        "🥳",
+        "😱",
+        "🤗",
+        "😜",
+        "🫡",
+        "👋",
+        "🤞",
+        "✨",
       ];
 
       /* =========================================================
-         CORE DOM ELEMENTS
-         ========================================================= */
+               CORE DOM ELEMENTS
+               ========================================================= */
       const sidebarNode = document.getElementById("sidebarNode");
       const toggleSidebarBtn = document.getElementById("toggleSidebarBtn");
       const userAvatar = document.getElementById("userAvatar");
@@ -1838,7 +1939,9 @@
         "attachmentFileInput",
       );
       const sidebarFilterInput = document.getElementById("sidebarFilterInput");
-      const chatSearchToggleBtn = document.getElementById("chatSearchToggleBtn");
+      const chatSearchToggleBtn = document.getElementById(
+        "chatSearchToggleBtn",
+      );
       const chatHeaderMenuBtn = document.getElementById("chatHeaderMenuBtn");
       const inChatSearchBar = document.getElementById("inChatSearchBar");
       const inChatSearchInput = document.getElementById("inChatSearchInput");
@@ -1848,16 +1951,12 @@
       const searchNavCount = document.getElementById("searchNavCount");
       const searchNavUp = document.getElementById("searchNavUp");
       const searchNavDown = document.getElementById("searchNavDown");
-      const typingIndicatorRow = document.getElementById(
-        "typingIndicatorRow",
-      );
+      const typingIndicatorRow = document.getElementById("typingIndicatorRow");
       const typingIndicatorText = document.getElementById(
         "typingIndicatorText",
       );
       const replyPreviewBar = document.getElementById("replyPreviewBar");
-      const replyPreviewAuthor = document.getElementById(
-        "replyPreviewAuthor",
-      );
+      const replyPreviewAuthor = document.getElementById("replyPreviewAuthor");
       const replyPreviewText = document.getElementById("replyPreviewText");
       const cancelReplyBtn = document.getElementById("cancelReplyBtn");
       const emojiToggleBtn = document.getElementById("emojiToggleBtn");
@@ -1916,8 +2015,8 @@
       const uploadProgressText = document.getElementById("uploadProgressText");
 
       /* =========================================================
-         SECURITY / SANITIZATION HELPERS
-         ========================================================= */
+               SECURITY / SANITIZATION HELPERS
+               ========================================================= */
       // Prevents dangerous HTML injection: always escape any user-supplied
       // text before it is placed into innerHTML.
       function escapeHtml(unsafe) {
@@ -1933,7 +2032,10 @@
       function sanitizeInputText(raw) {
         // Trim, cap length, and strip control characters. Real HTML escaping
         // happens at render time via escapeHtml().
-        return raw.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, "").trim().slice(0, 4000);
+        return raw
+          .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, "")
+          .trim()
+          .slice(0, 4000);
       }
 
       function formatFileSize(bytes) {
@@ -1944,8 +2046,8 @@
       }
 
       /* =========================================================
-         PERSISTENT / UTILITY SYSTEMS
-         ========================================================= */
+               PERSISTENT / UTILITY SYSTEMS
+               ========================================================= */
       function initializeThemeEngine() {
         const storedPref = localStorage.getItem("theme-preference") || "light";
         document.documentElement.setAttribute("data-theme", storedPref);
@@ -2061,8 +2163,8 @@
       }
 
       /* =========================================================
-         SESSION VERIFICATION HUB
-         ========================================================= */
+               SESSION VERIFICATION HUB
+               ========================================================= */
       onAuthStateChanged(auth, async (authenticatedUser) => {
         if (!authenticatedUser) {
           window.location.href = "auth.html";
@@ -2094,8 +2196,8 @@
       });
 
       /* =========================================================
-         SELF CHAT ("SAVED MESSAGES")
-         ========================================================= */
+               SELF CHAT ("SAVED MESSAGES")
+               ========================================================= */
       async function ensureSelfChatExists() {
         const email = currentUserEmailNormalized;
         const selfChatId = buildSelfChatId(email);
@@ -2126,8 +2228,8 @@
       }
 
       /* =========================================================
-         WORKSPACE PANEL MANAGEMENT
-         ========================================================= */
+               WORKSPACE PANEL MANAGEMENT
+               ========================================================= */
       toggleSidebarBtn.addEventListener("click", () => {
         sidebarNode.classList.toggle("collapsed");
         toggleSidebarBtn.classList.toggle("fa-square-caret-left");
@@ -2147,8 +2249,8 @@
       }
 
       /* =========================================================
-         MODAL DIALOG CONTROLS — NEW CONVERSATION
-         ========================================================= */
+               MODAL DIALOG CONTROLS — NEW CONVERSATION
+               ========================================================= */
       openModalBtn.addEventListener("click", () => {
         searchModalOverlay.classList.add("open");
         modalSearchEmailInput.value = "";
@@ -2248,8 +2350,8 @@
       });
 
       /* =========================================================
-         REALTIME CONVERSATION LIST ENGINE
-         ========================================================= */
+               REALTIME CONVERSATION LIST ENGINE
+               ========================================================= */
       function listenToRecentConversations(userEmail) {
         const normalizedEmail = normalizeEmailForId(userEmail);
         const chatsCollection = collection(db, "chats");
@@ -2289,7 +2391,10 @@
               chatData.lastSenderEmail &&
               chatData.lastSenderEmail !== normalizedEmail
             ) {
-              upgradeLastMessageDeliveryStatus(chatData.chatId, normalizedEmail);
+              upgradeLastMessageDeliveryStatus(
+                chatData.chatId,
+                normalizedEmail,
+              );
             }
           }
 
@@ -2312,13 +2417,23 @@
           if (
             data.senderEmail !== viewerEmail &&
             data.status === "sent" &&
-            (activeChatId !== chatId)
+            activeChatId !== chatId
           ) {
             await updateDoc(lastDoc.ref, { status: "delivered" });
           }
         } catch (e) {
           // Non-critical background enhancement — ignore failures silently.
         }
+      }
+
+      function getChatSortMetadata(entry, email) {
+        const updatedAt = entry.chatData.updatedAt?.toMillis
+          ? entry.chatData.updatedAt.toMillis()
+          : 0;
+        const isPinned = !!entry.chatData.pinned?.[email];
+        const displayName =
+          entry.partnerMeta?.name || entry.chatData.chatId || "";
+        return { isPinned, updatedAt, displayName: displayName.toLowerCase() };
       }
 
       function renderChatListFromCache() {
@@ -2349,18 +2464,19 @@
           });
         }
 
-        // Sort: pinned first, then by updatedAt desc.
         entries.sort((a, b) => {
-          const aPinned = !!a.chatData.pinned?.[email];
-          const bPinned = !!b.chatData.pinned?.[email];
-          if (aPinned !== bPinned) return aPinned ? -1 : 1;
-          const aTime = a.chatData.updatedAt?.toMillis
-            ? a.chatData.updatedAt.toMillis()
-            : 0;
-          const bTime = b.chatData.updatedAt?.toMillis
-            ? b.chatData.updatedAt.toMillis()
-            : 0;
-          return bTime - aTime;
+          const aMeta = getChatSortMetadata(a, email);
+          const bMeta = getChatSortMetadata(b, email);
+
+          if (aMeta.isPinned !== bMeta.isPinned) {
+            return aMeta.isPinned ? -1 : 1;
+          }
+
+          if (aMeta.updatedAt !== bMeta.updatedAt) {
+            return bMeta.updatedAt - aMeta.updatedAt;
+          }
+
+          return aMeta.displayName.localeCompare(bMeta.displayName);
         });
 
         chatListContainer.innerHTML = "";
@@ -2401,30 +2517,32 @@
           ? `<div class="avatar avatar-container saved-messages"><i class="fa-solid fa-bookmark"></i></div>`
           : `<img class="avatar" src="${escapeHtml(userData.photoURL)}" alt="User avatar" />`;
 
+        const safeDotClass = isSelf ? "" : `item-dot-${CSS.escape(otherEmail)}`;
+
         chatItemRow.innerHTML = `
-          <div class="avatar-container">
-            ${avatarMarkup}
-            ${isSelf ? "" : `<div class="status-dot item-dot-${otherEmail}"></div>`}
-          </div>
-          <div class="chat-item-details">
-            <div class="chat-item-header">
-              <h5>
-                ${isPinned ? '<i class="fa-solid fa-thumbtack pin-icon-badge"></i>' : ""}
-                ${escapeHtml(displayName)}
-                ${isMuted ? '<i class="fa-solid fa-bell-slash mute-icon-badge"></i>' : ""}
-              </h5>
-              <div class="chat-meta-wrapper">
-                <span class="chat-time">${formatChatListTime(roomData.updatedAt)}</span>
-                ${showUnread ? `<span class="unread-badge">${unreadCount > 0 ? unreadCount : "•"}</span>` : ""}
-              </div>
-            </div>
-            <div class="chat-item-sub">
-              <span class="presence-text-${otherEmail}" style="flex-shrink:0"></span>
-              <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapeHtml(roomData.lastMessage || "Tap to open chat.")}</span>
-            </div>
-          </div>
-          <i class="fa-solid fa-ellipsis-vertical chat-item-menu-btn" title="Chat options"></i>
-        `;
+                <div class="avatar-container">
+                  ${avatarMarkup}
+                  ${isSelf ? "" : `<div class="status-dot ${safeDotClass}"></div>`}
+                </div>
+                <div class="chat-item-details">
+                  <div class="chat-item-header">
+                    <h5>
+                      ${isPinned ? '<i class="fa-solid fa-thumbtack pin-icon-badge"></i>' : ""}
+                      ${escapeHtml(displayName)}
+                      ${isMuted ? '<i class="fa-solid fa-bell-slash mute-icon-badge"></i>' : ""}
+                    </h5>
+                    <div class="chat-meta-wrapper">
+                      <span class="chat-time">${formatChatListTime(roomData.updatedAt)}</span>
+                      ${showUnread ? `<span class="unread-badge">${unreadCount > 0 ? unreadCount : "•"}</span>` : ""}
+                    </div>
+                  </div>
+                  <div class="chat-item-sub">
+                    <span class="presence-text-${CSS.escape(otherEmail)}" style="flex-shrink:0"></span>
+                    <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapeHtml(roomData.lastMessage || "Tap to open chat.")}</span>
+                  </div>
+                </div>
+                <i class="fa-solid fa-ellipsis-vertical chat-item-menu-btn" title="Chat options"></i>
+              `;
 
         if (!isSelf && !userData.isShell) {
           const usersQuery = query(
@@ -2434,8 +2552,9 @@
           onSnapshot(usersQuery, (snapshot) => {
             if (snapshot.empty) return;
             const currentMeta = snapshot.docs[0].data();
+            const escapedEmail = CSS.escape(otherEmail);
             const targetDot = chatItemRow.querySelector(
-              `.item-dot-${otherEmail}`,
+              `.item-dot-${escapedEmail}`,
             );
             if (currentMeta && targetDot) {
               targetDot.classList.toggle(
@@ -2462,8 +2581,8 @@
       }
 
       /* =========================================================
-         CHAT ITEM / HEADER CONTEXT MENUS (PIN, ARCHIVE, MUTE, ETC.)
-         ========================================================= */
+               CHAT ITEM / HEADER CONTEXT MENUS (PIN, ARCHIVE, MUTE, ETC.)
+               ========================================================= */
       function positionDropdown(menuEl, anchorEvent) {
         const rect = anchorEvent.target.getBoundingClientRect();
         const menuWidth = 200;
@@ -2552,10 +2671,23 @@
           chatItemMenu.classList.remove("open");
           chatHeaderMenu.classList.remove("open");
         }
-        if (!e.target.closest(".quick-react-popup") && !e.target.closest(".fa-face-smile-icon-trigger")) {
+        if (
+          !e.target.closest(".quick-react-popup") &&
+          !e.target.closest(".fa-face-smile-icon-trigger")
+        ) {
           // quick-react popup closes on outside interaction (handled separately too)
         }
       });
+
+      function updateCachedChatState(chatId, patch) {
+        const cachedEntry = allChatDocsCache.get(chatId);
+        if (!cachedEntry) return;
+        cachedEntry.chatData = {
+          ...cachedEntry.chatData,
+          ...patch,
+        };
+        renderChatListFromCache();
+      }
 
       async function handleChatManagementAction(action, chatId, chatData) {
         const email = currentUserEmailNormalized;
@@ -2565,8 +2697,15 @@
           switch (action) {
             case "pin": {
               const isPinned = !!chatData?.pinned?.[email];
+              const nextPinned = !isPinned;
               await updateDoc(chatRef, {
-                [`pinned.${email}`]: !isPinned,
+                [`pinned.${email}`]: nextPinned,
+              });
+              updateCachedChatState(chatId, {
+                pinned: {
+                  ...(chatData.pinned || {}),
+                  [email]: nextPinned,
+                },
               });
               showToastNotification(
                 isPinned ? "Chat unpinned." : "Chat pinned to top.",
@@ -2576,8 +2715,15 @@
             }
             case "mute": {
               const isMuted = !!chatData?.muted?.[email];
+              const nextMuted = !isMuted;
               await updateDoc(chatRef, {
-                [`muted.${email}`]: !isMuted,
+                [`muted.${email}`]: nextMuted,
+              });
+              updateCachedChatState(chatId, {
+                muted: {
+                  ...(chatData.muted || {}),
+                  [email]: nextMuted,
+                },
               });
               showToastNotification(
                 isMuted ? "Notifications unmuted." : "Chat muted.",
@@ -2587,8 +2733,15 @@
             }
             case "archive": {
               const isArchived = !!chatData?.archived?.[email];
+              const nextArchived = !isArchived;
               await updateDoc(chatRef, {
-                [`archived.${email}`]: !isArchived,
+                [`archived.${email}`]: nextArchived,
+              });
+              updateCachedChatState(chatId, {
+                archived: {
+                  ...(chatData.archived || {}),
+                  [email]: nextArchived,
+                },
               });
               showToastNotification(
                 isArchived ? "Chat moved back to main list." : "Chat archived.",
@@ -2597,8 +2750,15 @@
               break;
             }
             case "unread": {
+              const nextMarkedUnread = true;
               await updateDoc(chatRef, {
-                [`markedUnread.${email}`]: true,
+                [`markedUnread.${email}`]: nextMarkedUnread,
+              });
+              updateCachedChatState(chatId, {
+                markedUnread: {
+                  ...(chatData.markedUnread || {}),
+                  [email]: nextMarkedUnread,
+                },
               });
               showToastNotification("Marked as unread.", false);
               break;
@@ -2606,27 +2766,46 @@
             case "clear": {
               if (
                 !confirm(
-                  "Clear all messages in this conversation? This cannot be undone.",
+                  "Clear Chat?\n\nThis will remove all messages from this device only.",
                 )
               )
                 return;
               await clearAllMessagesInChat(chatId);
+              const cachedEntry = allChatDocsCache.get(chatId);
+              if (cachedEntry) {
+                cachedEntry.chatData = {
+                  ...cachedEntry.chatData,
+                  lastMessage: "",
+                  lastSenderEmail: null,
+                  updatedAt: serverTimestamp(),
+                };
+              }
+              renderChatListFromCache();
               showToastNotification("Chat history cleared.", false);
               break;
             }
             case "delete": {
               if (
                 !confirm(
-                  "Delete this entire chat for you? This removes all messages and cannot be undone.",
+                  "Delete Chat?\n\nThis will remove this conversation from your chat list.",
                 )
               )
                 return;
               await clearAllMessagesInChat(chatId);
-              await deleteDoc(chatRef);
+              await updateDoc(chatRef, {
+                [`archived.${email}`]: true,
+                [`pinned.${email}`]: false,
+                [`markedUnread.${email}`]: false,
+                [`unreadCounts.${email}`]: 0,
+              });
               if (activeChatId === chatId) {
                 closeActiveConversation();
               }
-              showToastNotification("Chat deleted.", false);
+              if (allChatDocsCache.has(chatId)) {
+                allChatDocsCache.delete(chatId);
+              }
+              renderChatListFromCache();
+              showToastNotification("Chat deleted from your view.", false);
               break;
             }
           }
@@ -2652,9 +2831,13 @@
       }
 
       /* =========================================================
-         OPEN A CONVERSATION
-         ========================================================= */
-      function loadConversationInterface(chatId, recipientData, isSelf = false) {
+               OPEN A CONVERSATION
+               ========================================================= */
+      function loadConversationInterface(
+        chatId,
+        recipientData,
+        isSelf = false,
+      ) {
         activeChatId = chatId;
         activeChatPartner = recipientData;
         activeChatIsSelf = isSelf;
@@ -2669,7 +2852,9 @@
         activeChatLayout.style.display = "flex";
         chatArea.classList.add("active");
 
-        activeChatTitle.innerText = isSelf ? "Saved Messages" : recipientData.name;
+        activeChatTitle.innerText = isSelf
+          ? "Saved Messages"
+          : recipientData.name;
         if (isSelf) {
           activeChatAvatar.style.display = "none";
           activeChatHeaderStatusDot.style.display = "none";
@@ -2794,18 +2979,18 @@
       }
 
       /* =========================================================
-         MESSAGE LIST RENDERING
-         ========================================================= */
+               MESSAGE LIST RENDERING
+               ========================================================= */
       function renderMessageList() {
         chatMessagesDisplay.innerHTML = "";
 
         if (currentMessagesCache.length === 0) {
           chatMessagesDisplay.innerHTML = `
-            <div class="no-chat-fallback" style="height:100%;">
-              <i class="fa-regular fa-comments"></i>
-              <h3>No messages yet</h3>
-              <p>Send the first message to start this conversation.</p>
-            </div>`;
+                  <div class="no-chat-fallback" style="height:100%;">
+                    <i class="fa-regular fa-comments"></i>
+                    <h3>No messages yet</h3>
+                    <p>Send the first message to start this conversation.</p>
+                  </div>`;
           return;
         }
 
@@ -2844,21 +3029,21 @@
                 currentMessage.fileURL.split("/").pop();
               const sizeLabel = formatFileSize(currentMessage.fileSize);
               mediaMarkup = `
-                <a href="${escapeHtml(currentMessage.fileURL)}" target="_blank" class="doc-msg-card">
-                  <i class="fa-solid fa-file-arrow-down doc-icon"></i>
-                  <div class="doc-meta">
-                    <div class="doc-name">${escapeHtml(displayName)}</div>
-                    ${sizeLabel ? `<div class="doc-size">${escapeHtml(sizeLabel)}</div>` : ""}
-                  </div>
-                </a>`;
+                      <a href="${escapeHtml(currentMessage.fileURL)}" target="_blank" class="doc-msg-card">
+                        <i class="fa-solid fa-file-arrow-down doc-icon"></i>
+                        <div class="doc-meta">
+                          <div class="doc-name">${escapeHtml(displayName)}</div>
+                          ${sizeLabel ? `<div class="doc-size">${escapeHtml(sizeLabel)}</div>` : ""}
+                        </div>
+                      </a>`;
             }
           }
 
           const replyBlockMarkup = currentMessage.replyTo
             ? `<div class="reply-quote-block" data-jump-to="${escapeHtml(currentMessage.replyTo.id)}">
-                 <span class="reply-quote-author">${escapeHtml(currentMessage.replyTo.authorName)}</span>
-                 <span class="reply-quote-text">${escapeHtml(currentMessage.replyTo.text || "Attachment")}</span>
-               </div>`
+                       <span class="reply-quote-author">${escapeHtml(currentMessage.replyTo.authorName)}</span>
+                       <span class="reply-quote-text">${escapeHtml(currentMessage.replyTo.text || "Attachment")}</span>
+                     </div>`
             : "";
 
           const messageBody = isDeletedForEveryone
@@ -2899,32 +3084,32 @@
           const actionBarMarkup = isDeletedForEveryone
             ? ""
             : `
-              <div class="msg-action-bar">
-                <i class="fa-solid fa-face-smile" data-action="react" title="React"></i>
-                <i class="fa-solid fa-reply" data-action="reply" title="Reply"></i>
-                <i class="fa-solid fa-share" data-action="forward" title="Forward"></i>
-                ${currentMessage.type === "text" ? '<i class="fa-solid fa-copy" data-action="copy" title="Copy text"></i>' : ""}
-                <i class="fa-solid fa-star" data-action="star" title="${isStarred ? "Unstar" : "Star"}" style="${isStarred ? "color: var(--star-color);" : ""}"></i>
-                ${isOutgoing ? '<i class="fa-solid fa-pen" data-action="edit" title="Edit"></i>' : ""}
-                <i class="fa-solid fa-trash" data-action="delete" title="Delete"></i>
-              </div>`;
+                    <div class="msg-action-bar">
+                      <i class="fa-solid fa-face-smile" data-action="react" title="React"></i>
+                      <i class="fa-solid fa-reply" data-action="reply" title="Reply"></i>
+                      <i class="fa-solid fa-share" data-action="forward" title="Forward"></i>
+                      ${currentMessage.type === "text" ? '<i class="fa-solid fa-copy" data-action="copy" title="Copy text"></i>' : ""}
+                      <i class="fa-solid fa-star" data-action="star" title="${isStarred ? "Unstar" : "Star"}" style="${isStarred ? "color: var(--star-color);" : ""}"></i>
+                      ${isOutgoing ? '<i class="fa-solid fa-pen" data-action="edit" title="Edit"></i>' : ""}
+                      <i class="fa-solid fa-trash" data-action="delete" title="Delete"></i>
+                    </div>`;
 
           rowNode.innerHTML = `
-            ${actionBarMarkup}
-            <div class="message-stack">
-              <div class="message-box">
-                ${replyBlockMarkup}
-                ${messageBody}
-                ${reactionsMarkup}
-                <div class="message-meta">
-                  ${isStarred ? '<i class="fa-solid fa-star starred-flag"></i>' : ""}
-                  <span>${timeString}</span>
-                  ${isEdited ? '<span style="margin-left:2px;font-size:10px;opacity:0.75">Edited</span>' : ""}
-                  ${ticksMarkup}
-                </div>
-              </div>
-            </div>
-          `;
+                  ${actionBarMarkup}
+                  <div class="message-stack">
+                    <div class="message-box">
+                      ${replyBlockMarkup}
+                      ${messageBody}
+                      ${reactionsMarkup}
+                      <div class="message-meta">
+                        ${isStarred ? '<i class="fa-solid fa-star starred-flag"></i>' : ""}
+                        <span>${timeString}</span>
+                        ${isEdited ? '<span style="margin-left:2px;font-size:10px;opacity:0.75">Edited</span>' : ""}
+                        ${ticksMarkup}
+                      </div>
+                    </div>
+                  </div>
+                `;
           chatMessagesDisplay.appendChild(rowNode);
         });
 
@@ -2983,12 +3168,13 @@
         lightboxOverlay.classList.remove("open"),
       );
       lightboxOverlay.addEventListener("click", (e) => {
-        if (e.target === lightboxOverlay) lightboxOverlay.classList.remove("open");
+        if (e.target === lightboxOverlay)
+          lightboxOverlay.classList.remove("open");
       });
 
       /* =========================================================
-         MESSAGE ACTIONS: REACT, REPLY, FORWARD, COPY, STAR, EDIT, DELETE
-         ========================================================= */
+               MESSAGE ACTIONS: REACT, REPLY, FORWARD, COPY, STAR, EDIT, DELETE
+               ========================================================= */
       let quickReactTargetMsgId = null;
 
       function handleMessageAction(action, msgId, messageData, anchorEl) {
@@ -3072,12 +3258,16 @@
       }
 
       function beginReplyToMessage(msgId, messageData) {
-        const authorName = messageData.senderEmail === currentUserEmailNormalized
-          ? "You"
-          : (activeChatPartner?.name || messageData.senderEmail);
+        const authorName =
+          messageData.senderEmail === currentUserEmailNormalized
+            ? "You"
+            : activeChatPartner?.name || messageData.senderEmail;
         replyingToMessage = {
           id: msgId,
-          text: messageData.type === "text" ? messageData.text : `[${messageData.type || "attachment"}]`,
+          text:
+            messageData.type === "text"
+              ? messageData.text
+              : `[${messageData.type || "attachment"}]`,
           authorName,
         };
         replyPreviewAuthor.innerText = `Replying to ${authorName}`;
@@ -3104,9 +3294,9 @@
             const optionRow = document.createElement("div");
             optionRow.className = "forward-chat-option";
             optionRow.innerHTML = `
-              <img class="avatar small" src="${escapeHtml(isSelf ? currentUserSession.photoURL || "" : partnerMeta.photoURL)}" alt="" />
-              <h5>${escapeHtml(displayName)}</h5>
-            `;
+                    <img class="avatar small" src="${escapeHtml(isSelf ? currentUserSession.photoURL || "" : partnerMeta.photoURL)}" alt="" />
+                    <h5>${escapeHtml(displayName)}</h5>
+                  `;
             optionRow.addEventListener("click", () =>
               forwardMessageToChat(chatData.chatId, isSelf, partnerMeta),
             );
@@ -3121,7 +3311,11 @@
         forwardModalOverlay.classList.remove("open"),
       );
 
-      async function forwardMessageToChat(targetChatId, isSelfTarget, targetMeta) {
+      async function forwardMessageToChat(
+        targetChatId,
+        isSelfTarget,
+        targetMeta,
+      ) {
         if (!pendingForwardMessage) return;
         const { messageData } = pendingForwardMessage;
         const targetChatRef = doc(db, "chats", targetChatId);
@@ -3200,7 +3394,10 @@
           return;
         }
 
-        const refinedString = prompt("Edit your message:", messageData.text || "");
+        const refinedString = prompt(
+          "Edit your message:",
+          messageData.text || "",
+        );
         if (refinedString === null) return;
         const cleaned = sanitizeInputText(refinedString);
         if (!cleaned) return;
@@ -3259,8 +3456,8 @@
       }
 
       /* =========================================================
-         STARRED MESSAGES MODAL
-         ========================================================= */
+               STARRED MESSAGES MODAL
+               ========================================================= */
       starredMessagesBtn.addEventListener("click", async () => {
         starredListPane.innerHTML = `<p style="color:var(--text-muted);font-size:13px">Loading starred messages...</p>`;
         starredModalOverlay.classList.add("open");
@@ -3275,9 +3472,18 @@
         const email = currentUserEmailNormalized;
         const results = [];
 
-        for (const { chatData, partnerMeta, isSelf } of allChatDocsCache.values()) {
+        for (const {
+          chatData,
+          partnerMeta,
+          isSelf,
+        } of allChatDocsCache.values()) {
           try {
-            const msgsRef = collection(db, "chats", chatData.chatId, "messages");
+            const msgsRef = collection(
+              db,
+              "chats",
+              chatData.chatId,
+              "messages",
+            );
             const starredQuery = query(
               msgsRef,
               where("starredBy", "array-contains", email),
@@ -3306,8 +3512,12 @@
         starredListPane.innerHTML = "";
         results
           .sort((a, b) => {
-            const at = a.data.timestamp?.toMillis ? a.data.timestamp.toMillis() : 0;
-            const bt = b.data.timestamp?.toMillis ? b.data.timestamp.toMillis() : 0;
+            const at = a.data.timestamp?.toMillis
+              ? a.data.timestamp.toMillis()
+              : 0;
+            const bt = b.data.timestamp?.toMillis
+              ? b.data.timestamp.toMillis()
+              : 0;
             return bt - at;
           })
           .forEach(({ chatId, partnerMeta, isSelf, msgId, data }) => {
@@ -3315,14 +3525,16 @@
             item.className = "starred-list-item";
             const label = isSelf ? "Saved Messages" : partnerMeta.name;
             const preview =
-              data.type === "text" ? data.text : `[${data.type || "attachment"}]`;
+              data.type === "text"
+                ? data.text
+                : `[${data.type || "attachment"}]`;
             item.innerHTML = `
-              <div>${escapeHtml(preview || "")}</div>
-              <div class="starred-meta">
-                <span>${escapeHtml(label)}</span>
-                <span>${formatMessageTime(data.timestamp)}</span>
-              </div>
-            `;
+                    <div>${escapeHtml(preview || "")}</div>
+                    <div class="starred-meta">
+                      <span>${escapeHtml(label)}</span>
+                      <span>${formatMessageTime(data.timestamp)}</span>
+                    </div>
+                  `;
             item.addEventListener("click", () => {
               starredModalOverlay.classList.remove("open");
               loadConversationInterface(chatId, partnerMeta, isSelf);
@@ -3333,8 +3545,8 @@
       }
 
       /* =========================================================
-         IN-CHAT SEARCH
-         ========================================================= */
+               IN-CHAT SEARCH
+               ========================================================= */
       chatSearchToggleBtn.addEventListener("click", () => {
         inChatSearchBar.classList.toggle("open");
         if (inChatSearchBar.classList.contains("open")) {
@@ -3383,7 +3595,9 @@
       });
 
       function navigateToSearchMatch(rows) {
-        rows = rows || Array.from(chatMessagesDisplay.querySelectorAll(".message-row"));
+        rows =
+          rows ||
+          Array.from(chatMessagesDisplay.querySelectorAll(".message-row"));
         rows.forEach((r) => r.classList.remove("highlight-match"));
         if (searchMatchIndices.length === 0) return;
         const rowIdx = searchMatchIndices[searchMatchCursor];
@@ -3410,8 +3624,8 @@
       });
 
       /* =========================================================
-         EMOJI PICKER
-         ========================================================= */
+               EMOJI PICKER
+               ========================================================= */
       COMMON_EMOJIS.forEach((emoji) => {
         const span = document.createElement("span");
         span.innerText = emoji;
@@ -3437,15 +3651,15 @@
       });
 
       /* =========================================================
-         VOICE MESSAGE PLACEHOLDER
-         ========================================================= */
+               VOICE MESSAGE PLACEHOLDER
+               ========================================================= */
       voiceMessageBtn.addEventListener("click", () => {
         showToastNotification("Voice recording feature coming soon", false);
       });
 
       /* =========================================================
-         TYPING INDICATOR BROADCAST
-         ========================================================= */
+               TYPING INDICATOR BROADCAST
+               ========================================================= */
       messageTextInput.addEventListener("input", () => {
         if (!activeChatId || activeChatIsSelf) return;
         clearTimeout(typingDebounceTimer);
@@ -3461,8 +3675,8 @@
       });
 
       /* =========================================================
-         DISPATCH DATA ENGINE (SEND MESSAGE)
-         ========================================================= */
+               DISPATCH DATA ENGINE (SEND MESSAGE)
+               ========================================================= */
       async function transmitDataPacket(customFileObj = null) {
         if (!activeChatId) return;
 
@@ -3531,8 +3745,8 @@
       });
 
       /* =========================================================
-         FILE UPLOAD PIPELINE (WITH PREVIEW-BEFORE-SEND)
-         ========================================================= */
+               FILE UPLOAD PIPELINE (WITH PREVIEW-BEFORE-SEND)
+               ========================================================= */
       function setUploadProgress(percent) {
         uploadProgressBar.setAttribute("aria-hidden", "false");
         uploadProgressFill.style.width = `${percent}%`;
@@ -3608,12 +3822,12 @@
           const row = document.createElement("div");
           row.className = "attach-preview-file-row";
           row.innerHTML = `
-            <i class="fa-solid fa-file-lines"></i>
-            <div class="doc-meta">
-              <div class="doc-name">${escapeHtml(file.name)}</div>
-              <div class="doc-size">${escapeHtml(formatFileSize(file.size))}</div>
-            </div>
-          `;
+                  <i class="fa-solid fa-file-lines"></i>
+                  <div class="doc-meta">
+                    <div class="doc-name">${escapeHtml(file.name)}</div>
+                    <div class="doc-size">${escapeHtml(formatFileSize(file.size))}</div>
+                  </div>
+                `;
           attachPreviewBody.appendChild(row);
         }
 
@@ -3626,9 +3840,9 @@
         const actions = document.createElement("div");
         actions.className = "attach-preview-actions";
         actions.innerHTML = `
-          <button class="btn-secondary-action" id="cancelAttachSendBtn">Cancel</button>
-          <button class="btn-modal-action" id="confirmAttachSendBtn">Send</button>
-        `;
+                <button class="btn-secondary-action" id="cancelAttachSendBtn">Cancel</button>
+                <button class="btn-modal-action" id="confirmAttachSendBtn">Send</button>
+              `;
         attachPreviewBody.appendChild(actions);
 
         document
@@ -3664,29 +3878,44 @@
         setUploadProgress(0);
 
         try {
-          const fileStorageRef = ref(
-            storage,
-            `mini_whatsapp_media/${Date.now()}_${file.name}`,
-          );
-          const uploadTask = uploadBytesResumable(fileStorageRef, file);
+          const formData = new FormData();
 
-          await new Promise((resolve, reject) => {
-            uploadTask.on(
-              "state_changed",
-              (snapshot) => {
-                const percentage = Math.round(
-                  (snapshot.bytesTransferred / snapshot.totalBytes) * 100,
-                );
-                setUploadProgress(percentage);
-              },
-              (error) => reject(error),
-              () => resolve(),
+          formData.append("file", file);
+          formData.append("upload_preset", "mini-whatsapp");
+          formData.append("folder", "mini-whatsapp");
+          formData.append("resource_type", "auto");
+          const xhr = new XMLHttpRequest();
+
+          const accessibleDownloadUrl = await new Promise((resolve, reject) => {
+            xhr.open(
+              "POST",
+              "https://api.cloudinary.com/v1_1/wl9fz1mi/auto/upload",
             );
-          });
 
-          const accessibleDownloadUrl = await getDownloadURL(
-            uploadTask.snapshot.ref,
-          );
+            xhr.upload.onprogress = (event) => {
+              if (event.lengthComputable) {
+                const percentage = Math.round(
+                  (event.loaded / event.total) * 100,
+                );
+
+                setUploadProgress(percentage);
+              }
+            };
+
+            xhr.onload = () => {
+              if (xhr.status >= 200 && xhr.status < 300) {
+                const response = JSON.parse(xhr.responseText);
+
+                resolve(response.secure_url);
+              } else {
+                reject(new Error("Cloudinary upload failed."));
+              }
+            };
+
+            xhr.onerror = () => reject(new Error("Network Error"));
+
+            xhr.send(formData);
+          });
 
           const oldCaption = messageTextInput.value;
           messageTextInput.value = captionText || "";
@@ -3710,8 +3939,8 @@
       }
 
       /* =========================================================
-         THEME + MOBILE NAVIGATION
-         ========================================================= */
+               THEME + MOBILE NAVIGATION
+               ========================================================= */
       themeToggle.addEventListener("click", () => {
         const nextTheme =
           document.documentElement.getAttribute("data-theme") === "dark"
