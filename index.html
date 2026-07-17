@@ -1316,6 +1316,108 @@
         border-radius: 4px;
       }
 
+      .install-popup{
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.45);
+
+    display:none;
+
+    justify-content:center;
+
+    align-items:center;
+
+    z-index:999999;
+
+}
+
+.popup-card{
+
+    width:360px;
+
+    background:#fff;
+
+    border-radius:18px;
+
+    padding:28px;
+
+    text-align:center;
+
+    box-shadow:0 25px 50px rgba(0,0,0,.25);
+
+}
+
+.popup-logo{
+
+    width:80px;
+
+    height:80px;
+
+    border-radius:18px;
+
+    margin-bottom:18px;
+
+}
+
+.popup-card h2{
+
+    margin-bottom:10px;
+
+    color:#2563EB;
+
+}
+
+.popup-card p{
+
+    line-height:1.6;
+
+    color:#555;
+
+    margin-bottom:25px;
+
+}
+
+.popup-buttons{
+
+    display:flex;
+
+    gap:12px;
+
+}
+
+.popup-buttons button{
+
+    flex:1;
+
+    padding:12px;
+
+    border:none;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    font-size:15px;
+
+}
+
+#installBtn{
+
+    background:#2563EB;
+
+    color:white;
+
+}
+
+#laterBtn{
+
+    background:#E5E7EB;
+
+}
+      
       /* --- IMAGE LIGHTBOX --- */
       .lightbox-overlay {
         position: fixed;
@@ -1806,6 +1908,34 @@
 
     <div class="toast" id="globalToast">Notification</div>
 
+    <div id="installPopup" class="install-popup">
+
+    <div class="popup-card">
+
+        <img src="favicon.ico.png" class="popup-logo">
+
+        <h2>Install MailDialog</h2>
+
+        <p>
+            Install MailDialog for a faster and smoother messaging experience.
+            Access your chats directly from your desktop or home screen.
+        </p>
+
+        <div class="popup-buttons">
+
+            <button id="installBtn">
+                Install
+            </button>
+
+            <button id="laterBtn">
+                Maybe Later
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
       import {
@@ -3988,6 +4118,41 @@
             .then(() => console.log("Service Worker Registered"))
             .catch(err => console.log(err));
     });
+}
+      let deferredPrompt;
+
+const popup = document.getElementById("installPopup");
+
+const installBtn = document.getElementById("installBtn");
+
+const laterBtn = document.getElementById("laterBtn");
+
+window.addEventListener("beforeinstallprompt", (e)=>{
+
+    e.preventDefault();
+
+    deferredPrompt = e;
+
+    popup.style.display="flex";
+
+});
+
+installBtn.addEventListener("click", async()=>{
+
+    popup.style.display="none";
+
+    deferredPrompt.prompt();
+
+    const choice = await deferredPrompt.userChoice;
+
+    deferredPrompt = null;
+
+});
+
+laterBtn.onclick=()=>{
+
+    popup.style.display="none";
+
 }
     </script>
   </body>
