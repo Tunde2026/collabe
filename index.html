@@ -2800,10 +2800,9 @@
               : getParticipantMeta(chatData, otherEmail) ||
                 createPlaceholderUser(otherEmail);
 
-            allChatDocsCache.set(chatData.chatId, {
-              chatData,
-              partnerMeta: meta,
-              isSelf,
+                allChatDocsCache.set(chatDoc.id, {
+                chatData: chatDoc.data(),
+                partnerMeta
             });
 
             // Best-effort "delivered" status upgrade: if the last message in
@@ -3031,7 +3030,7 @@
         contextMenuTargetChatId = chatData.chatId;
         contextMenuTargetChatData = chatData;
         const email = currentUserEmailNormalized;
-        const isPinned = !!chatData.pinned?.[email];
+        const isPinned = chatData.pinned;
         const isMuted = !!chatData.muted?.[email];
         const isArchived = !!chatData.archived?.[email];
 
@@ -3113,14 +3112,21 @@
       });
 
       function updateCachedChatState(chatId, patch) {
-        const cachedEntry = allChatDocsCache.get(chatId);
-        if (!cachedEntry) return;
-        cachedEntry.chatData = {
-          ...cachedEntry.chatData,
-          ...patch,
-        };
-        renderChatListFromCache();
-      }
+
+    const cached = allChatDocsCache.get(chatId);
+
+    if (!cached) return;
+
+    cached.chatData = {
+        ...cached.chatData,
+        ...patch
+    };
+
+    allChatDocsCache.set(chatId, cached);
+
+    renderChatListFromCache();
+
+}
 
       async function handleChatManagementAction(action, chatId, chatData) {
         const email = currentUserEmailNormalized;
@@ -4319,7 +4325,7 @@ async function editMessage(msgId, messageData) {
  * Otherwise,
  * only Delete for Me is available.
  */
-async function openDeleteMessageChoice(msgId, messageData) {
+async function openMessageActionSheet(msgId, messageData) {
 
   const isMine =
     messageData.senderEmail === currentUserEmailNormalized;
@@ -4340,40 +4346,195 @@ async function openDeleteMessageChoice(msgId, messageData) {
       return;
     }
 
-    // Custom choice dialog (we'll build later)
-
+       // Show the universal action sheet
     const choice = await showChoiceDialog({
+      title: "Message",
+      options: buildMessageActions(msgId, messageData)
+    });
 
-    title:"Delete Message",
+    if (!choice) return;
 
-    options:[
+    switch (choice) {
+
+      case "reply":
+        beginReply(msgId, messageData);
+        break;
+
+      case "react":
+        openReactionPicker(msgId, messageData);
+        break;
+
+      case "copy":
+        copyMessage(msgId, messageData);
+        break;
+
+      case "download":
+        downloadMessage(msgId, messageData);
+        break;
+
+      case "forward":
+        openForwardDialog(msgId, messageData);
+        break;
+
+      case "pin":
+        togglePinMessage(msgId, messageData);
+        break;
+
+      case "star":
+        toggleStarMessage(msgId, messageData);
+        break;
+
+      case "edit":
+        await editMessage(msgId, messageData);
+        break;
+
+      case "delete":
+
+        // Owners get a second choice
+        const deleteChoice = await showChoiceDialog({
+          title: "Delete Message",
+          options: [
+            {
+              id: "me",
+              label: "Delete for Me",
+              icon: "🗑️"
+            },
+            {
+              id: "everyone",
+              label: "Delete for Everyone",
+              icon: "🚫",
+              danger: true
+            }
+          ]
+        });
+
+        if (deleteChoice === "me") {
+          await deleteMessageForMe(msgId);
+        }
+
+        if (deleteChoice === "everyone") {
+          await deleteMessageForEveryone(msgId);
+        }
+
+        break;
+
+      case "info":
+        showMessageInfo(msgId);
+        break;
+
+    }
+
+  } catch (error) {
+
+    console.error("Message action failed:", error);
+
+    showToastNotification(
+      "Unable to perform the selected action.",
+      true
+    );
+
+  }
+
+}
+});
+/**
+ * ==========================================================
+ * Build the available actions for a message.
+ *
+ * The actions shown depend on:
+ * - whether the message belongs to the current user
+ * - whether it contains attachments
+ *
+ * This makes the Bottom Sheet reusable for every message.
+ * ==========================================================
+ */
+function buildMessageActions(msgId, messageData) {
+
+    const isMine =
+        messageData.senderEmail === currentUserEmailNormalized;
+
+    const actions = [
 
         {
-
-            id:"me",
-
-            label:"Delete for Me",
-
-            icon:"🗑️"
-
+            id:"reply",
+            label:"Reply",
+            icon:"↩️"
         },
 
         {
+            id:"react",
+            label:"React",
+            icon:"❤️"
+        },
 
-            id:"everyone",
+        {
+            id:"copy",
+            label:"Copy",
+            icon:"📋"
+        },
 
-            label:"Delete for Everyone",
+        {
+            id:"download",
+            label:"Download",
+            icon:"📥"
+        },
 
-            icon:"🚫",
+        {
+            id:"forward",
+            label:"Forward",
+            icon:"📤"
+        },
 
-            danger:true
+        {
+            id:"pin",
+            label:"Pin Chat",
+            icon:"📌"
+        },
 
+        {
+            id:"star",
+            label:"Star Message",
+            icon:"⭐"
+        },
+
+        {
+            id:"info",
+            label:"Message Info",
+            icon:"ℹ️"
         }
 
-    ]
+    ];
 
-});
+    if(isMine){
 
+        actions.splice(6,0,{
+
+            id:"edit",
+
+            label:"Edit",
+
+            icon:"✏️"
+
+        });
+
+    }
+
+    actions.push({
+
+        id:"delete",
+
+        label:"Delete",
+
+        icon:"🗑️",
+
+        danger:true
+
+    });
+
+    return actions;
+
+}
+    
 
 /**
  * Deletes the message only for the current user.
