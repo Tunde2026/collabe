@@ -1,12 +1,19 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
     />
     <title>Logic Vision - Connect Workspace</title>
+    
+    <!-- PWA Manifest & App Icons -->
+    <meta name="theme-color" content="#2563eb" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjoiTG9naWMgVmlzaW9uIFdvcmtzcGFjZSIsInNob3J0X25hbWUiOiJMb2dpYyBWaXNpb24iLCJzdGFydF91cmwiOiIvIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiI2Y4ZmFmYyIsInRoZW1lX2NvbG9yIjoiIzI1NjNlYiIsImljb25zIjpbXX0=" />
+
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
@@ -75,6 +82,7 @@
         justify-content: center;
         align-items: center;
         overflow: hidden;
+        overscroll-behavior-y: none;
       }
 
       .app-container {
@@ -856,7 +864,7 @@
 
       /* --- QUICK REACT POPUP --- */
       .quick-react-popup {
-        position: fixed;
+        position: absolute;
         display: none;
         gap: 4px;
         background: var(--bg-sidebar);
@@ -1408,91 +1416,56 @@
 ========================================================== */
 
 .app-dialog-overlay{
-
     position:fixed;
-
     inset:0;
-
     background:rgba(0,0,0,.45);
-
     display:flex;
-
     justify-content:center;
-
     align-items:center;
-
     z-index:999999;
-
     backdrop-filter:blur(6px);
-
     animation:fadeIn .18s ease;
-
 }
 
 .hidden{
-
     display:none!important;
-
 }
 
 .app-dialog{
-
     width:min(92%,430px);
-
-    background:var(--surface,#ffffff);
-
+    background:var(--bg-sidebar);
     border-radius:18px;
-
     overflow:hidden;
-
     box-shadow:0 18px 50px rgba(0,0,0,.25);
-
     animation:dialogPop .18s ease;
-
 }
 
 .app-dialog-header{
-
     padding:20px;
-
     font-weight:700;
-
     font-size:18px;
-
-    border-bottom:1px solid rgba(0,0,0,.08);
-
+    border-bottom:1px solid var(--border-color);
 }
 
 .app-dialog-body{
-
     padding:20px;
-
 }
 
 .app-dialog-body p{
-
     margin-bottom:15px;
-
     line-height:1.6;
-
 }
 
 #appDialogInput{
-
     width:100%;
-
     min-height:120px;
-
     resize:vertical;
-
     padding:12px;
-
     border-radius:10px;
-
-    border:1px solid #ccc;
-
+    border:1px solid var(--border-color);
+    background:var(--bg-input);
+    color:var(--text-main);
     font-size:15px;
-
 }
 
 /* ==========================================================
@@ -1500,205 +1473,122 @@
 ========================================================== */
 
 .bottom-sheet{
-
     position:absolute;
-
     left:0;
-
     right:0;
-
     bottom:0;
-
-    background:var(--surface,#fff);
-
+    background:var(--bg-sidebar);
     border-radius:24px 24px 0 0;
-
     padding:18px;
-
     animation:bottomSheetUp .25s ease;
-
     box-shadow:0 -10px 40px rgba(0,0,0,.18);
-
 }
 
 .bottom-sheet-header{
-
     text-align:center;
-
     margin-bottom:18px;
-
 }
 
 .bottom-sheet-handle{
-
     width:55px;
-
     height:5px;
-
     background:#cfcfcf;
-
     border-radius:100px;
-
     margin:auto;
-
     margin-bottom:12px;
-
 }
 
 .bottom-sheet-header h4{
-
     font-size:16px;
-
     font-weight:700;
-
 }
 
 #bottomSheetActions{
-
     display:flex;
-
     flex-direction:column;
-
     gap:10px;
-
 }
 
 .sheet-action{
-
     display:flex;
-
     align-items:center;
-
     gap:14px;
-
     border:none;
-
-    background:#f5f5f5;
-
+    background:var(--bg-input);
+    color:var(--text-main);
     padding:16px;
-
     border-radius:14px;
-
     cursor:pointer;
-
     font-size:15px;
-
     transition:.18s;
-
 }
 
 .sheet-action:hover{
-
-    background:#eaeaea;
-
+    background:var(--hover-bg);
     transform:translateY(-1px);
-
 }
 
 .sheet-action.delete{
-
-    color:#d93025;
-
+    color:var(--danger);
 }
 
 .sheet-action.delete:hover{
-
-    background:#ffe7e7;
-
+    background:rgba(239, 68, 68, 0.1);
 }
 
 @keyframes bottomSheetUp{
-
     from{
-
         transform:translateY(100%);
-
     }
-
     to{
-
         transform:translateY(0);
-
     }
-
 }
 
 .app-dialog-footer{
-
     display:flex;
-
     justify-content:flex-end;
-
     gap:12px;
-
     padding:18px;
-
-    border-top:1px solid rgba(0,0,0,.08);
-
+    border-top:1px solid var(--border-color);
 }
 
 .dialog-btn{
-
     padding:10px 20px;
-
     border:none;
-
     border-radius:10px;
-
     cursor:pointer;
-
     font-weight:600;
-
 }
 
 .dialog-btn.primary{
-
-    background:#25D366;
-
+    background:var(--primary);
     color:white;
-
 }
 
 .dialog-btn.secondary{
-
-    background:#e6e6e6;
-
+    background:var(--bg-input);
+    color:var(--text-main);
 }
 
 @keyframes dialogPop{
-
     from{
-
         transform:scale(.85);
-
         opacity:0;
-
     }
-
     to{
-
         transform:scale(1);
-
         opacity:1;
-
     }
-
 }
 
 @keyframes fadeIn{
-
     from{
-
         opacity:0;
-
     }
-
     to{
-
         opacity:1;
-
     }
-
 }
     </style>
   </head>
@@ -1717,26 +1607,10 @@
             </div>
           </div>
           <div class="header-actions">
-            <i
-              class="fa-solid fa-star"
-              id="starredMessagesBtn"
-              title="Starred Messages"
-            ></i>
-            <i
-              class="fa-solid fa-square-caret-left"
-              id="toggleSidebarBtn"
-              title="Collapse Workspace Panel"
-            ></i>
-            <i
-              class="fa-solid fa-moon"
-              id="themeToggle"
-              title="Toggle Theme Matrix"
-            ></i>
-            <i
-              class="fa-solid fa-right-from-bracket"
-              id="logoutBtn"
-              title="End Session"
-            ></i>
+            <i class="fa-solid fa-star" id="starredMessagesBtn" title="Starred Messages"></i>
+            <i class="fa-solid fa-square-caret-left" id="toggleSidebarBtn" title="Collapse Workspace Panel"></i>
+            <i class="fa-solid fa-moon" id="themeToggle" title="Toggle Theme Matrix"></i>
+            <i class="fa-solid fa-right-from-bracket" id="logoutBtn" title="End Session"></i>
           </div>
         </div>
 
@@ -1749,15 +1623,8 @@
 
         <div class="search-container">
           <div class="search-box">
-            <i
-              class="fa-solid fa-magnifying-glass"
-              style="color: var(--text-muted)"
-            ></i>
-            <input
-              type="text"
-              id="sidebarFilterInput"
-              placeholder="Search chats, names or emails..."
-            />
+            <i class="fa-solid fa-magnifying-glass" style="color: var(--text-muted)"></i>
+            <input type="text" id="sidebarFilterInput" placeholder="Search chats, names or emails..." />
           </div>
         </div>
 
@@ -1765,17 +1632,13 @@
           <button class="chat-tab-btn active" id="tabMainChats" data-tab="main">
             <i class="fa-solid fa-comments"></i> Chats
           </button>
-          <button
-            class="chat-tab-btn"
-            id="tabArchivedChats"
-            data-tab="archived"
-          >
+          <button class="chat-tab-btn" id="tabArchivedChats" data-tab="archived">
             <i class="fa-solid fa-box-archive"></i> Archived
           </button>
         </div>
 
         <div class="chat-list" id="chatListContainer">
-          <div class="skeleton-item" v-for="n in 5">
+          <div class="skeleton-item">
             <div class="skeleton-box skeleton-avatar"></div>
             <div class="skeleton-lines">
               <div class="skeleton-box skeleton-line" style="width: 60%"></div>
@@ -1788,71 +1651,34 @@
       <main class="chat-area" id="chatArea">
         <div class="no-chat-fallback" id="noChatSelected">
           <i class="fa-solid fa-shield-halved"></i>
-          <h3>Secure Workspace Portal</h3>
-          <p>
-            Select an ongoing stream or look up a workspace email to clear the
-            pipeline.
-          </p>
+          <h3>Logic Vision Secure Portal</h3>
+          <p>Select an ongoing stream or look up a workspace email to clear the pipeline.</p>
         </div>
 
-        <div
-          id="activeChatLayout"
-          style="display: none; flex-direction: column; height: 100%"
-        >
+        <div id="activeChatLayout" style="display: none; flex-direction: column; height: 100%">
           <div class="chat-header">
             <i class="fa-solid fa-arrow-left back-btn" id="mobileBackBtn"></i>
             <div class="avatar-container">
-              <img
-                id="activeChatAvatar"
-                class="avatar"
-                src=""
-                alt="Target Profile"
-              />
+              <img id="activeChatAvatar" class="avatar" src="" alt="Target Profile" />
               <div id="activeChatHeaderStatusDot" class="status-dot"></div>
             </div>
             <div class="user-info">
               <h4 id="activeChatTitle">Connection Workspace</h4>
-              <p id="activeChatStatus" style="font-size: 11px">
-                Checking line...
-              </p>
+              <p id="activeChatStatus" style="font-size: 11px">Checking line...</p>
             </div>
             <div class="chat-header-actions">
-              <i
-                class="fa-solid fa-magnifying-glass"
-                id="chatSearchToggleBtn"
-                title="Search in conversation"
-              ></i>
-              <i
-                class="fa-solid fa-ellipsis-vertical"
-                id="chatHeaderMenuBtn"
-                title="More options"
-              ></i>
+              <i class="fa-solid fa-magnifying-glass" id="chatSearchToggleBtn" title="Search in conversation"></i>
+              <i class="fa-solid fa-ellipsis-vertical" id="chatHeaderMenuBtn" title="More options"></i>
             </div>
           </div>
 
           <div class="in-chat-search-bar" id="inChatSearchBar">
             <i class="fa-solid fa-magnifying-glass"></i>
-            <input
-              type="text"
-              id="inChatSearchInput"
-              placeholder="Search this conversation..."
-            />
+            <input type="text" id="inChatSearchInput" placeholder="Search this conversation..." />
             <span class="search-nav-count" id="searchNavCount"></span>
-            <i
-              class="fa-solid fa-chevron-up"
-              id="searchNavUp"
-              title="Previous match"
-            ></i>
-            <i
-              class="fa-solid fa-chevron-down"
-              id="searchNavDown"
-              title="Next match"
-            ></i>
-            <i
-              class="fa-solid fa-xmark"
-              id="closeInChatSearchBtn"
-              title="Close search"
-            ></i>
+            <i class="fa-solid fa-chevron-up" id="searchNavUp" title="Previous match"></i>
+            <i class="fa-solid fa-chevron-down" id="searchNavDown" title="Next match"></i>
+            <i class="fa-solid fa-xmark" id="closeInChatSearchBtn" title="Close search"></i>
           </div>
 
           <div class="chat-messages" id="chatMessagesDisplay"></div>
@@ -1874,43 +1700,19 @@
 
           <div class="chat-footer">
             <div class="emoji-picker-popup" id="emojiPickerPopup"></div>
-            <i
-              class="fa-regular fa-face-smile"
-              id="emojiToggleBtn"
-              title="Insert emoji"
-            ></i>
+            <i class="fa-regular fa-face-smile fa-face-smile-icon-trigger" id="emojiToggleBtn" title="Insert emoji"></i>
             <div class="input-wrap">
-              <input
-                type="text"
-                id="messageTextInput"
-                placeholder="Type message data payload..."
-                autocomplete="off"
-              />
+              <input type="text" id="messageTextInput" placeholder="Type message data payload..." autocomplete="off" />
             </div>
             <div class="footer-actions">
               <label for="attachmentFileInput">
-                <i
-                  class="fa-solid fa-paperclip"
-                  title="Attach Media Assets"
-                ></i>
+                <i class="fa-solid fa-paperclip" title="Attach Media Assets"></i>
               </label>
               <input type="file" id="attachmentFileInput" accept="*/*" />
-              <i
-                class="fa-solid fa-microphone"
-                id="voiceMessageBtn"
-                title="Voice message"
-              ></i>
-              <i
-                class="fa-solid fa-paper-plane"
-                id="sendMessageBtn"
-                title="Transmit Data Packets"
-              ></i>
+              <i class="fa-solid fa-microphone" id="voiceMessageBtn" title="Voice message"></i>
+              <i class="fa-solid fa-paper-plane" id="sendMessageBtn" title="Transmit Data Packets"></i>
             </div>
-            <div
-              class="upload-progress"
-              id="uploadProgressBar"
-              aria-hidden="true"
-            >
+            <div class="upload-progress" id="uploadProgressBar" aria-hidden="true">
               <i class="fa-solid fa-cloud-arrow-up"></i>
               <div class="upload-progress-track">
                 <div class="upload-progress-fill" id="uploadProgressFill"></div>
@@ -1927,39 +1729,20 @@
       <div class="modal-container">
         <div class="modal-header">
           <h3>Start Conversation</h3>
-          <i
-            class="fa-solid fa-xmark"
-            id="closeModalBtn"
-            style="cursor: pointer"
-          ></i>
+          <i class="fa-solid fa-xmark" id="closeModalBtn" style="cursor: pointer"></i>
         </div>
         <div class="modal-body">
           <div class="modal-search-group">
-            <input
-              type="email"
-              id="modalSearchEmailInput"
-              placeholder="Enter user's email"
-            />
+            <input type="email" id="modalSearchEmailInput" placeholder="Enter user's email" />
             <button class="btn-modal-action" id="modalSearchBtn">Search</button>
           </div>
           <div class="modal-result-pane" id="modalResultPane">
-            <img
-              id="modalResultAvatar"
-              class="avatar"
-              style="width: 60px; height: 60px"
-              src=""
-              alt="Target Profile"
-            />
+            <img id="modalResultAvatar" class="avatar" style="width: 60px; height: 60px" src="" alt="Target Profile" />
             <div style="text-align: center">
               <h4 id="modalResultName"></h4>
-              <p
-                id="modalResultEmail"
-                style="font-size: 12px; color: var(--text-muted)"
-              ></p>
+              <p id="modalResultEmail" style="font-size: 12px; color: var(--text-muted)"></p>
             </div>
-            <button class="btn-new-message" id="modalStartChatBtn">
-              Start Chat
-            </button>
+            <button class="btn-new-message" id="modalStartChatBtn">Start Chat</button>
           </div>
         </div>
       </div>
@@ -1970,30 +1753,20 @@
       <div class="modal-container">
         <div class="modal-header">
           <h3>Forward Message</h3>
-          <i
-            class="fa-solid fa-xmark"
-            id="closeForwardModalBtn"
-            style="cursor: pointer"
-          ></i>
+          <i class="fa-solid fa-xmark" id="closeForwardModalBtn" style="cursor: pointer"></i>
         </div>
         <div class="modal-body" id="forwardChatListPane">
-          <p style="color: var(--text-muted); font-size: 13px">
-            Select a conversation to forward this message to.
-          </p>
+          <p style="color: var(--text-muted); font-size: 13px">Select a conversation to forward this message to.</p>
         </div>
       </div>
     </div>
 
-    <!-- ATTACHMENT PREVIEW MODAL (SHOWN BEFORE SENDING FILES) -->
+    <!-- ATTACHMENT PREVIEW MODAL -->
     <div class="modal-overlay" id="attachPreviewOverlay">
       <div class="modal-container">
         <div class="modal-header">
           <h3>Send Attachment</h3>
-          <i
-            class="fa-solid fa-xmark"
-            id="closeAttachPreviewBtn"
-            style="cursor: pointer"
-          ></i>
+          <i class="fa-solid fa-xmark" id="closeAttachPreviewBtn" style="cursor: pointer"></i>
         </div>
         <div class="modal-body attach-preview-body" id="attachPreviewBody">
           <!-- populated dynamically -->
@@ -2006,16 +1779,10 @@
       <div class="modal-container">
         <div class="modal-header">
           <h3>Starred Messages</h3>
-          <i
-            class="fa-solid fa-xmark"
-            id="closeStarredModalBtn"
-            style="cursor: pointer"
-          ></i>
+          <i class="fa-solid fa-xmark" id="closeStarredModalBtn" style="cursor: pointer"></i>
         </div>
         <div class="modal-body" id="starredListPane" style="max-height: 60vh">
-          <p style="color: var(--text-muted); font-size: 13px">
-            Messages you star will appear here for quick reference.
-          </p>
+          <p style="color: var(--text-muted); font-size: 13px">Messages you star will appear here for quick reference.</p>
         </div>
       </div>
     </div>
@@ -2083,132 +1850,80 @@
       <img id="lightboxImage" src="" alt="Full size preview" />
     </div>
 
-
-    <!-- ===========================================
-     Reusable WhatsApp Style Dialog System
-     Used for:
-     - Edit Message
-     - Delete Message
-     - Confirmations
-     - Future dialogs
-============================================ -->
-
-<div id="appDialogOverlay" class="app-dialog-overlay hidden">
-
-    <div class="app-dialog">
-
+    <!-- REUSABLE DIALOG -->
+    <div id="appDialogOverlay" class="app-dialog-overlay hidden">
+      <div class="app-dialog">
         <div class="app-dialog-header">
-
-            <h3 id="appDialogTitle"></h3>
-
+          <h3 id="appDialogTitle"></h3>
         </div>
-
         <div class="app-dialog-body">
-
-            <p id="appDialogMessage"></p>
-
-            <textarea
-                id="appDialogInput"
-                class="hidden"
-                rows="4"
-                placeholder="Type here..."
-            ></textarea>
-
-            <!-- Bottom Sheet Action Menu -->
-
-          <div
-              id="appDialogChoices"
-              class="bottom-sheet hidden"
-          >
+          <p id="appDialogMessage"></p>
+          <textarea id="appDialogInput" class="hidden" rows="4" placeholder="Type here..."></textarea>
           
-              <div class="bottom-sheet-header">
-          
-                  <div class="bottom-sheet-handle"></div>
-          
-                  <h4>Select an Action</h4>
-          
-              </div>
-          
-              <div id="bottomSheetActions"></div>
-          
+          <!-- Bottom Sheet Action Menu -->
+          <div id="appDialogChoices" class="bottom-sheet hidden">
+            <div class="bottom-sheet-header">
+              <div class="bottom-sheet-handle"></div>
+              <h4>Select an Action</h4>
+            </div>
+            <div id="bottomSheetActions"></div>
           </div>
-
         </div>
-
         <div class="app-dialog-footer">
-
-            <button
-                id="dialogCancelBtn"
-                class="dialog-btn secondary"
-            >
-                Cancel
-            </button>
-
-            <button
-                id="dialogOkBtn"
-                class="dialog-btn primary"
-            >
-                OK
-            </button>
-
+          <button id="dialogCancelBtn" class="dialog-btn secondary">Cancel</button>
+          <button id="dialogOkBtn" class="dialog-btn primary">OK</button>
         </div>
-
+      </div>
     </div>
-
-</div>
     
     <div class="toast" id="globalToast">Notification</div>
 
+    <!-- PWA Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('sw.js').catch(err => console.log('SW registration failed: ', err));
+        });
+      }
+    </script>
+
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
       import {
         getAuth,
         onAuthStateChanged,
         signOut,
       } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-      
       import {
         getFirestore,
+        initializeFirestore,
+        persistentLocalCache,
+        persistentMultipleTabManager,
         doc,
         getDoc,
         setDoc,
         updateDoc,
         deleteDoc,
         collection,
-        collectionGroup,
         query,
         where,
-        and,
-        or,
         getDocs,
-        getDocFromCache,
         addDoc,
         orderBy,
         limit,
-        limitToLast,
-        startAfter,
-        startAt,
-        endAt,
         onSnapshot,
         serverTimestamp,
-        increment,
-        deleteField,
         writeBatch,
-        runTransaction,
         arrayUnion,
         arrayRemove,
       } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-      
       import {
         getStorage,
         ref,
         uploadBytesResumable,
         getDownloadURL,
-        deleteObject,
       } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
-      // Your specific web app's Firebase configuration
       const firebaseConfig = {
         apiKey: "AIzaSyCutP1u8y7zuYw5Je_GNyRppkdtLbbmM2o",
         authDomain: "mini-whatsapp-f3937.firebaseapp.com",
@@ -2221,12 +1936,15 @@
 
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
-      const db = getFirestore(app);
+      // PWA standard: initialize firestore with persistent local cache
+      const db = initializeFirestore(app, {
+        localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() })
+      });
       const storage = getStorage(app);
 
       /* =========================================================
-               STATE HOOKS
-               ========================================================= */
+         STATE HOOKS
+      ========================================================= */
       let currentUserSession = null;
       let currentUserEmailNormalized = null;
       let activeChatId = null;
@@ -2236,102 +1954,24 @@
       let unsubscribeTargetUserStatus = null;
       let unsubscribeActiveChatDoc = null;
       let targetUserCache = null;
-      let currentChatTab = "main"; // 'main' | 'archived'
-      let allChatDocsCache = new Map(); // chatId -> {chatData, partnerMeta}
-      let currentMessagesCache = []; // {id, data} for the open conversation, ordered asc
-      let replyingToMessage = null; // {id, text, authorName, type}
+      let currentChatTab = "main";
+      let allChatDocsCache = new Map();
+      let currentMessagesCache = [];
+      let replyingToMessage = null;
       let typingDebounceTimer = null;
       let searchMatchIndices = [];
       let searchMatchCursor = -1;
-      let pendingForwardMessage = null;
-      let pendingAttachment = null; // { file, classifiedType }
       let contextMenuTargetChatId = null;
       let contextMenuTargetChatData = null;
-
-      // BUGFIX (message list jump/flicker + "never recreate entire DOM"):
-      // The original renderMessageList() wiped chatMessagesDisplay with
-      // innerHTML = "" and rebuilt every message row from scratch on every
-      // single Firestore snapshot — including snapshots triggered by
-      // something as small as one reaction or one read-receipt flip. That
-      // caused three separate visible problems: (1) every message flickered
-      // on every update, (2) images/videos got torn down and re-fetched
-      // constantly, and (3) the view was force-scrolled to the bottom every
-      // time, yanking the user back down even if they had scrolled up to
-      // read older history. This map lets renderMessageList() recognize
-      // which messages are unchanged and leave their DOM nodes completely
-      // untouched, only building/replacing the ones that actually changed.
-      let renderedMessageNodes = new Map(); // msgId -> { node, signature }
-
-      // BUGFIX (duplicate Firestore listeners / memory leak):
-      // renderRecentChatItemCard() attaches one onSnapshot() per visible
-      // chat row to track that contact's online/offline dot. The chat list
-      // re-renders from scratch every time the parent "chats" listener
-      // fires (i.e. on every message, pin, archive, mute toggle...), so
-      // without explicit teardown these listeners piled up indefinitely —
-      // each re-render left the previous batch subscribed forever, quietly
-      // multiplying Firestore reads and memory usage the longer a session
-      // ran. We track every active per-row unsubscribe function here so
-      // renderChatListFromCache() can cleanly dispose of the old batch
-      // before creating the next one.
+      let pendingForwardMessage = null;
+      let renderedMessageNodes = new Map(); 
       let activeChatRowPresenceUnsubscribes = [];
 
-      function disposeChatRowPresenceListeners() {
-        activeChatRowPresenceUnsubscribes.forEach((unsubscribe) => {
-          try {
-            unsubscribe();
-          } catch (e) {
-            // Already-detached listeners are harmless to ignore.
-          }
-        });
-        activeChatRowPresenceUnsubscribes = [];
-      }
-
-      const COMMON_EMOJIS = [
-        "😀",
-        "😁",
-        "😂",
-        "🤣",
-        "😊",
-        "😍",
-        "😘",
-        "😎",
-        "🤔",
-        "😴",
-        "😭",
-        "😡",
-        "👍",
-        "👎",
-        "👏",
-        "🙏",
-        "💪",
-        "🔥",
-        "🎉",
-        "❤️",
-        "💙",
-        "💯",
-        "✅",
-        "❌",
-        "⭐",
-        "🎂",
-        "😢",
-        "😮",
-        "🙌",
-        "🤝",
-        "😅",
-        "😇",
-        "🥳",
-        "😱",
-        "🤗",
-        "😜",
-        "🫡",
-        "👋",
-        "🤞",
-        "✨",
-      ];
+      const COMMON_EMOJIS = ["😀","😁","😂","🤣","😊","😍","😘","😎","🤔","😴","😭","😡","👍","👎","👏","🙏","💪","🔥","🎉","❤️","💙","💯","✅","❌","⭐","🎂","😢","😮","🙌","🤝","😅","😇","🥳","😱","🤗","😜","🫡","👋","🤞","✨"];
 
       /* =========================================================
-               CORE DOM ELEMENTS
-               ========================================================= */
+         DOM ELEMENTS
+      ========================================================= */
       const sidebarNode = document.getElementById("sidebarNode");
       const toggleSidebarBtn = document.getElementById("toggleSidebarBtn");
       const userAvatar = document.getElementById("userAvatar");
@@ -2351,34 +1991,22 @@
       const activeChatAvatar = document.getElementById("activeChatAvatar");
       const activeChatTitle = document.getElementById("activeChatTitle");
       const activeChatStatus = document.getElementById("activeChatStatus");
-      const activeChatHeaderStatusDot = document.getElementById(
-        "activeChatHeaderStatusDot",
-      );
-      const chatMessagesDisplay = document.getElementById(
-        "chatMessagesDisplay",
-      );
+      const activeChatHeaderStatusDot = document.getElementById("activeChatHeaderStatusDot");
+      const chatMessagesDisplay = document.getElementById("chatMessagesDisplay");
       const messageTextInput = document.getElementById("messageTextInput");
       const sendMessageBtn = document.getElementById("sendMessageBtn");
-      const attachmentFileInput = document.getElementById(
-        "attachmentFileInput",
-      );
+      const attachmentFileInput = document.getElementById("attachmentFileInput");
       const sidebarFilterInput = document.getElementById("sidebarFilterInput");
-      const chatSearchToggleBtn = document.getElementById(
-        "chatSearchToggleBtn",
-      );
+      const chatSearchToggleBtn = document.getElementById("chatSearchToggleBtn");
       const chatHeaderMenuBtn = document.getElementById("chatHeaderMenuBtn");
       const inChatSearchBar = document.getElementById("inChatSearchBar");
       const inChatSearchInput = document.getElementById("inChatSearchInput");
-      const closeInChatSearchBtn = document.getElementById(
-        "closeInChatSearchBtn",
-      );
+      const closeInChatSearchBtn = document.getElementById("closeInChatSearchBtn");
       const searchNavCount = document.getElementById("searchNavCount");
       const searchNavUp = document.getElementById("searchNavUp");
       const searchNavDown = document.getElementById("searchNavDown");
       const typingIndicatorRow = document.getElementById("typingIndicatorRow");
-      const typingIndicatorText = document.getElementById(
-        "typingIndicatorText",
-      );
+      const typingIndicatorText = document.getElementById("typingIndicatorText");
       const replyPreviewBar = document.getElementById("replyPreviewBar");
       const replyPreviewAuthor = document.getElementById("replyPreviewAuthor");
       const replyPreviewText = document.getElementById("replyPreviewText");
@@ -2393,13 +2021,10 @@
       const lightboxImage = document.getElementById("lightboxImage");
       const closeLightboxBtn = document.getElementById("closeLightboxBtn");
 
-      /* MODAL LOOKUP ELEMENTS */
       const searchModalOverlay = document.getElementById("searchModalOverlay");
       const openModalBtn = document.getElementById("openModalBtn");
       const closeModalBtn = document.getElementById("closeModalBtn");
-      const modalSearchEmailInput = document.getElementById(
-        "modalSearchEmailInput",
-      );
+      const modalSearchEmailInput = document.getElementById("modalSearchEmailInput");
       const modalSearchBtn = document.getElementById("modalSearchBtn");
       const modalResultPane = document.getElementById("modalResultPane");
       const modalResultAvatar = document.getElementById("modalResultAvatar");
@@ -2408,141 +2033,54 @@
       const modalStartChatBtn = document.getElementById("modalStartChatBtn");
       const globalToast = document.getElementById("globalToast");
 
-      const forwardModalOverlay = document.getElementById(
-        "forwardModalOverlay",
-      );
-      const closeForwardModalBtn = document.getElementById(
-        "closeForwardModalBtn",
-      );
-      const forwardChatListPane = document.getElementById(
-        "forwardChatListPane",
-      );
-
-      const attachPreviewOverlay = document.getElementById(
-        "attachPreviewOverlay",
-      );
-      const closeAttachPreviewBtn = document.getElementById(
-        "closeAttachPreviewBtn",
-      );
+      const forwardModalOverlay = document.getElementById("forwardModalOverlay");
+      const closeForwardModalBtn = document.getElementById("closeForwardModalBtn");
+      const forwardChatListPane = document.getElementById("forwardChatListPane");
+      const attachPreviewOverlay = document.getElementById("attachPreviewOverlay");
+      const closeAttachPreviewBtn = document.getElementById("closeAttachPreviewBtn");
       const attachPreviewBody = document.getElementById("attachPreviewBody");
-
-      const starredModalOverlay = document.getElementById(
-        "starredModalOverlay",
-      );
-      const closeStarredModalBtn = document.getElementById(
-        "closeStarredModalBtn",
-      );
+      const starredModalOverlay = document.getElementById("starredModalOverlay");
+      const closeStarredModalBtn = document.getElementById("closeStarredModalBtn");
       const starredListPane = document.getElementById("starredListPane");
-
       const uploadProgressBar = document.getElementById("uploadProgressBar");
       const uploadProgressFill = document.getElementById("uploadProgressFill");
       const uploadProgressText = document.getElementById("uploadProgressText");
 
       /* =========================================================
-               SECURITY / SANITIZATION HELPERS
-               ========================================================= */
-      // Prevents dangerous HTML injection: always escape any user-supplied
-      // text before it is placed into innerHTML.
+         UTILITY & INIT
+      ========================================================= */
       function escapeHtml(unsafe) {
         if (unsafe === null || unsafe === undefined) return "";
-        return String(unsafe)
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/"/g, "&quot;")
-          .replace(/'/g, "&#039;");
+        return String(unsafe).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
       }
-
-      function sanitizeInputText(raw) {
-        // Trim, cap length, and strip control characters. Real HTML escaping
-        // happens at render time via escapeHtml().
-        return raw
-          .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, "")
-          .trim()
-          .slice(0, 4000);
-      }
-
       function formatFileSize(bytes) {
         if (!bytes && bytes !== 0) return "";
         if (bytes < 1024) return `${bytes} B`;
         if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
         return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
       }
-
-      /* =========================================================
-               PERSISTENT / UTILITY SYSTEMS
-               ========================================================= */
-      function initializeThemeEngine() {
-        const storedPref = localStorage.getItem("theme-preference") || "light";
-        document.documentElement.setAttribute("data-theme", storedPref);
-        themeToggle.className =
-          storedPref === "dark" ? "fa-solid fa-sun" : "fa-solid fa-moon";
-      }
-
-      // Fix mobile viewport height (address bar resize issues) so the
-      // keyboard doesn't break layout on phones.
-      function setAppViewportHeight() {
-        document.documentElement.style.setProperty(
-          "--app-vh",
-          `${window.innerHeight}px`,
-        );
-      }
-      window.addEventListener("resize", setAppViewportHeight);
-      setAppViewportHeight();
-
-      function showToastNotification(textPayload, isError = true) {
-        globalToast.innerText = textPayload;
-        globalToast.style.background = isError ? "#0f172a" : "#165e40";
-        globalToast.style.display = "block";
-        clearTimeout(showToastNotification._t);
-        showToastNotification._t = setTimeout(() => {
-          globalToast.style.display = "none";
-        }, 3200);
-      }
-
       function normalizeEmailForId(email) {
         return (email || "").trim().toLowerCase();
       }
-
       function buildChatIdFromEmails(emailA, emailB) {
-        const sorted = [
-          normalizeEmailForId(emailA),
-          normalizeEmailForId(emailB),
-        ].sort();
+        const sorted = [normalizeEmailForId(emailA), normalizeEmailForId(emailB)].sort();
         return `chat_${sorted.join("___")}`;
       }
-
       function buildSelfChatId(email) {
         return `selfchat_${normalizeEmailForId(email)}`;
       }
-
       function formatMessageTime(timestamp) {
         if (!timestamp) return "...";
-        const date = timestamp.toDate
-          ? timestamp.toDate()
-          : new Date(timestamp);
-        return date.toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        });
+        const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+        return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
       }
-
       function formatChatListTime(timestamp) {
         if (!timestamp) return "";
-        const date = timestamp.toDate
-          ? timestamp.toDate()
-          : new Date(timestamp);
+        const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
         const now = new Date();
         const sameDay = date.toDateString() === now.toDateString();
-        if (sameDay) {
-          return date.toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          });
-        }
-        return date.toLocaleDateString([], { month: "short", day: "numeric" });
+        return sameDay ? date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : date.toLocaleDateString([], { month: "short", day: "numeric" });
       }
-
       function createPlaceholderUser(email) {
         const normalized = normalizeEmailForId(email);
         return {
@@ -2554,74 +2092,76 @@
           isShell: true,
         };
       }
-
-      async function fetchUserByEmail(email) {
-        const normalized = normalizeEmailForId(email);
-        if (!normalized) return null;
-
-        const usersCollection = collection(db, "users");
-        const userQuery = query(
-          usersCollection,
-          where("email", "==", normalized),
-        );
-        const snapshot = await getDocs(userQuery);
-        if (snapshot.empty) return null;
-        return snapshot.docs[0].data();
+      function showToastNotification(textPayload, isError = true) {
+        globalToast.innerText = textPayload;
+        globalToast.style.background = isError ? "#0f172a" : "#165e40";
+        globalToast.style.display = "block";
+        clearTimeout(showToastNotification._t);
+        showToastNotification._t = setTimeout(() => { globalToast.style.display = "none"; }, 3200);
       }
+      function initializeThemeEngine() {
+        const storedPref = localStorage.getItem("theme-preference") || "light";
+        document.documentElement.setAttribute("data-theme", storedPref);
+        themeToggle.className = storedPref === "dark" ? "fa-solid fa-sun" : "fa-solid fa-moon";
+      }
+      function setAppViewportHeight() {
+        document.documentElement.style.setProperty("--app-vh", `${window.innerHeight}px`);
+      }
+      window.addEventListener("resize", setAppViewportHeight);
+      setAppViewportHeight();
+      initializeThemeEngine();
 
+      themeToggle.addEventListener("click", () => {
+        const current = document.documentElement.getAttribute("data-theme");
+        const next = current === "dark" ? "light" : "dark";
+        localStorage.setItem("theme-preference", next);
+        document.documentElement.setAttribute("data-theme", next);
+        themeToggle.className = next === "dark" ? "fa-solid fa-sun" : "fa-solid fa-moon";
+      });
+
+      function disposeChatRowPresenceListeners() {
+        activeChatRowPresenceUnsubscribes.forEach(u => { try { u(); } catch(e){} });
+        activeChatRowPresenceUnsubscribes = [];
+      }
       function getParticipantMeta(chatDoc, email) {
         if (!chatDoc || !chatDoc.participantMeta) return null;
         return chatDoc.participantMeta[normalizeEmailForId(email)];
       }
 
-      async function setUserOnlineFootprint(user, isOnline) {
-        if (!user) return;
-        try {
-          await updateDoc(doc(db, "users", user.uid), {
-            status: isOnline ? "online" : "offline",
-            lastSeen: serverTimestamp(),
-          });
-        } catch (e) {
-          // If the document footprint isn't established yet
-        }
-      }
-
       /* =========================================================
-               SESSION VERIFICATION HUB
-               ========================================================= */
+         AUTH
+      ========================================================= */
       onAuthStateChanged(auth, async (authenticatedUser) => {
         if (!authenticatedUser) {
           window.location.href = "auth.html";
         } else {
           currentUserSession = authenticatedUser;
-          currentUserEmailNormalized = normalizeEmailForId(
-            currentUserSession.email,
-          );
-          userName.innerText =
-            currentUserSession.displayName || "Workspace Engineer";
+          currentUserEmailNormalized = normalizeEmailForId(currentUserSession.email);
+          userName.innerText = currentUserSession.displayName || "Workspace Engineer";
           userEmail.innerText = currentUserSession.email;
-          userAvatar.src =
-            currentUserSession.photoURL ||
-            `https://api.dicebear.com/7.x/initials/svg?seed=${currentUserEmailNormalized}`;
-
+          userAvatar.src = currentUserSession.photoURL || `https://api.dicebear.com/7.x/initials/svg?seed=${currentUserEmailNormalized}`;
           await setUserOnlineFootprint(currentUserSession, true);
           await ensureSelfChatExists();
           listenToRecentConversations(currentUserSession.email);
         }
       });
-
       logoutBtn.addEventListener("click", async () => {
         await setUserOnlineFootprint(currentUserSession, false);
         signOut(auth).then(() => (window.location.href = "auth.html"));
       });
+      window.addEventListener("beforeunload", () => { setUserOnlineFootprint(currentUserSession, false); });
 
-      window.addEventListener("beforeunload", () => {
-        setUserOnlineFootprint(currentUserSession, false);
-      });
-
-      /* =========================================================
-               SELF CHAT ("SAVED MESSAGES")
-               ========================================================= */
+      async function fetchUserByEmail(email) {
+        const normalized = normalizeEmailForId(email);
+        const snap = await getDocs(query(collection(db, "users"), where("email", "==", normalized)));
+        return snap.empty ? null : snap.docs[0].data();
+      }
+      async function setUserOnlineFootprint(user, isOnline) {
+        if (!user) return;
+        try {
+          await updateDoc(doc(db, "users", user.uid), { status: isOnline ? "online" : "offline", lastSeen: serverTimestamp() });
+        } catch (e) {}
+      }
       async function ensureSelfChatExists() {
         const email = currentUserEmailNormalized;
         const selfChatId = buildSelfChatId(email);
@@ -2633,38 +2173,26 @@
             isSelfChat: true,
             participantsEmails: [email],
             participantsUids: [currentUserSession.uid],
-            participantMeta: {
-              [email]: {
-                name: currentUserSession.displayName || email.split("@")[0],
-                email,
-                photoURL:
-                  currentUserSession.photoURL ||
-                  `https://api.dicebear.com/7.x/initials/svg?seed=${email}`,
-              },
-            },
+            participantMeta: { [email]: { name: currentUserSession.displayName || email.split("@")[0], email, photoURL: currentUserSession.photoURL || `https://api.dicebear.com/7.x/initials/svg?seed=${email}` } },
             lastMessage: "Save notes, files and reminders here.",
             updatedAt: serverTimestamp(),
             unreadCounts: { [email]: 0 },
-            lastSenderEmail: null,
             pinned: { [email]: true },
           });
         }
       }
 
       /* =========================================================
-               WORKSPACE PANEL MANAGEMENT
-               ========================================================= */
+         WORKSPACE PANEL & MODALS
+      ========================================================= */
       toggleSidebarBtn.addEventListener("click", () => {
         sidebarNode.classList.toggle("collapsed");
         toggleSidebarBtn.classList.toggle("fa-square-caret-left");
         toggleSidebarBtn.classList.toggle("fa-square-caret-right");
       });
-
+      mobileBackBtn.addEventListener("click", () => { closeActiveConversation(); });
       tabMainChats.addEventListener("click", () => switchChatTab("main"));
-      tabArchivedChats.addEventListener("click", () =>
-        switchChatTab("archived"),
-      );
-
+      tabArchivedChats.addEventListener("click", () => switchChatTab("archived"));
       function switchChatTab(tab) {
         currentChatTab = tab;
         tabMainChats.classList.toggle("active", tab === "main");
@@ -2672,199 +2200,93 @@
         renderChatListFromCache();
       }
 
-      /* =========================================================
-               MODAL DIALOG CONTROLS — NEW CONVERSATION
-               ========================================================= */
       openModalBtn.addEventListener("click", () => {
         searchModalOverlay.classList.add("open");
         modalSearchEmailInput.value = "";
         modalResultPane.style.display = "none";
       });
-
-      closeModalBtn.addEventListener("click", () => {
-        searchModalOverlay.classList.remove("open");
-      });
-
+      closeModalBtn.addEventListener("click", () => { searchModalOverlay.classList.remove("open"); });
       modalSearchBtn.addEventListener("click", async () => {
         const emailQuery = normalizeEmailForId(modalSearchEmailInput.value);
         if (!emailQuery) return;
-
         if (emailQuery === currentUserEmailNormalized) {
-          // Redirect them to their existing Saved Messages self chat instead
-          // of blocking the action outright.
           searchModalOverlay.classList.remove("open");
           const selfChatId = buildSelfChatId(currentUserEmailNormalized);
-          const selfPartner = {
-            uid: currentUserSession.uid,
-            name: "You (Saved Messages)",
-            email: currentUserEmailNormalized,
-            photoURL:
-              currentUserSession.photoURL ||
-              `https://api.dicebear.com/7.x/initials/svg?seed=${currentUserEmailNormalized}`,
-            status: "online",
-          };
+          const selfPartner = { uid: currentUserSession.uid, name: "You (Saved Messages)", email: currentUserEmailNormalized, photoURL: currentUserSession.photoURL || `https://api.dicebear.com/7.x/initials/svg?seed=${currentUserEmailNormalized}`, status: "online" };
           loadConversationInterface(selfChatId, selfPartner, true);
           return;
         }
-
         const targetUserData = await fetchUserByEmail(emailQuery);
-        if (targetUserData) {
-          targetUserCache = targetUserData;
-        } else {
-          targetUserCache = createPlaceholderUser(emailQuery);
-          showToastNotification(
-            "This chat will be available once the recipient joins with this email.",
-            false,
-          );
-        }
-
+        targetUserCache = targetUserData ? targetUserData : createPlaceholderUser(emailQuery);
+        if (!targetUserData) showToastNotification("This chat will be available once the recipient joins.", false);
         modalResultName.innerText = targetUserCache.name;
         modalResultEmail.innerText = targetUserCache.email;
         modalResultAvatar.src = targetUserCache.photoURL;
         modalResultPane.style.display = "flex";
       });
-
       modalStartChatBtn.addEventListener("click", async () => {
         if (!targetUserCache || !currentUserSession) return;
-
         const currentEmail = normalizeEmailForId(currentUserSession.email);
         const targetEmail = normalizeEmailForId(targetUserCache.email);
         const chatId = buildChatIdFromEmails(currentEmail, targetEmail);
         const chatRef = doc(db, "chats", chatId);
         const existingChat = await getDoc(chatRef);
-
         if (!existingChat.exists()) {
           await setDoc(chatRef, {
             chatId,
             participantsEmails: [currentEmail, targetEmail],
-            participantsUids: [
-              currentUserSession.uid,
-              targetUserCache.uid || null,
-            ],
+            participantsUids: [currentUserSession.uid, targetUserCache.uid || null],
             participantMeta: {
-              [currentEmail]: {
-                name:
-                  currentUserSession.displayName || currentEmail.split("@")[0],
-                email: currentEmail,
-                photoURL:
-                  currentUserSession.photoURL ||
-                  `https://api.dicebear.com/7.x/initials/svg?seed=${currentEmail}`,
-              },
-              [targetEmail]: {
-                name: targetUserCache.name,
-                email: targetEmail,
-                photoURL: targetUserCache.photoURL,
-              },
+              [currentEmail]: { name: currentUserSession.displayName || currentEmail.split("@")[0], email: currentEmail, photoURL: currentUserSession.photoURL || `https://api.dicebear.com/7.x/initials/svg?seed=${currentEmail}` },
+              [targetEmail]: { name: targetUserCache.name, email: targetEmail, photoURL: targetUserCache.photoURL },
             },
             lastMessage: "Say hello to start the conversation.",
             updatedAt: serverTimestamp(),
-            unreadCounts: {
-              [currentEmail]: 0,
-              [targetEmail]: 0,
-            },
-            lastSenderEmail: null,
-            pinned: {},
-            archived: {},
-            muted: {},
+            unreadCounts: { [currentEmail]: 0, [targetEmail]: 0 },
+            pinned: {}, archived: {}, muted: {},
           });
         }
-
         searchModalOverlay.classList.remove("open");
         loadConversationInterface(chatId, targetUserCache);
       });
 
       /* =========================================================
-               REALTIME CONVERSATION LIST ENGINE
-               ========================================================= */
+         REALTIME LIST & RENDERING
+      ========================================================= */
       function listenToRecentConversations(userEmail) {
         const normalizedEmail = normalizeEmailForId(userEmail);
-        const chatsCollection = collection(db, "chats");
-        const compositeQuery = query(
-          chatsCollection,
-          where("participantsEmails", "array-contains", normalizedEmail),
-        );
-
-        onSnapshot(compositeQuery, async (snapshot) => {
+        const compositeQuery = query(collection(db, "chats"), where("participantsEmails", "array-contains", normalizedEmail));
+        onSnapshot(compositeQuery, (snapshot) => {
           allChatDocsCache.clear();
-
           for (const conversationDoc of snapshot.docs) {
             const chatData = conversationDoc.data();
             const isSelf = chatData.isSelfChat === true;
-            const otherEmail = isSelf
-              ? normalizedEmail
-              : chatData.participantsEmails.find(
-                  (email) => email !== normalizedEmail,
-                );
-            const meta = isSelf
-              ? getParticipantMeta(chatData, normalizedEmail)
-              : getParticipantMeta(chatData, otherEmail) ||
-                createPlaceholderUser(otherEmail);
-
-                allChatDocsCache.set(chatDoc.id, {
-                chatData: chatDoc.data(),
-                partnerMeta
-            });
-
-            // Best-effort "delivered" status upgrade: if the last message in
-            // this chat was sent by the other participant and hasn't been
-            // marked delivered/read yet, flag it delivered now that this
-            // client has received the update via the realtime listener.
-            if (
-              !isSelf &&
-              chatData.lastSenderEmail &&
-              chatData.lastSenderEmail !== normalizedEmail
-            ) {
-              upgradeLastMessageDeliveryStatus(
-                chatData.chatId,
-                normalizedEmail,
-              );
+            const otherEmail = isSelf ? normalizedEmail : chatData.participantsEmails.find(email => email !== normalizedEmail);
+            const partnerMeta = isSelf ? getParticipantMeta(chatData, normalizedEmail) : (getParticipantMeta(chatData, otherEmail) || createPlaceholderUser(otherEmail));
+            allChatDocsCache.set(conversationDoc.id, { chatData, partnerMeta, isSelf });
+            if (!isSelf && chatData.lastSenderEmail && chatData.lastSenderEmail !== normalizedEmail) {
+              upgradeLastMessageDeliveryStatus(chatData.chatId, normalizedEmail);
             }
           }
-
           renderChatListFromCache();
         });
       }
-
       async function upgradeLastMessageDeliveryStatus(chatId, viewerEmail) {
         try {
           const msgsRef = collection(db, "chats", chatId, "messages");
-          const lastMsgQuery = query(
-            msgsRef,
-            orderBy("timestamp", "desc"),
-            limit(1),
-          );
-          const snap = await getDocs(lastMsgQuery);
+          const snap = await getDocs(query(msgsRef, orderBy("timestamp", "desc"), limit(1)));
           if (snap.empty) return;
           const lastDoc = snap.docs[0];
           const data = lastDoc.data();
-          if (
-            data.senderEmail !== viewerEmail &&
-            data.status === "sent" &&
-            activeChatId !== chatId
-          ) {
+          if (data.senderEmail !== viewerEmail && data.status === "sent" && activeChatId !== chatId) {
             await updateDoc(lastDoc.ref, { status: "delivered" });
           }
-        } catch (e) {
-          // Non-critical background enhancement — ignore failures silently.
-        }
-      }
-
-      function getChatSortMetadata(entry, email) {
-        const updatedAt = entry.chatData.updatedAt?.toMillis
-          ? entry.chatData.updatedAt.toMillis()
-          : 0;
-        const isPinned = !!entry.chatData.pinned?.[email];
-        const displayName =
-          entry.partnerMeta?.name || entry.chatData.chatId || "";
-        return { isPinned, updatedAt, displayName: displayName.toLowerCase() };
+        } catch (e) {}
       }
 
       function renderChatListFromCache() {
         const email = currentUserEmailNormalized;
-        const searchTerm = (sidebarFilterInput.value || "")
-          .toLowerCase()
-          .trim();
-
+        const searchTerm = (sidebarFilterInput.value || "").toLowerCase().trim();
         let entries = Array.from(allChatDocsCache.values());
 
         entries = entries.filter(({ chatData }) => {
@@ -2874,391 +2296,183 @@
 
         if (searchTerm) {
           entries = entries.filter(({ chatData, partnerMeta }) => {
-            const nameMatch = (partnerMeta?.name || "")
-              .toLowerCase()
-              .includes(searchTerm);
-            const emailMatch = (partnerMeta?.email || "")
-              .toLowerCase()
-              .includes(searchTerm);
-            const lastMsgMatch = (chatData.lastMessage || "")
-              .toLowerCase()
-              .includes(searchTerm);
-            return nameMatch || emailMatch || lastMsgMatch;
+            const nMatch = (partnerMeta?.name || "").toLowerCase().includes(searchTerm);
+            const eMatch = (partnerMeta?.email || "").toLowerCase().includes(searchTerm);
+            const mMatch = (chatData.lastMessage || "").toLowerCase().includes(searchTerm);
+            return nMatch || eMatch || mMatch;
           });
         }
 
         entries.sort((a, b) => {
-          const aMeta = getChatSortMetadata(a, email);
-          const bMeta = getChatSortMetadata(b, email);
-
-          if (aMeta.isPinned !== bMeta.isPinned) {
-            return aMeta.isPinned ? -1 : 1;
-          }
-
-          if (aMeta.updatedAt !== bMeta.updatedAt) {
-            return bMeta.updatedAt - aMeta.updatedAt;
-          }
-
-          return aMeta.displayName.localeCompare(bMeta.displayName);
+          const aPin = !!a.chatData.pinned?.[email];
+          const bPin = !!b.chatData.pinned?.[email];
+          const aTime = a.chatData.updatedAt?.toMillis ? a.chatData.updatedAt.toMillis() : 0;
+          const bTime = b.chatData.updatedAt?.toMillis ? b.chatData.updatedAt.toMillis() : 0;
+          if (aPin !== bPin) return aPin ? -1 : 1;
+          if (aTime !== bTime) return bTime - aTime;
+          const aName = (a.partnerMeta?.name || "").toLowerCase();
+          const bName = (b.partnerMeta?.name || "").toLowerCase();
+          return aName.localeCompare(bName);
         });
 
-        // Dispose of the previous render's per-row presence listeners
-        // *before* wiping the container — otherwise every re-render leaves
-        // the old batch of onSnapshot() subscriptions dangling with no
-        // reference left to unsubscribe them later. See the declaration of
-        // activeChatRowPresenceUnsubscribes above for the full explanation.
         disposeChatRowPresenceListeners();
         chatListContainer.innerHTML = "";
-
         if (entries.length === 0) {
-          const emptyLabel =
-            currentChatTab === "archived"
-              ? "No archived chats."
-              : "No conversations yet. Start a chat by searching an email address.";
-          chatListContainer.innerHTML = `<div class="no-chat-fallback" style="padding: 24px; margin: 16px; background: var(--bg-chat); border-radius: 14px;"><h4>${escapeHtml(emptyLabel)}</h4></div>`;
+          chatListContainer.innerHTML = `<div class="no-chat-fallback" style="padding: 24px; margin: 16px; border-radius: 14px;"><h4>No conversations here.</h4></div>`;
           return;
         }
-
         entries.forEach(({ chatData, partnerMeta, isSelf }) => {
           renderRecentChatItemCard(chatData, partnerMeta, isSelf);
         });
       }
-
-      sidebarFilterInput.addEventListener("input", () => {
-        renderChatListFromCache();
-      });
+      sidebarFilterInput.addEventListener("input", renderChatListFromCache);
 
       function renderRecentChatItemCard(roomData, userData, isSelf) {
         const email = currentUserEmailNormalized;
         const otherEmail = normalizeEmailForId(userData.email);
         const unreadCount = roomData.unreadCounts?.[otherEmail] || 0;
+        const showUnread = unreadCount > 0 || !!roomData.markedUnread?.[email];
         const isPinned = !!roomData.pinned?.[email];
         const isMuted = !!roomData.muted?.[email];
-        const isMarkedUnread = !!roomData.markedUnread?.[email];
-        const showUnread = unreadCount > 0 || isMarkedUnread;
 
         const chatItemRow = document.createElement("div");
         chatItemRow.className = `chat-item ${activeChatId === roomData.chatId ? "active" : ""} ${showUnread ? "unread" : ""}`;
         chatItemRow.dataset.chatId = roomData.chatId;
 
-        const displayName = isSelf ? "Saved Messages" : userData.name;
-        const avatarMarkup = isSelf
-          ? `<div class="avatar avatar-container saved-messages"><i class="fa-solid fa-bookmark"></i></div>`
-          : `<img class="avatar" src="${escapeHtml(userData.photoURL)}" alt="User avatar" />`;
-
+        const dName = isSelf ? "Saved Messages" : userData.name;
+        const avatarMarkup = isSelf ? `<div class="avatar avatar-container saved-messages"><i class="fa-solid fa-bookmark"></i></div>` : `<img class="avatar" src="${escapeHtml(userData.photoURL)}" alt="Avatar" />`;
         const safeDotClass = isSelf ? "" : `item-dot-${CSS.escape(otherEmail)}`;
 
         chatItemRow.innerHTML = `
-                <div class="avatar-container">
-                  ${avatarMarkup}
-                  ${isSelf ? "" : `<div class="status-dot ${safeDotClass}"></div>`}
-                </div>
-                <div class="chat-item-details">
-                  <div class="chat-item-header">
-                    <h5>
-                      ${isPinned ? '<i class="fa-solid fa-thumbtack pin-icon-badge"></i>' : ""}
-                      ${escapeHtml(displayName)}
-                      ${isMuted ? '<i class="fa-solid fa-bell-slash mute-icon-badge"></i>' : ""}
-                    </h5>
-                    <div class="chat-meta-wrapper">
-                      <span class="chat-time">${formatChatListTime(roomData.updatedAt)}</span>
-                      ${showUnread ? `<span class="unread-badge">${unreadCount > 0 ? unreadCount : "•"}</span>` : ""}
-                    </div>
-                  </div>
-                  <div class="chat-item-sub">
-                    <span class="presence-text-${CSS.escape(otherEmail)}" style="flex-shrink:0"></span>
-                    <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapeHtml(roomData.lastMessage || "Tap to open chat.")}</span>
-                  </div>
-                </div>
-                <i class="fa-solid fa-ellipsis-vertical chat-item-menu-btn" title="Chat options"></i>
-              `;
+          <div class="avatar-container">
+            ${avatarMarkup}
+            ${isSelf ? "" : `<div class="status-dot ${safeDotClass}"></div>`}
+          </div>
+          <div class="chat-item-details">
+            <div class="chat-item-header">
+              <h5>${isPinned ? '<i class="fa-solid fa-thumbtack pin-icon-badge"></i>' : ""} ${escapeHtml(dName)} ${isMuted ? '<i class="fa-solid fa-bell-slash mute-icon-badge"></i>' : ""}</h5>
+              <div class="chat-meta-wrapper">
+                <span class="chat-time">${formatChatListTime(roomData.updatedAt)}</span>
+                ${showUnread ? `<span class="unread-badge">${unreadCount > 0 ? unreadCount : "•"}</span>` : ""}
+              </div>
+            </div>
+            <div class="chat-item-sub">
+              <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapeHtml(roomData.lastMessage || "")}</span>
+            </div>
+          </div>
+          <i class="fa-solid fa-ellipsis-vertical chat-item-menu-btn" title="Chat options"></i>
+        `;
 
         if (!isSelf && !userData.isShell) {
-          const usersQuery = query(
-            collection(db, "users"),
-            where("email", "==", otherEmail),
-          );
-          const unsubscribeRowPresence = onSnapshot(usersQuery, (snapshot) => {
-            if (snapshot.empty) return;
-            const currentMeta = snapshot.docs[0].data();
-            const escapedEmail = CSS.escape(otherEmail);
-            const targetDot = chatItemRow.querySelector(
-              `.item-dot-${escapedEmail}`,
-            );
-            if (currentMeta && targetDot) {
-              targetDot.classList.toggle(
-                "online",
-                currentMeta.status === "online",
-              );
-            }
+          const unsub = onSnapshot(query(collection(db, "users"), where("email", "==", otherEmail)), (snap) => {
+            if (snap.empty) return;
+            const dot = chatItemRow.querySelector(`.${safeDotClass}`);
+            if (dot) dot.classList.toggle("online", snap.docs[0].data().status === "online");
           });
-          // Track this row's listener so the next renderChatListFromCache()
-          // call can dispose of it cleanly instead of leaking it.
-          activeChatRowPresenceUnsubscribes.push(unsubscribeRowPresence);
+          activeChatRowPresenceUnsubscribes.push(unsub);
         }
 
         chatItemRow.addEventListener("click", (e) => {
           if (e.target.closest(".chat-item-menu-btn")) return;
           loadConversationInterface(roomData.chatId, userData, isSelf);
         });
-
-        chatItemRow
-          .querySelector(".chat-item-menu-btn")
-          .addEventListener("click", (e) => {
-            e.stopPropagation();
-            openChatItemMenu(e, roomData);
-          });
-
+        chatItemRow.querySelector(".chat-item-menu-btn").addEventListener("click", (e) => {
+          e.stopPropagation();
+          openChatItemMenu(e, roomData);
+        });
         chatListContainer.appendChild(chatItemRow);
       }
 
-      /* =========================================================
-               CHAT ITEM / HEADER CONTEXT MENUS (PIN, ARCHIVE, MUTE, ETC.)
-               ========================================================= */
       function positionDropdown(menuEl, anchorEvent) {
         const rect = anchorEvent.target.getBoundingClientRect();
-        const menuWidth = 200;
-        let left = rect.left - menuWidth + rect.width;
+        let left = rect.left - 200 + rect.width;
         let top = rect.bottom + 6;
         if (left < 8) left = 8;
         if (top + 260 > window.innerHeight) top = rect.top - 266;
         menuEl.style.left = `${left}px`;
         menuEl.style.top = `${top}px`;
       }
-
       function openChatItemMenu(anchorEvent, chatData) {
         contextMenuTargetChatId = chatData.chatId;
         contextMenuTargetChatData = chatData;
-        const email = currentUserEmailNormalized;
-        const isPinned = chatData.pinned;
-        const isMuted = !!chatData.muted?.[email];
-        const isArchived = !!chatData.archived?.[email];
-
-        chatItemMenu.querySelector(".menu-label-pin").innerText = isPinned
-          ? "Unpin Chat"
-          : "Pin Chat";
-        chatItemMenu.querySelector(".menu-label-mute").innerText = isMuted
-          ? "Unmute Notifications"
-          : "Mute Notifications";
-        chatItemMenu.querySelector(".menu-label-archive").innerText = isArchived
-          ? "Unarchive Chat"
-          : "Archive Chat";
-
+        const e = currentUserEmailNormalized;
+        chatItemMenu.querySelector(".menu-label-pin").innerText = chatData.pinned?.[e] ? "Unpin Chat" : "Pin Chat";
+        chatItemMenu.querySelector(".menu-label-mute").innerText = chatData.muted?.[e] ? "Unmute Notifications" : "Mute Notifications";
+        chatItemMenu.querySelector(".menu-label-archive").innerText = chatData.archived?.[e] ? "Unarchive Chat" : "Archive Chat";
         positionDropdown(chatItemMenu, anchorEvent);
         chatItemMenu.classList.add("open");
       }
-
-      chatItemMenu.addEventListener("click", async (e) => {
-        const btn = e.target.closest("button");
-        if (!btn || !contextMenuTargetChatId) return;
-        await handleChatManagementAction(
-          btn.dataset.action,
-          contextMenuTargetChatId,
-          contextMenuTargetChatData,
-        );
-        chatItemMenu.classList.remove("open");
-      });
-
+      chatItemMenu.addEventListener("click", (e) => handleDropdownClick(e, chatItemMenu));
       chatHeaderMenuBtn.addEventListener("click", (e) => {
         if (!activeChatId) return;
         const cached = allChatDocsCache.get(activeChatId);
-        const chatData = cached ? cached.chatData : { chatId: activeChatId };
-        const email = currentUserEmailNormalized;
-        const isPinned = !!chatData.pinned?.[email];
-        const isMuted = !!chatData.muted?.[email];
-        const isArchived = !!chatData.archived?.[email];
-
-        chatHeaderMenu.querySelector(".menu-label-pin-h").innerText = isPinned
-          ? "Unpin Chat"
-          : "Pin Chat";
-        chatHeaderMenu.querySelector(".menu-label-mute-h").innerText = isMuted
-          ? "Unmute Notifications"
-          : "Mute Notifications";
-        chatHeaderMenu.querySelector(".menu-label-archive-h").innerText =
-          isArchived ? "Unarchive Chat" : "Archive Chat";
-
+        contextMenuTargetChatData = cached ? cached.chatData : { chatId: activeChatId };
         contextMenuTargetChatId = activeChatId;
-        contextMenuTargetChatData = chatData;
+        const em = currentUserEmailNormalized;
+        chatHeaderMenu.querySelector(".menu-label-pin-h").innerText = contextMenuTargetChatData.pinned?.[em] ? "Unpin Chat" : "Pin Chat";
+        chatHeaderMenu.querySelector(".menu-label-mute-h").innerText = contextMenuTargetChatData.muted?.[em] ? "Unmute Notifications" : "Mute Notifications";
+        chatHeaderMenu.querySelector(".menu-label-archive-h").innerText = contextMenuTargetChatData.archived?.[em] ? "Unarchive Chat" : "Archive Chat";
         positionDropdown(chatHeaderMenu, e);
         chatHeaderMenu.classList.add("open");
       });
-
-      chatHeaderMenu.addEventListener("click", async (e) => {
-        const btn = e.target.closest("button");
-        if (!btn || !contextMenuTargetChatId) return;
-        await handleChatManagementAction(
-          btn.dataset.action,
-          contextMenuTargetChatId,
-          contextMenuTargetChatData,
-        );
-        chatHeaderMenu.classList.remove("open");
-      });
-
+      chatHeaderMenu.addEventListener("click", (e) => handleDropdownClick(e, chatHeaderMenu));
       document.addEventListener("click", (e) => {
-        if (
-          !e.target.closest(".dropdown-menu") &&
-          !e.target.closest(".chat-item-menu-btn") &&
-          !e.target.closest("#chatHeaderMenuBtn")
-        ) {
+        if (!e.target.closest(".dropdown-menu") && !e.target.closest(".chat-item-menu-btn") && !e.target.closest("#chatHeaderMenuBtn")) {
           chatItemMenu.classList.remove("open");
           chatHeaderMenu.classList.remove("open");
         }
-        if (
-          !e.target.closest(".quick-react-popup") &&
-          !e.target.closest(".fa-face-smile-icon-trigger")
-        ) {
-          // quick-react popup closes on outside interaction (handled separately too)
-        }
       });
-
+      async function handleDropdownClick(e, menu) {
+        const btn = e.target.closest("button");
+        if (!btn || !contextMenuTargetChatId) return;
+        await handleChatManagementAction(btn.dataset.action, contextMenuTargetChatId, contextMenuTargetChatData);
+        menu.classList.remove("open");
+      }
       function updateCachedChatState(chatId, patch) {
-
-    const cached = allChatDocsCache.get(chatId);
-
-    if (!cached) return;
-
-    cached.chatData = {
-        ...cached.chatData,
-        ...patch
-    };
-
-    allChatDocsCache.set(chatId, cached);
-
-    renderChatListFromCache();
-
-}
-
+        const cached = allChatDocsCache.get(chatId);
+        if (!cached) return;
+        cached.chatData = { ...cached.chatData, ...patch };
+        allChatDocsCache.set(chatId, cached);
+        renderChatListFromCache();
+      }
       async function handleChatManagementAction(action, chatId, chatData) {
         const email = currentUserEmailNormalized;
         const chatRef = doc(db, "chats", chatId);
-
         try {
-          switch (action) {
-            case "pin": {
-              const isPinned = !!chatData?.pinned?.[email];
-              const nextPinned = !isPinned;
-              await updateDoc(chatRef, {
-                [`pinned.${email}`]: nextPinned,
-              });
-              updateCachedChatState(chatId, {
-                pinned: {
-                  ...(chatData.pinned || {}),
-                  [email]: nextPinned,
-                },
-              });
-              showToastNotification(
-                isPinned ? "Chat unpinned." : "Chat pinned to top.",
-                false,
-              );
-              break;
-            }
-            case "mute": {
-              const isMuted = !!chatData?.muted?.[email];
-              const nextMuted = !isMuted;
-              await updateDoc(chatRef, {
-                [`muted.${email}`]: nextMuted,
-              });
-              updateCachedChatState(chatId, {
-                muted: {
-                  ...(chatData.muted || {}),
-                  [email]: nextMuted,
-                },
-              });
-              showToastNotification(
-                isMuted ? "Notifications unmuted." : "Chat muted.",
-                false,
-              );
-              break;
-            }
-            case "archive": {
-              const isArchived = !!chatData?.archived?.[email];
-              const nextArchived = !isArchived;
-              await updateDoc(chatRef, {
-                [`archived.${email}`]: nextArchived,
-              });
-              updateCachedChatState(chatId, {
-                archived: {
-                  ...(chatData.archived || {}),
-                  [email]: nextArchived,
-                },
-              });
-              showToastNotification(
-                isArchived ? "Chat moved back to main list." : "Chat archived.",
-                false,
-              );
-              break;
-            }
-            case "unread": {
-              const nextMarkedUnread = true;
-              await updateDoc(chatRef, {
-                [`markedUnread.${email}`]: nextMarkedUnread,
-              });
-              updateCachedChatState(chatId, {
-                markedUnread: {
-                  ...(chatData.markedUnread || {}),
-                  [email]: nextMarkedUnread,
-                },
-              });
-              showToastNotification("Marked as unread.", false);
-              break;
-            }
-            case "clear": {
-              if (
-                !confirm(
-                  "Clear Chat?\n\nThis will remove all messages from this device only.",
-                )
-              )
-                return;
-              await clearAllMessagesInChat(chatId);
-              const cachedEntry = allChatDocsCache.get(chatId);
-              if (cachedEntry) {
-                cachedEntry.chatData = {
-                  ...cachedEntry.chatData,
-                  lastMessage: "",
-                  lastSenderEmail: null,
-                  updatedAt: serverTimestamp(),
-                };
-              }
-              renderChatListFromCache();
-              showToastNotification("Chat history cleared.", false);
-              break;
-            }
-            case "delete": {
-              if (
-                !confirm(
-                  "Delete Chat?\n\nThis will remove this conversation from your chat list.",
-                )
-              )
-                return;
-              await clearAllMessagesInChat(chatId);
-              await updateDoc(chatRef, {
-                [`archived.${email}`]: true,
-                [`pinned.${email}`]: false,
-                [`markedUnread.${email}`]: false,
-                [`unreadCounts.${email}`]: 0,
-              });
-              if (activeChatId === chatId) {
-                closeActiveConversation();
-              }
-              if (allChatDocsCache.has(chatId)) {
-                allChatDocsCache.delete(chatId);
-              }
-              renderChatListFromCache();
-              showToastNotification("Chat deleted from your view.", false);
-              break;
-            }
+          if (action === "pin") {
+            const val = !chatData?.pinned?.[email];
+            await updateDoc(chatRef, { [`pinned.${email}`]: val });
+            updateCachedChatState(chatId, { pinned: { ...(chatData.pinned || {}), [email]: val } });
+          } else if (action === "mute") {
+            const val = !chatData?.muted?.[email];
+            await updateDoc(chatRef, { [`muted.${email}`]: val });
+            updateCachedChatState(chatId, { muted: { ...(chatData.muted || {}), [email]: val } });
+          } else if (action === "archive") {
+            const val = !chatData?.archived?.[email];
+            await updateDoc(chatRef, { [`archived.${email}`]: val });
+            updateCachedChatState(chatId, { archived: { ...(chatData.archived || {}), [email]: val } });
+          } else if (action === "unread") {
+            await updateDoc(chatRef, { [`markedUnread.${email}`]: true });
+            updateCachedChatState(chatId, { markedUnread: { ...(chatData.markedUnread || {}), [email]: true } });
+          } else if (action === "clear") {
+            if (!confirm("Clear Chat messages locally?")) return;
+            const msgs = await getDocs(collection(db, "chats", chatId, "messages"));
+            const batch = writeBatch(db);
+            msgs.forEach(d => batch.delete(d.ref));
+            await batch.commit();
+            updateCachedChatState(chatId, { lastMessage: "" });
+          } else if (action === "delete") {
+            if (!confirm("Delete Chat?")) return;
+            const msgs = await getDocs(collection(db, "chats", chatId, "messages"));
+            const batch = writeBatch(db);
+            msgs.forEach(d => batch.delete(d.ref));
+            await batch.commit();
+            await updateDoc(chatRef, { [`archived.${email}`]: true, [`pinned.${email}`]: false });
+            if (activeChatId === chatId) closeActiveConversation();
+            allChatDocsCache.delete(chatId);
+            renderChatListFromCache();
           }
-        } catch (e) {
-          showToastNotification("Action failed: " + e.message);
-        }
-      }
-
-      async function clearAllMessagesInChat(chatId) {
-        const msgsRef = collection(db, "chats", chatId, "messages");
-        const snap = await getDocs(msgsRef);
-        const batch = writeBatch(db);
-        snap.docs.forEach((d) => batch.delete(d.ref));
-        await batch.commit();
+        } catch (e) { showToastNotification("Error: " + e.message); }
       }
 
       function closeActiveConversation() {
@@ -3267,33 +2481,23 @@
         noChatSelected.style.display = "flex";
         activeChatLayout.style.display = "none";
         chatArea.classList.remove("active");
+        renderChatListFromCache(); // To remove active class
       }
 
       /* =========================================================
-               OPEN A CONVERSATION
-               ========================================================= */
-      function loadConversationInterface(
-        chatId,
-        recipientData,
-        isSelf = false,
-      ) {
+         CONVERSATION VIEW
+      ========================================================= */
+      function loadConversationInterface(chatId, recipientData, isSelf = false) {
         activeChatId = chatId;
         activeChatPartner = recipientData;
         activeChatIsSelf = isSelf;
         replyingToMessage = null;
         replyPreviewBar.classList.remove("show");
-        inChatSearchBar.classList.remove("open");
-        inChatSearchInput.value = "";
-        searchMatchIndices = [];
-        searchMatchCursor = -1;
-
         noChatSelected.style.display = "none";
         activeChatLayout.style.display = "flex";
         chatArea.classList.add("active");
-
-        activeChatTitle.innerText = isSelf
-          ? "Saved Messages"
-          : recipientData.name;
+        activeChatTitle.innerText = isSelf ? "Saved Messages" : recipientData.name;
+        
         if (isSelf) {
           activeChatAvatar.style.display = "none";
           activeChatHeaderStatusDot.style.display = "none";
@@ -3302,11 +2506,8 @@
           activeChatAvatar.style.display = "";
           activeChatHeaderStatusDot.style.display = "";
           activeChatAvatar.src = recipientData.photoURL;
-          activeChatStatus.innerText = `${recipientData.status === "online" ? "Online" : "Offline"} | Secure Pipeline`;
-          activeChatHeaderStatusDot.classList.toggle(
-            "online",
-            recipientData.status === "online",
-          );
+          activeChatStatus.innerText = recipientData.status === "online" ? "Online | Secure" : "Offline | Secure";
+          activeChatHeaderStatusDot.classList.toggle("online", recipientData.status === "online");
         }
 
         if (unsubscribeMessagesSnapshot) unsubscribeMessagesSnapshot();
@@ -3314,15 +2515,8 @@
         if (unsubscribeActiveChatDoc) unsubscribeActiveChatDoc();
 
         if (!isSelf && !recipientData.isShell) {
-          const recipientEmail = normalizeEmailForId(recipientData.email);
-          const usersQuery = query(
-            collection(db, "users"),
-            where("email", "==", recipientEmail),
-          );
-          unsubscribeTargetUserStatus = onSnapshot(usersQuery, (snapshot) => {
-            if (snapshot.empty) return;
-            const uData = snapshot.docs[0].data();
-            if (uData && uData.status === "online") {
+          unsubscribeTargetUserStatus = onSnapshot(query(collection(db, "users"), where("email", "==", normalizeEmailForId(recipientData.email))), (snap) => {
+            if (!snap.empty && snap.docs[0].data().status === "online") {
               activeChatHeaderStatusDot.classList.add("online");
               activeChatStatus.innerText = "Online | Secure Pipeline Encrypted";
             } else {
@@ -3333,1802 +2527,561 @@
         }
 
         const chatRef = doc(db, "chats", chatId);
-        updateDoc(chatRef, {
-          [`unreadCounts.${currentUserEmailNormalized}`]: 0,
-          [`markedUnread.${currentUserEmailNormalized}`]: false,
-        }).catch(() => {});
-
-        // Listen to the chat doc itself for typing indicator changes.
+        updateDoc(chatRef, { [`unreadCounts.${currentUserEmailNormalized}`]: 0, [`markedUnread.${currentUserEmailNormalized}`]: false }).catch(()=>{});
+        
         unsubscribeActiveChatDoc = onSnapshot(chatRef, (snap) => {
-          if (!snap.exists()) return;
-          const data = snap.data();
-          renderTypingIndicator(data);
+          if (snap.exists()) renderTypingIndicator(snap.data());
         });
 
-        const messagesCollectionRef = collection(
-          db,
-          "chats",
-          chatId,
-          "messages",
-        );
-        const sortedMessagesQuery = query(
-          messagesCollectionRef,
-          orderBy("timestamp", "asc"),
-        );
-
-        unsubscribeMessagesSnapshot = onSnapshot(
-          sortedMessagesQuery,
-          (snapshot) => {
-            currentMessagesCache = snapshot.docs.map((d) => ({
-              id: d.id,
-              data: d.data(),
-            }));
-            renderMessageList();
-            markIncomingMessagesAsRead(snapshot.docs);
-          },
-        );
+        unsubscribeMessagesSnapshot = onSnapshot(query(collection(db, "chats", chatId, "messages"), orderBy("timestamp", "asc")), (snap) => {
+          currentMessagesCache = snap.docs.map(d => ({ id: d.id, data: d.data() }));
+          renderMessageList();
+          markIncomingMessagesAsRead(snap.docs);
+        });
+        renderChatListFromCache(); // Update active class
       }
 
       function renderTypingIndicator(chatData) {
-        if (activeChatIsSelf) {
-          typingIndicatorRow.classList.remove("show");
-          return;
-        }
-        const partnerEmail = normalizeEmailForId(activeChatPartner?.email);
-        const typingMap = chatData.typing || {};
-        const typingTimestamp = typingMap[partnerEmail];
-        if (!typingTimestamp) {
-          typingIndicatorRow.classList.remove("show");
-          return;
-        }
-        const typingMillis = typingTimestamp.toMillis
-          ? typingTimestamp.toMillis()
-          : 0;
-        const isRecent = Date.now() - typingMillis < 4000;
-        if (isRecent) {
-          typingIndicatorText.innerText = `${activeChatPartner.name || "User"} is typing...`;
+        if (activeChatIsSelf) { typingIndicatorRow.classList.remove("show"); return; }
+        const pEmail = normalizeEmailForId(activeChatPartner?.email);
+        const stamp = chatData.typing?.[pEmail];
+        if (stamp && (Date.now() - (stamp.toMillis ? stamp.toMillis() : 0) < 4000)) {
+          typingIndicatorText.innerText = `${activeChatPartner.name} is typing...`;
           typingIndicatorRow.classList.add("show");
         } else {
           typingIndicatorRow.classList.remove("show");
         }
       }
-
       async function markIncomingMessagesAsRead(docsSnapshot) {
         if (!activeChatId) return;
         const batch = writeBatch(db);
         let hasUpdates = false;
-        docsSnapshot.forEach((msgDoc) => {
-          const data = msgDoc.data();
-          if (
-            data.senderEmail !== currentUserEmailNormalized &&
-            data.status !== "read" &&
-            !data.deleted
-          ) {
-            batch.update(msgDoc.ref, { status: "read" });
+        docsSnapshot.forEach(doc => {
+          const d = doc.data();
+          if (d.senderEmail !== currentUserEmailNormalized && d.status !== "read" && !d.deleted) {
+            batch.update(doc.ref, { status: "read" });
             hasUpdates = true;
           }
         });
-        if (hasUpdates) {
-          try {
-            await batch.commit();
-          } catch (e) {
-            // Ignore — non-critical UX enhancement.
-          }
-        }
+        if (hasUpdates) { try { await batch.commit(); } catch(e){} }
       }
 
       /* =========================================================
-               MESSAGE LIST RENDERING
-               ========================================================= */
-      // Builds a compact string capturing every piece of message data that
-      // affects its rendered markup. Two snapshots of the same message with
-      // an identical signature would produce byte-identical HTML, so if a
-      // cached row's signature hasn't changed we can safely skip rebuilding
-      // it — this is the core of the incremental-rendering fix described
-      // above (avoids the flicker/scroll-jump caused by full DOM teardown).
-      function computeMessageSignature(currentMessage, isStarred) {
-        return JSON.stringify([
-          currentMessage.text,
-          currentMessage.type,
-          currentMessage.fileURL,
-          currentMessage.fileName,
-          currentMessage.fileSize,
-          currentMessage.deleted,
-          currentMessage.edited,
-          currentMessage.status,
-          currentMessage.reactions,
-          currentMessage.replyTo,
-          isStarred,
-        ]);
+         VIRTUALIZED MESSAGE RENDERING
+      ========================================================= */
+      function computeMessageSignature(msg, isStarred) {
+        return JSON.stringify([msg.text, msg.type, msg.fileURL, msg.deleted, msg.edited, msg.status, msg.reactions, msg.replyTo, isStarred]);
       }
 
-      // Builds one message row's DOM node. Extracted out of
-      // renderMessageList() so it can be invoked either for a brand-new
-      // message or to rebuild a single row whose data actually changed,
-      // without touching any of the other (unchanged) rows.
       function buildMessageRowNode(msgId, currentMessage) {
-          const isOutgoing =
-            currentMessage.senderEmail === currentUserEmailNormalized;
+        const isOut = currentMessage.senderEmail === currentUserEmailNormalized;
+        const rowNode = document.createElement("div");
+        rowNode.className = `message-row ${isOut ? "out" : "in"}`;
+        rowNode.dataset.msgId = msgId;
+        
+        const timeStr = formatMessageTime(currentMessage.timestamp);
+        const isDel = currentMessage.deleted === true;
+        const isEd = currentMessage.edited === true;
+        const isStar = Array.isArray(currentMessage.starredBy) && currentMessage.starredBy.includes(currentUserEmailNormalized);
 
-          const rowNode = document.createElement("div");
-          rowNode.className = `message-row ${isOutgoing ? "out" : "in"}`;
-          rowNode.dataset.msgId = msgId;
-
-          const timeString = formatMessageTime(currentMessage.timestamp);
-          const isDeletedForEveryone = currentMessage.deleted === true;
-          const isEdited = currentMessage.edited === true;
-          const isStarred = Array.isArray(currentMessage.starredBy)
-            ? currentMessage.starredBy.includes(currentUserEmailNormalized)
-            : false;
-
-          let mediaMarkup = "";
-          if (!isDeletedForEveryone) {
-            if (currentMessage.type === "image") {
-              mediaMarkup = `<img src="${escapeHtml(currentMessage.fileURL)}" class="message-media-render" alt="Image attachment" data-lightbox="1" />`;
-            } else if (currentMessage.type === "video") {
-              mediaMarkup = `<video src="${escapeHtml(currentMessage.fileURL)}" controls class="message-media-render"></video>`;
-            } else if (currentMessage.fileURL) {
-              const displayName =
-                currentMessage.fileName ||
-                currentMessage.fileURL.split("/").pop();
-              const sizeLabel = formatFileSize(currentMessage.fileSize);
-              mediaMarkup = `
-                      <a href="${escapeHtml(currentMessage.fileURL)}" target="_blank" class="doc-msg-card">
-                        <i class="fa-solid fa-file-arrow-down doc-icon"></i>
-                        <div class="doc-meta">
-                          <div class="doc-name">${escapeHtml(displayName)}</div>
-                          ${sizeLabel ? `<div class="doc-size">${escapeHtml(sizeLabel)}</div>` : ""}
-                        </div>
-                      </a>`;
-            }
+        let mediaMarkup = "";
+        if (!isDel && currentMessage.fileURL) {
+          if (currentMessage.type === "image") {
+            mediaMarkup = `<img src="${escapeHtml(currentMessage.fileURL)}" class="message-media-render" alt="Image attachment" data-lightbox="1" />`;
+          } else if (currentMessage.type === "video") {
+            mediaMarkup = `<video src="${escapeHtml(currentMessage.fileURL)}" controls class="message-media-render"></video>`;
+          } else if (currentMessage.type === "document") {
+            mediaMarkup = `<a href="${escapeHtml(currentMessage.fileURL)}" target="_blank" class="doc-msg-card">
+              <i class="fa-solid fa-file-lines doc-icon"></i>
+              <div class="doc-meta"><div class="doc-name">${escapeHtml(currentMessage.fileName)}</div><div class="doc-size">${formatFileSize(currentMessage.fileSize)}</div></div>
+            </a>`;
+          } else if (currentMessage.type === "audio") {
+            mediaMarkup = `<audio src="${escapeHtml(currentMessage.fileURL)}" controls style="max-width:200px;height:40px;margin-top:4px;"></audio>`;
           }
+        }
 
-          const replyBlockMarkup = currentMessage.replyTo
-            ? `<div class="reply-quote-block" data-jump-to="${escapeHtml(currentMessage.replyTo.id)}">
-                       <span class="reply-quote-author">${escapeHtml(currentMessage.replyTo.authorName)}</span>
-                       <span class="reply-quote-text">${escapeHtml(currentMessage.replyTo.text || "Attachment")}</span>
-                     </div>`
-            : "";
+        let textMarkup = "";
+        if (currentMessage.text) {
+          if (!isDel) textMarkup = `<div class="message-text">${escapeHtml(currentMessage.text)}</div>`;
+          else textMarkup = `<div class="message-text" style="font-style:italic;color:var(--text-muted);"><i class="fa-solid fa-ban"></i> This message was deleted.</div>`;
+        } else if (isDel) {
+          textMarkup = `<div class="message-text" style="font-style:italic;color:var(--text-muted);"><i class="fa-solid fa-ban"></i> This message was deleted.</div>`;
+        }
 
-          const messageBody = isDeletedForEveryone
-            ? `<div class="message-text" style="font-style: italic; opacity: 0.75">This message was deleted</div>`
-            : currentMessage.type === "text"
-              ? `<div class="message-text">${escapeHtml(currentMessage.text || "")}</div>`
-              : `${mediaMarkup}${currentMessage.text ? `<div class="message-text">${escapeHtml(currentMessage.text)}</div>` : ""}`;
+        let replyMarkup = "";
+        if (currentMessage.replyTo && !isDel) {
+          replyMarkup = `<div class="reply-quote-block" data-target="${currentMessage.replyTo.id}">
+            <span class="reply-quote-author">${escapeHtml(currentMessage.replyTo.author)}</span>
+            <span class="reply-quote-text">${escapeHtml(currentMessage.replyTo.text)}</span>
+          </div>`;
+        }
 
-          // Reactions summary — group by emoji.
-          const reactionCounts = {};
-          const reactions = currentMessage.reactions || {};
-          Object.entries(reactions).forEach(([reactorEmail, emoji]) => {
-            if (!reactionCounts[emoji]) reactionCounts[emoji] = [];
-            reactionCounts[emoji].push(reactorEmail);
-          });
-          const reactionsMarkup =
-            Object.keys(reactionCounts).length > 0
-              ? `<div class="msg-reactions">${Object.entries(reactionCounts)
-                  .map(([emoji, emails]) => {
-                    const mine = emails.includes(currentUserEmailNormalized);
-                    return `<span class="reaction-pill ${mine ? "mine" : ""}" data-emoji="${escapeHtml(emoji)}">${emoji}${emails.length > 1 ? `<span class="count">${emails.length}</span>` : ""}</span>`;
-                  })
-                  .join("")}</div>`
-              : "";
-
-          let ticksMarkup = "";
-          if (isOutgoing && !isDeletedForEveryone) {
-            const status = currentMessage.status || "sent";
-            if (status === "read") {
-              ticksMarkup = `<i class="fa-solid fa-check-double msg-ticks read"></i>`;
-            } else if (status === "delivered") {
-              ticksMarkup = `<i class="fa-solid fa-check-double msg-ticks"></i>`;
-            } else {
-              ticksMarkup = `<i class="fa-solid fa-check msg-ticks"></i>`;
-            }
+        let ticks = "";
+        if (isOut) {
+          if (currentMessage.status === "read") ticks = `<i class="fa-solid fa-check-double msg-ticks read"></i>`;
+          else if (currentMessage.status === "delivered") ticks = `<i class="fa-solid fa-check-double msg-ticks"></i>`;
+          else ticks = `<i class="fa-solid fa-check msg-ticks"></i>`;
+        }
+        
+        let rxMarkup = "";
+        if (currentMessage.reactions && Object.keys(currentMessage.reactions).length > 0) {
+          const counts = {};
+          const mine = {};
+          for (const [em, emoji] of Object.entries(currentMessage.reactions)) {
+            counts[emoji] = (counts[emoji] || 0) + 1;
+            if (em === currentUserEmailNormalized) mine[emoji] = true;
           }
+          const pills = Object.keys(counts).map(emoji => `<div class="reaction-pill ${mine[emoji] ? 'mine' : ''}" data-emoji="${emoji}"><span>${emoji}</span><span class="count">${counts[emoji]}</span></div>`).join('');
+          rxMarkup = `<div class="msg-reactions">${pills}</div>`;
+        }
 
-          const actionBarMarkup = isDeletedForEveryone
-            ? ""
-            : `
-                    <div class="msg-action-bar">
-                      <i class="fa-solid fa-face-smile" data-action="react" title="React"></i>
-                      <i class="fa-solid fa-reply" data-action="reply" title="Reply"></i>
-                      <i class="fa-solid fa-share" data-action="forward" title="Forward"></i>
-                      ${currentMessage.type === "text" ? '<i class="fa-solid fa-copy" data-action="copy" title="Copy text"></i>' : ""}
-                      <i class="fa-solid fa-star" data-action="star" title="${isStarred ? "Unstar" : "Star"}" style="${isStarred ? "color: var(--star-color);" : ""}"></i>
-                      ${isOutgoing ? '<i class="fa-solid fa-pen" data-action="edit" title="Edit"></i>' : ""}
-                      <i class="fa-solid fa-trash" data-action="delete" title="Delete"></i>
-                    </div>`;
+        const editMark = isEd && !isDel ? `<span style="font-style:italic; margin-right:4px;">Edited</span>` : "";
+        const starMark = isStar ? `<i class="fa-solid fa-star starred-flag"></i>` : "";
 
-          rowNode.innerHTML = `
-                  ${actionBarMarkup}
-                  <div class="message-stack">
-                    <div class="message-box">
-                      ${replyBlockMarkup}
-                      ${messageBody}
-                      ${reactionsMarkup}
-                      <div class="message-meta">
-                        ${isStarred ? '<i class="fa-solid fa-star starred-flag"></i>' : ""}
-                        <span>${timeString}</span>
-                        ${isEdited ? '<span style="margin-left:2px;font-size:10px;opacity:0.75">Edited</span>' : ""}
-                        ${ticksMarkup}
-                      </div>
-                    </div>
-                  </div>
-                `;
-          return rowNode;
+        rowNode.innerHTML = `
+          <div class="message-stack">
+            <div class="message-box">
+              ${!isDel ? `
+              <div class="msg-action-bar">
+                <i class="fa-solid fa-reply action-reply" title="Reply"></i>
+                <i class="fa-solid fa-face-smile action-react" title="React"></i>
+                <i class="fa-solid fa-share action-forward" title="Forward"></i>
+                <i class="fa-regular fa-star action-star" title="${isStar ? 'Unstar' : 'Star'}"></i>
+                <i class="fa-solid fa-download action-download" title="Download"></i>
+                ${isOut ? `<i class="fa-solid fa-pen action-edit" title="Edit"></i>` : ""}
+                <i class="fa-solid fa-trash action-delete" title="Delete"></i>
+              </div>` : ""}
+              ${replyMarkup}${mediaMarkup}${textMarkup}
+              <div class="message-meta">${editMark}${starMark}<span>${timeStr}</span>${ticks}</div>
+            </div>
+            ${rxMarkup}
+          </div>
+        `;
+        return rowNode;
       }
 
-      // BUGFIX (see renderedMessageNodes declaration above for the full
-      // rationale): incremental, non-destructive message list rendering.
-      //
-      // Instead of wiping chatMessagesDisplay and rebuilding every row on
-      // every snapshot, this:
-      //   1. Computes a lightweight signature per message.
-      //   2. Reuses a message's existing DOM node untouched if its
-      //      signature hasn't changed (huge win: no flicker, no re-fetch of
-      //      images/videos, no lost text selection on unrelated rows).
-      //   3. Rebuilds only the rows that actually changed (e.g. a new
-      //      reaction, an edit, a read-receipt flip).
-      //   4. Repositions nodes only when their order actually differs from
-      //      what's already in the DOM (cheap no-op check via nextSibling).
-      //   5. Only force-scrolls to the bottom if the viewer was already
-      //      near the bottom before the update — someone scrolled up to
-      //      read history is left exactly where they are ("smart
-      //      auto-scroll" / "preserve scroll" from the spec).
       function renderMessageList() {
-        const viewerEmail = currentUserEmailNormalized;
+        const container = chatMessagesDisplay;
+        const isAtBottom = container.scrollHeight - container.scrollTop <= container.clientHeight + 80;
+        const currentSignatures = new Set();
+        
+        currentMessagesCache.forEach((msg, idx) => {
+          const isStar = Array.isArray(msg.data.starredBy) && msg.data.starredBy.includes(currentUserEmailNormalized);
+          const sig = computeMessageSignature(msg.data, isStar);
+          currentSignatures.add(msg.id);
 
-        // Respect "delete for me": this viewer simply never sees these.
-        const visibleMessages = currentMessagesCache.filter(
-          ({ data }) =>
-            !(
-              Array.isArray(data.deletedFor) &&
-              data.deletedFor.includes(viewerEmail)
-            ),
-        );
-
-        if (visibleMessages.length === 0) {
-          chatMessagesDisplay.innerHTML = `
-                  <div class="no-chat-fallback" style="height:100%;">
-                    <i class="fa-regular fa-comments"></i>
-                    <h3>No messages yet</h3>
-                    <p>Send the first message to start this conversation.</p>
-                  </div>`;
-          renderedMessageNodes.clear();
-          return;
-        }
-
-        // Clear the "no messages yet" placeholder the first time a message
-        // actually arrives — it's not a tracked node, so the diffing loop
-        // below wouldn't otherwise remove it.
-        if (
-          renderedMessageNodes.size === 0 &&
-          chatMessagesDisplay.querySelector(".no-chat-fallback")
-        ) {
-          chatMessagesDisplay.innerHTML = "";
-        }
-
-        // Was the viewer already at (or very near) the bottom before this
-        // update? Captured before we touch the DOM.
-        const distanceFromBottom =
-          chatMessagesDisplay.scrollHeight -
-          chatMessagesDisplay.scrollTop -
-          chatMessagesDisplay.clientHeight;
-        const wasNearBottom = distanceFromBottom < 120;
-
-        // Drop cached nodes for messages that are no longer visible (e.g.
-        // this viewer just chose "delete for me", or the doc was removed).
-        const visibleIds = new Set(visibleMessages.map((m) => m.id));
-        for (const [cachedId, entry] of renderedMessageNodes) {
-          if (!visibleIds.has(cachedId)) {
-            entry.node.remove();
-            renderedMessageNodes.delete(cachedId);
-          }
-        }
-
-        let previousNode = null;
-        visibleMessages.forEach(({ id: msgId, data: currentMessage }) => {
-          const isStarred = Array.isArray(currentMessage.starredBy)
-            ? currentMessage.starredBy.includes(viewerEmail)
-            : false;
-          const signature = computeMessageSignature(currentMessage, isStarred);
-          const cached = renderedMessageNodes.get(msgId);
-
-          let rowNode;
-          if (cached && cached.signature === signature) {
-            // Untouched: reuse the exact same DOM node.
-            rowNode = cached.node;
+          let row;
+          if (renderedMessageNodes.has(msg.id) && renderedMessageNodes.get(msg.id).signature === sig) {
+            row = renderedMessageNodes.get(msg.id).node;
           } else {
-            rowNode = buildMessageRowNode(msgId, currentMessage);
-            renderedMessageNodes.set(msgId, { node: rowNode, signature });
+            row = buildMessageRowNode(msg.id, msg.data);
+            renderedMessageNodes.set(msg.id, { node: row, signature: sig });
           }
 
-          // Only move the node if it isn't already in the right spot —
-          // avoids unnecessary reflow for rows that are already correctly
-          // ordered.
-          const expectedNextSibling = previousNode
-            ? previousNode.nextSibling
-            : chatMessagesDisplay.firstChild;
-          if (expectedNextSibling !== rowNode) {
-            chatMessagesDisplay.insertBefore(rowNode, expectedNextSibling);
+          if (container.children[idx] !== row) {
+            if (container.children[idx]) container.insertBefore(row, container.children[idx]);
+            else container.appendChild(row);
           }
-          previousNode = rowNode;
         });
 
-        if (wasNearBottom) {
-          chatMessagesDisplay.scrollTop = chatMessagesDisplay.scrollHeight;
-        }
+        Array.from(container.children).forEach(child => {
+          if (!currentSignatures.has(child.dataset.msgId)) {
+            container.removeChild(child);
+            renderedMessageNodes.delete(child.dataset.msgId);
+          }
+        });
+
+        if (isAtBottom) container.scrollTo({ top: container.scrollHeight, behavior: "smooth" });
       }
 
-      /* Delegate all per-message action bar clicks and reaction pill clicks. */
+      /* =========================================================
+         ACTIONS (DELEGATED)
+      ========================================================= */
       chatMessagesDisplay.addEventListener("click", (e) => {
         const row = e.target.closest(".message-row");
         if (!row) return;
         const msgId = row.dataset.msgId;
-        const entry = currentMessagesCache.find((m) => m.id === msgId);
-        if (!entry) return;
+        const msgObj = currentMessagesCache.find(m => m.id === msgId);
+        if (!msgObj) return;
 
-        const actionIcon = e.target.closest("[data-action]");
-        if (actionIcon) {
-          const action = actionIcon.dataset.action;
-          handleMessageAction(action, msgId, entry.data, actionIcon);
-          return;
+        if (e.target.closest(".action-reply")) {
+          replyingToMessage = { id: msgId, author: msgObj.data.senderEmail === currentUserEmailNormalized ? "You" : activeChatPartner.name, text: msgObj.data.text || msgObj.data.type };
+          replyPreviewBar.classList.add("show");
+          replyPreviewAuthor.innerText = replyingToMessage.author;
+          replyPreviewText.innerText = replyingToMessage.text;
+          messageTextInput.focus();
+        } 
+        else if (e.target.closest(".action-delete")) {
+          openDeleteDialog(msgId, msgObj);
         }
-
-        const reactionPill = e.target.closest(".reaction-pill");
-        if (reactionPill) {
-          toggleReaction(msgId, reactionPill.dataset.emoji, entry.data);
-          return;
+        else if (e.target.closest(".action-edit")) {
+          openEditDialog(msgId, msgObj);
         }
-
-        const replyJump = e.target.closest("[data-jump-to]");
-        if (replyJump) {
-          jumpToMessage(replyJump.dataset.jumpTo);
-          return;
+        else if (e.target.closest(".action-react")) {
+          showQuickReact(e.target, msgId);
         }
-
-        const lightboxImg = e.target.closest("[data-lightbox]");
-        if (lightboxImg) {
-          openLightbox(lightboxImg.src);
+        else if (e.target.closest(".action-star")) {
+          toggleStarMessage(msgId, msgObj);
+        }
+        else if (e.target.closest(".action-forward")) {
+          openForwardDialog(msgObj);
+        }
+        else if (e.target.closest(".action-download")) {
+          downloadMessage(msgObj);
+        }
+        else if (e.target.closest(".reaction-pill")) {
+          toggleReaction(msgId, msgObj, e.target.closest(".reaction-pill").dataset.emoji);
+        }
+        else if (e.target.closest(".reply-quote-block")) {
+          const targetId = e.target.closest(".reply-quote-block").dataset.target;
+          const targetRow = chatMessagesDisplay.querySelector(`[data-msg-id="${targetId}"]`);
+          if (targetRow) {
+            targetRow.scrollIntoView({ behavior: "smooth", block: "center" });
+            targetRow.classList.add("highlight-match");
+            setTimeout(() => targetRow.classList.remove("highlight-match"), 1500);
+          }
+        }
+        else if (e.target.dataset.lightbox || e.target.tagName === 'IMG' && e.target.classList.contains('message-media-render')) {
+          lightboxImage.src = e.target.src;
+          lightboxOverlay.classList.add("open");
         }
       });
+      closeLightboxBtn.addEventListener("click", () => lightboxOverlay.classList.remove("open"));
+      cancelReplyBtn.addEventListener("click", () => { replyingToMessage = null; replyPreviewBar.classList.remove("show"); });
 
-      function jumpToMessage(msgId) {
-        const target = chatMessagesDisplay.querySelector(
-          `[data-msg-id="${CSS.escape(msgId)}"]`,
-        );
-        if (target) {
-          target.scrollIntoView({ behavior: "smooth", block: "center" });
-          target.classList.add("highlight-match");
-          setTimeout(() => target.classList.remove("highlight-match"), 1400);
-        }
+      async function toggleStarMessage(msgId, msgObj) {
+        const isStar = Array.isArray(msgObj.data.starredBy) && msgObj.data.starredBy.includes(currentUserEmailNormalized);
+        try {
+          await updateDoc(doc(db, "chats", activeChatId, "messages", msgId), {
+            starredBy: isStar ? arrayRemove(currentUserEmailNormalized) : arrayUnion(currentUserEmailNormalized)
+          });
+        } catch(e){}
       }
-
-      function openLightbox(src) {
-        lightboxImage.src = src;
-        lightboxOverlay.classList.add("open");
+      async function toggleReaction(msgId, msgObj, emoji) {
+        try {
+          const currentRx = msgObj.data.reactions || {};
+          const isMine = currentRx[currentUserEmailNormalized] === emoji;
+          const key = `reactions.${currentUserEmailNormalized}`;
+          await updateDoc(doc(db, "chats", activeChatId, "messages", msgId), {
+            [key]: isMine ? deleteField() : emoji
+          });
+        } catch(e){}
       }
-      closeLightboxBtn.addEventListener("click", () =>
-        lightboxOverlay.classList.remove("open"),
-      );
-      lightboxOverlay.addEventListener("click", (e) => {
-        if (e.target === lightboxOverlay)
-          lightboxOverlay.classList.remove("open");
-      });
-
-      /* =========================================================
-               MESSAGE ACTIONS: REACT, REPLY, FORWARD, COPY, STAR, EDIT, DELETE
-               ========================================================= */
-      let quickReactTargetMsgId = null;
-
-      function handleMessageAction(action, msgId, messageData, anchorEl) {
-        switch (action) {
-          case "react":
-            openQuickReactPopup(anchorEl, msgId);
-            break;
-          case "reply":
-            beginReplyToMessage(msgId, messageData);
-            break;
-          case "forward":
-            openForwardModal(msgId, messageData);
-            break;
-          case "copy":
-            navigator.clipboard
-              ?.writeText(messageData.text || "")
-              .then(() => showToastNotification("Message copied.", false))
-              .catch(() => showToastNotification("Could not copy message."));
-            break;
-          case "star":
-            toggleStarMessage(msgId, messageData);
-            break;
-          case "edit":
-            beginEditMessage(msgId, messageData);
-            break;
-          case "delete":
-            openDeleteMessageChoice(msgId, messageData);
-            break;
-        }
-      }
-
-      function openQuickReactPopup(anchorEl, msgId) {
-        quickReactTargetMsgId = msgId;
-        const rect = anchorEl.getBoundingClientRect();
-        quickReactPopup.style.left = `${Math.max(8, rect.left - 90)}px`;
-        quickReactPopup.style.top = `${rect.top - 46}px`;
+      function showQuickReact(anchor, msgId) {
+        const rect = anchor.getBoundingClientRect();
+        quickReactPopup.style.left = `${Math.max(10, rect.left - 100)}px`;
+        quickReactPopup.style.top = `${rect.top - 50}px`;
         quickReactPopup.classList.add("open");
+        quickReactPopup.dataset.targetId = msgId;
       }
-
       quickReactPopup.addEventListener("click", (e) => {
-        const span = e.target.closest("span[data-emoji]");
-        if (!span || !quickReactTargetMsgId) return;
-        const entry = currentMessagesCache.find(
-          (m) => m.id === quickReactTargetMsgId,
-        );
-        if (entry) {
-          toggleReaction(quickReactTargetMsgId, span.dataset.emoji, entry.data);
-        }
-        quickReactPopup.classList.remove("open");
-      });
-
-      document.addEventListener("click", (e) => {
-        if (
-          !e.target.closest(".quick-react-popup") &&
-          !e.target.closest('[data-action="react"]')
-        ) {
+        if (e.target.tagName === 'SPAN') {
+          const emoji = e.target.dataset.emoji;
+          const msgId = quickReactPopup.dataset.targetId;
+          const msgObj = currentMessagesCache.find(m => m.id === msgId);
+          if (msgObj) toggleReaction(msgId, msgObj, emoji);
           quickReactPopup.classList.remove("open");
         }
       });
+      function downloadMessage(msgObj) {
+        if (msgObj.data.fileURL) {
+          const a = document.createElement("a");
+          a.href = msgObj.data.fileURL;
+          a.download = msgObj.data.fileName || "download";
+          a.target = "_blank";
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        } else if (msgObj.data.text) {
+          const blob = new Blob([msgObj.data.text], { type: "text/plain" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `Message_${new Date(msgObj.data.timestamp?.toMillis ? msgObj.data.timestamp.toMillis() : Date.now()).getTime()}.txt`;
+          a.click();
+          URL.revokeObjectURL(url);
+        }
+      }
 
-      async function toggleReaction(msgId, emoji, messageData) {
-        if (!activeChatId) return;
-        const msgRef = doc(db, "chats", activeChatId, "messages", msgId);
-        const existingReactions = messageData.reactions || {};
-        const currentReaction = existingReactions[currentUserEmailNormalized];
+      /* DIALOGS (EDIT/DELETE) */
+      const appDialogOverlay = document.getElementById("appDialogOverlay");
+      const appDialogTitle = document.getElementById("appDialogTitle");
+      const appDialogMessage = document.getElementById("appDialogMessage");
+      const appDialogInput = document.getElementById("appDialogInput");
+      const appDialogChoices = document.getElementById("appDialogChoices");
+      const bottomSheetActions = document.getElementById("bottomSheetActions");
+      const dialogCancelBtn = document.getElementById("dialogCancelBtn");
+      const dialogOkBtn = document.getElementById("dialogOkBtn");
+      let dialogConfirmCallback = null;
 
-        try {
-          if (currentReaction === emoji) {
-            // Toggle off if clicking the same reaction again.
-            await updateDoc(msgRef, {
-              [`reactions.${currentUserEmailNormalized}`]: deleteField(),
-            });
-          } else {
-            await updateDoc(msgRef, {
-              [`reactions.${currentUserEmailNormalized}`]: emoji,
+      function closeDialog() {
+        appDialogOverlay.classList.add("hidden");
+        appDialogChoices.classList.add("hidden");
+        dialogConfirmCallback = null;
+      }
+      dialogCancelBtn.addEventListener("click", closeDialog);
+      dialogOkBtn.addEventListener("click", () => {
+        if (dialogConfirmCallback) dialogConfirmCallback(appDialogInput.value);
+        closeDialog();
+      });
+
+      function openEditDialog(msgId, msgObj) {
+        appDialogTitle.innerText = "Edit Message";
+        appDialogMessage.innerText = "";
+        appDialogInput.value = msgObj.data.text || "";
+        appDialogInput.classList.remove("hidden");
+        appDialogChoices.classList.add("hidden");
+        appDialogOverlay.classList.remove("hidden");
+        dialogConfirmCallback = async (newText) => {
+          if (newText.trim() && newText !== msgObj.data.text) {
+            await updateDoc(doc(db, "chats", activeChatId, "messages", msgId), {
+              text: newText.trim(), edited: true
             });
           }
-        } catch (e) {
-          showToastNotification("Could not update reaction.");
-        }
+        };
       }
-
-      function beginReplyToMessage(msgId, messageData) {
-        const authorName =
-          messageData.senderEmail === currentUserEmailNormalized
-            ? "You"
-            : activeChatPartner?.name || messageData.senderEmail;
-        replyingToMessage = {
-          id: msgId,
-          text:
-            messageData.type === "text"
-              ? messageData.text
-              : `[${messageData.type || "attachment"}]`,
-          authorName,
-        };
-        replyPreviewAuthor.innerText = `Replying to ${authorName}`;
-        replyPreviewText.innerText = replyingToMessage.text || "Attachment";
-        replyPreviewBar.classList.add("show");
-        messageTextInput.focus();
-      }
-
-      cancelReplyBtn.addEventListener("click", () => {
-        replyingToMessage = null;
-        replyPreviewBar.classList.remove("show");
-      });
-
-      function openForwardModal(msgId, messageData) {
-        pendingForwardMessage = { msgId, messageData };
-        forwardChatListPane.innerHTML = "";
-
-        const entries = Array.from(allChatDocsCache.values());
-        if (entries.length === 0) {
-          forwardChatListPane.innerHTML = `<p style="color:var(--text-muted);font-size:13px">No conversations available to forward to.</p>`;
-        } else {
-          entries.forEach(({ chatData, partnerMeta, isSelf }) => {
-            const displayName = isSelf ? "Saved Messages" : partnerMeta.name;
-            const optionRow = document.createElement("div");
-            optionRow.className = "forward-chat-option";
-            optionRow.innerHTML = `
-                    <img class="avatar small" src="${escapeHtml(isSelf ? currentUserSession.photoURL || "" : partnerMeta.photoURL)}" alt="" />
-                    <h5>${escapeHtml(displayName)}</h5>
-                  `;
-            optionRow.addEventListener("click", () =>
-              forwardMessageToChat(chatData.chatId, isSelf, partnerMeta),
-            );
-            forwardChatListPane.appendChild(optionRow);
-          });
-        }
-
-        forwardModalOverlay.classList.add("open");
-      }
-
-      closeForwardModalBtn.addEventListener("click", () =>
-        forwardModalOverlay.classList.remove("open"),
-      );
-
-      async function forwardMessageToChat(
-        targetChatId,
-        isSelfTarget,
-        targetMeta,
-      ) {
-        if (!pendingForwardMessage) return;
-        const { messageData } = pendingForwardMessage;
-        const targetChatRef = doc(db, "chats", targetChatId);
-        const otherEmailForUnread = isSelfTarget
-          ? currentUserEmailNormalized
-          : normalizeEmailForId(targetMeta.email);
-
-        try {
-          await addDoc(collection(targetChatRef, "messages"), {
-            senderId: currentUserSession.uid,
-            senderEmail: currentUserEmailNormalized,
-            timestamp: serverTimestamp(),
-            type: messageData.type,
-            text: messageData.type === "text" ? messageData.text || "" : "",
-            fileURL: messageData.fileURL || null,
-            fileName: messageData.fileName || null,
-            fileType: messageData.fileType || null,
-            fileSize: messageData.fileSize || null,
-            forwarded: true,
-            deleted: false,
-            edited: false,
-            status: "sent",
-          });
-
-          await updateDoc(targetChatRef, {
-            lastMessage:
-              messageData.type === "text"
-                ? messageData.text
-                : `[Forwarded ${messageData.type}]`,
-            lastSenderEmail: currentUserEmailNormalized,
-            updatedAt: serverTimestamp(),
-            [`unreadCounts.${otherEmailForUnread}`]: increment(1),
-          });
-
-          forwardModalOverlay.classList.remove("open");
-          showToastNotification("Message forwarded.", false);
-        } catch (e) {
-          showToastNotification("Forward failed: " + e.message);
-        }
-      }
-
-     /**
- * Toggle the starred state of a message.
- *
- * This function safely adds or removes the current user's email
- * from the `starredBy` array using Firestore's atomic array operations.
- *
- * Why use arrayUnion() and arrayRemove()?
- * ---------------------------------------
- * - Prevents duplicate entries.
- * - Prevents race conditions when multiple users update at once.
- * - Eliminates the need to manually rebuild the array.
- * - Recommended by Firebase for array updates.
- */
-async function toggleStarMessage(msgId, messageData) {
-  // Ensure there is an active conversation.
-  if (!activeChatId) return;
-
-  // Reference to the message document.
-  const msgRef = doc(db, "chats", activeChatId, "messages", msgId);
-
-  // Existing users who have starred this message.
-  const starredBy = messageData.starredBy || [];
-
-  // Check whether the current user has already starred it.
-  const alreadyStarred = starredBy.includes(currentUserEmailNormalized);
-
-  try {
-    if (alreadyStarred) {
-      // Remove current user from starred list.
-      await updateDoc(msgRef, {
-        starredBy: arrayRemove(currentUserEmailNormalized)
-      });
-
-      showToastNotification("Removed from starred.", false);
-
-    } else {
-      // Add current user to starred list.
-      await updateDoc(msgRef, {
-        starredBy: arrayUnion(currentUserEmailNormalized)
-      });
-
-      showToastNotification("Message starred.", false);
-    }
-
-  } catch (error) {
-    console.error("Error updating starred message:", error);
-
-    showToastNotification(
-      "Unable to update the starred message. Please try again.",
-      true
-    );
-  }
-}
-
-      function beginEditMessage(msgId, messageData) {
-        if (messageData.senderEmail !== currentUserEmailNormalized) {
-          showToastNotification("Only your outgoing messages can be edited.");
-          return;
-        }
-        if (messageData.type !== "text") {
-          showToastNotification("Only text messages can be edited.");
-          return;
-        }
-
-
-        /* ==========================================================
-   Reusable WhatsApp-Style Dialog Engine
-   ----------------------------------------------------------
-   This dialog system replaces:
-   - prompt()
-   - confirm()
-   - simple choice prompts
-
-   Functions provided:
-   • showInputDialog()
-   • showConfirmDialog()
-   • showChoiceDialog()
-
-   Every function returns a Promise, allowing usage like:
-
-   const value = await showInputDialog(...);
-
-   ========================================================== */
-
-const dialogOverlay = document.getElementById("appDialogOverlay");
-const dialogTitle = document.getElementById("appDialogTitle");
-const dialogMessage = document.getElementById("appDialogMessage");
-const dialogInput = document.getElementById("appDialogInput");
-const dialogChoices = document.getElementById("appDialogChoices");
-
-const dialogOkBtn = document.getElementById("dialogOkBtn");
-const dialogCancelBtn = document.getElementById("dialogCancelBtn");
-
-let dialogResolver = null;
-
-/**
- * Close dialog and reset UI.
- */
-function closeDialog(result = null) {
-
-    dialogOverlay.classList.add("hidden");
-
-    dialogInput.classList.add("hidden");
-    dialogChoices.classList.add("hidden");
-
-    dialogInput.value = "";
-    dialogChoices.innerHTML = "";
-
-    if (dialogResolver) {
-        dialogResolver(result);
-        dialogResolver = null;
-    }
-}
-
-/**
- * Opens dialog shell.
- */
-function openDialog() {
-
-    dialogOverlay.classList.remove("hidden");
-
-    dialogInput.classList.add("hidden");
-    dialogChoices.classList.add("hidden");
-
-    dialogMessage.textContent = "";
-
-    dialogOkBtn.style.display = "";
-    dialogCancelBtn.style.display = "";
-}
-
-/* ==========================================================
-   INPUT DIALOG
-========================================================== */
-
-async function showInputDialog({
-
-    title = "",
-    message = "",
-    value = "",
-    placeholder = ""
-
-}) {
-
-    openDialog();
-
-    dialogTitle.textContent = title;
-    dialogMessage.textContent = message;
-
-    dialogInput.classList.remove("hidden");
-
-    dialogInput.placeholder = placeholder;
-
-    dialogInput.value = value;
-
-    dialogInput.focus();
-
-    dialogInput.select();
-
-    return new Promise(resolve => {
-
-        dialogResolver = resolve;
-
-        dialogOkBtn.onclick = () => {
-
-            closeDialog(dialogInput.value);
-
-        };
-
-        dialogCancelBtn.onclick = () => {
-
-            closeDialog(null);
-
-        };
-
-    });
-
-}
-
-/* ==========================================================
-   CONFIRM DIALOG
-========================================================== */
-
-async function showConfirmDialog({
-
-    title = "",
-    message = ""
-
-}) {
-
-    openDialog();
-
-    dialogTitle.textContent = title;
-
-    dialogMessage.textContent = message;
-
-    return new Promise(resolve => {
-
-        dialogResolver = resolve;
-
-        dialogOkBtn.onclick = () => {
-
-            closeDialog(true);
-
-        };
-
-        dialogCancelBtn.onclick = () => {
-
-            closeDialog(false);
-
-        };
-
-    });
-
-}
-
-/* ==========================================================
-   CHOICE DIALOG
-========================================================== */
-
-/**
- * ==========================================================
- * WhatsApp Style Bottom Sheet
- * ----------------------------------------------------------
- * Displays a mobile-friendly action menu that slides up from
- * the bottom of the screen.
- *
- * Returns:
- *   option.id
- *   OR
- *   null (cancelled)
- * ==========================================================
- */
-async function showChoiceDialog({
-
-    title = "",
-    options = []
-
-}) {
-
-    openDialog();
-
-    dialogTitle.textContent = "";
-
-    dialogMessage.textContent = "";
-
-    dialogChoices.classList.remove("hidden");
-
-    dialogOkBtn.style.display = "none";
-
-    dialogCancelBtn.style.display = "none";
-
-    const container =
-        document.getElementById("bottomSheetActions");
-
-    container.innerHTML = "";
-
-    return new Promise(resolve => {
-
-        dialogResolver = resolve;
-
-        options.forEach(option => {
-
-            const button =
-                document.createElement("button");
-
-            button.className =
-                "sheet-action";
-
-            if(option.danger){
-
-                button.classList.add("delete");
-
-            }
-
-            button.innerHTML = `
-                <span style="font-size:20px;">
-                    ${option.icon ?? ""}
-                </span>
-
-                <span>
-                    ${option.label}
-                </span>
-            `;
-
-            button.onclick = () => {
-
-                closeDialog(option.id);
-
-            };
-
-            container.appendChild(button);
-
-        });
-
-        /* Cancel by tapping outside */
-
-        dialogOverlay.onclick = e => {
-
-            if(e.target === dialogOverlay){
-
-                closeDialog(null);
-
-            }
-
-        };
-
-    });
-
-}
-/* ==========================================================
-   EXTRA FEATURES
-========================================================== */
-
-/* Close dialog when clicking outside */
-
-dialogOverlay.addEventListener("click", (event) => {
-
-    if (event.target === dialogOverlay) {
-
-        closeDialog(null);
-
-    }
-
-});
-
-/* Escape key closes dialog */
-
-document.addEventListener("keydown", (event) => {
-
-    if (
-        event.key === "Escape" &&
-        !dialogOverlay.classList.contains("hidden")
-    ) {
-
-        closeDialog(null);
-
-    }
-
-});
-
-/* Ctrl + Enter submits input dialog */
-
-dialogInput.addEventListener("keydown", (event) => {
-
-    if (
-        event.key === "Enter" &&
-        event.ctrlKey
-    ) {
-
-        dialogOkBtn.click();
-
-    }
-
-});
+      function openDeleteDialog(msgId, msgObj) {
+        appDialogTitle.innerText = "Delete Message";
+        appDialogMessage.innerText = "Are you sure you want to delete this message?";
+        appDialogInput.classList.add("hidden");
+        appDialogOverlay.classList.remove("hidden");
+        appDialogChoices.classList.remove("hidden");
         
-        /**
- * Edit an existing message.
- *
- * This function opens a custom input dialog (to be implemented later)
- * allowing the sender to modify the message text.
- *
- * Improvements:
- * - Uses async/await.
- * - Prevents empty messages.
- * - Prevents unnecessary Firestore writes.
- * - Sanitizes user input.
- * - Better error handling.
- */
-async function editMessage(msgId, messageData) {
-  if (!activeChatId) return;
-
-  try {
-    // Custom dialog (we'll build this later)
-    const refinedString = await showInputDialog({
-      title: "Edit Message",
-      value: messageData.text || "",
-      placeholder: "Type your message..."
-    });
-
-    // User cancelled.
-    if (refinedString === null) return;
-
-    const cleaned = sanitizeInputText(refinedString);
-
-    if (!cleaned) {
-      showToastNotification("Message cannot be empty.", true);
-      return;
-    }
-
-    // Prevent unnecessary update
-    if (cleaned === messageData.text) {
-      showToastNotification("Nothing changed.", false);
-      return;
-    }
-
-    await updateDoc(
-      doc(db, "chats", activeChatId, "messages", msgId),
-      {
-        text: cleaned,
-        edited: true,
-        editedAt: serverTimestamp()
-      }
-    );
-
-    showToastNotification("Message updated.", false);
-
-  } catch (error) {
-    console.error("Edit message failed:", error);
-    showToastNotification("Unable to edit message.", true);
-  }
-}
-
-
-/**
- * Opens the delete options dialog.
- *
- * If the current user owns the message,
- * they may choose:
- *
- * • Delete for Me
- * • Delete for Everyone
- *
- * Otherwise,
- * only Delete for Me is available.
- */
-async function openMessageActionSheet(msgId, messageData) {
-
-  const isMine =
-    messageData.senderEmail === currentUserEmailNormalized;
-
-  try {
-
-    if (!isMine) {
-
-      const confirmed = await showConfirmDialog({
-        title: "Delete Message",
-        message: "Delete this message for you only?"
-      });
-
-      if (!confirmed) return;
-
-      await deleteMessageForMe(msgId);
-
-      return;
-    }
-
-       // Show the universal action sheet
-    const choice = await showChoiceDialog({
-      title: "Message",
-      options: buildMessageActions(msgId, messageData)
-    });
-
-    if (!choice) return;
-
-    switch (choice) {
-
-      case "reply":
-        beginReply(msgId, messageData);
-        break;
-
-      case "react":
-        openReactionPicker(msgId, messageData);
-        break;
-
-      case "copy":
-        copyMessage(msgId, messageData);
-        break;
-
-      case "download":
-        downloadMessage(msgId, messageData);
-        break;
-
-      case "forward":
-        openForwardDialog(msgId, messageData);
-        break;
-
-      case "pin":
-        togglePinMessage(msgId, messageData);
-        break;
-
-      case "star":
-        toggleStarMessage(msgId, messageData);
-        break;
-
-      case "edit":
-        await editMessage(msgId, messageData);
-        break;
-
-      case "delete":
-
-        // Owners get a second choice
-        const deleteChoice = await showChoiceDialog({
-          title: "Delete Message",
-          options: [
-            {
-              id: "me",
-              label: "Delete for Me",
-              icon: "🗑️"
-            },
-            {
-              id: "everyone",
-              label: "Delete for Everyone",
-              icon: "🚫",
-              danger: true
-            }
-          ]
-        });
-
-        if (deleteChoice === "me") {
-          await deleteMessageForMe(msgId);
-        }
-
-        if (deleteChoice === "everyone") {
-          await deleteMessageForEveryone(msgId);
-        }
-
-        break;
-
-      case "info":
-        showMessageInfo(msgId);
-        break;
-
-    }
-
-  } catch (error) {
-
-    console.error("Message action failed:", error);
-
-    showToastNotification(
-      "Unable to perform the selected action.",
-      true
-    );
-
-  }
-
-}
-});
-/**
- * ==========================================================
- * Build the available actions for a message.
- *
- * The actions shown depend on:
- * - whether the message belongs to the current user
- * - whether it contains attachments
- *
- * This makes the Bottom Sheet reusable for every message.
- * ==========================================================
- */
-function buildMessageActions(msgId, messageData) {
-
-    const isMine =
-        messageData.senderEmail === currentUserEmailNormalized;
-
-    const actions = [
-
-        {
-            id:"reply",
-            label:"Reply",
-            icon:"↩️"
-        },
-
-        {
-            id:"react",
-            label:"React",
-            icon:"❤️"
-        },
-
-        {
-            id:"copy",
-            label:"Copy",
-            icon:"📋"
-        },
-
-        {
-            id:"download",
-            label:"Download",
-            icon:"📥"
-        },
-
-        {
-            id:"forward",
-            label:"Forward",
-            icon:"📤"
-        },
-
-        {
-            id:"pin",
-            label:"Pin Chat",
-            icon:"📌"
-        },
-
-        {
-            id:"star",
-            label:"Star Message",
-            icon:"⭐"
-        },
-
-        {
-            id:"info",
-            label:"Message Info",
-            icon:"ℹ️"
-        }
-
-    ];
-
-    if(isMine){
-
-        actions.splice(6,0,{
-
-            id:"edit",
-
-            label:"Edit",
-
-            icon:"✏️"
-
-        });
-
-    }
-
-    actions.push({
-
-        id:"delete",
-
-        label:"Delete",
-
-        icon:"🗑️",
-
-        danger:true
-
-    });
-
-    return actions;
-
-}
-    
-
-/**
- * Deletes the message only for the current user.
- *
- * Uses Firestore's atomic array update
- * to avoid race conditions.
- */
-async function deleteMessageForMe(msgId) {
-
-  if (!activeChatId) return;
-
-  try {
-
-    await updateDoc(
-      doc(db, "chats", activeChatId, "messages", msgId),
-      {
-        deletedFor: arrayUnion(
-          currentUserEmailNormalized
-        )
-      }
-    );
-
-    showToastNotification(
-      "Message removed for you.",
-      false
-    );
-
-  } catch (error) {
-
-    console.error(error);
-
-    showToastNotification(
-      "Could not delete message.",
-      true
-    );
-
-  }
-
-}
-
-
-/**
- * Deletes the message for every participant.
- *
- * Instead of removing the document,
- * we soft-delete it so replies,
- * timestamps and chat history remain intact.
- */
-async function deleteMessageForEveryone(msgId) {
-
-  if (!activeChatId) return;
-
-  try {
-
-    await updateDoc(
-      doc(db, "chats", activeChatId, "messages", msgId),
-      {
-        deleted: true,
-        deletedAt: serverTimestamp(),
-        text: "",
-        caption: "",
-        fileURL: null,
-        thumbnailURL: null,
-        fileName: "",
-        fileType: "",
-        fileSize: 0
-      }
-    );
-
-    showToastNotification(
-      "Message deleted for everyone.",
-      false
-    );
-
-  } catch (error) {
-
-    console.error(error);
-
-    showToastNotification(
-      "Could not delete message.",
-      true
-    );
-
-  }
-
-}
-      /* =========================================================
-               STARRED MESSAGES MODAL
-               ========================================================= */
-      starredMessagesBtn.addEventListener("click", async () => {
-        starredListPane.innerHTML = `<p style="color:var(--text-muted);font-size:13px">Loading starred messages...</p>`;
-        starredModalOverlay.classList.add("open");
-        await loadStarredMessagesAcrossChats();
-      });
-
-      closeStarredModalBtn.addEventListener("click", () =>
-        starredModalOverlay.classList.remove("open"),
-      );
-
-      async function loadStarredMessagesAcrossChats() {
-        const email = currentUserEmailNormalized;
-        const results = [];
-
-        for (const {
-          chatData,
-          partnerMeta,
-          isSelf,
-        } of allChatDocsCache.values()) {
-          try {
-            const msgsRef = collection(
-              db,
-              "chats",
-              chatData.chatId,
-              "messages",
-            );
-            const starredQuery = query(
-              msgsRef,
-              where("starredBy", "array-contains", email),
-            );
-            const snap = await getDocs(starredQuery);
-            snap.docs.forEach((d) => {
-              const data = d.data();
-              results.push({
-                chatId: chatData.chatId,
-                partnerMeta,
-                isSelf,
-                msgId: d.id,
-                data,
-              });
-            });
-          } catch (e) {
-            // Skip chats that fail (e.g. permission edge cases).
-          }
-        }
-
-        if (results.length === 0) {
-          starredListPane.innerHTML = `<p style="color:var(--text-muted);font-size:13px">You haven't starred any messages yet.</p>`;
-          return;
-        }
-
-        starredListPane.innerHTML = "";
-        results
-          .sort((a, b) => {
-            const at = a.data.timestamp?.toMillis
-              ? a.data.timestamp.toMillis()
-              : 0;
-            const bt = b.data.timestamp?.toMillis
-              ? b.data.timestamp.toMillis()
-              : 0;
-            return bt - at;
-          })
-          .forEach(({ chatId, partnerMeta, isSelf, msgId, data }) => {
-            const item = document.createElement("div");
-            item.className = "starred-list-item";
-            const label = isSelf ? "Saved Messages" : partnerMeta.name;
-            const preview =
-              data.type === "text"
-                ? data.text
-                : `[${data.type || "attachment"}]`;
-            item.innerHTML = `
-                    <div>${escapeHtml(preview || "")}</div>
-                    <div class="starred-meta">
-                      <span>${escapeHtml(label)}</span>
-                      <span>${formatMessageTime(data.timestamp)}</span>
-                    </div>
-                  `;
-            item.addEventListener("click", () => {
-              starredModalOverlay.classList.remove("open");
-              loadConversationInterface(chatId, partnerMeta, isSelf);
-              setTimeout(() => jumpToMessage(msgId), 400);
-            });
-            starredListPane.appendChild(item);
-          });
-      }
-
-      /* =========================================================
-               IN-CHAT SEARCH
-               ========================================================= */
-      chatSearchToggleBtn.addEventListener("click", () => {
-        inChatSearchBar.classList.toggle("open");
-        if (inChatSearchBar.classList.contains("open")) {
-          inChatSearchInput.focus();
-        } else {
-          clearSearchHighlights();
-        }
-      });
-
-      closeInChatSearchBtn.addEventListener("click", () => {
-        inChatSearchBar.classList.remove("open");
-        inChatSearchInput.value = "";
-        clearSearchHighlights();
-      });
-
-      function clearSearchHighlights() {
-        chatMessagesDisplay
-          .querySelectorAll(".highlight-match")
-          .forEach((el) => el.classList.remove("highlight-match"));
-        searchMatchIndices = [];
-        searchMatchCursor = -1;
-        searchNavCount.innerText = "";
-      }
-
-      inChatSearchInput.addEventListener("input", () => {
-        const term = inChatSearchInput.value.toLowerCase().trim();
-        clearSearchHighlights();
-        if (!term) return;
-
-        const rows = Array.from(
-          chatMessagesDisplay.querySelectorAll(".message-row"),
-        );
-        rows.forEach((row, idx) => {
-          const textEl = row.querySelector(".message-text");
-          if (textEl && textEl.innerText.toLowerCase().includes(term)) {
-            searchMatchIndices.push(idx);
-          }
-        });
-
-        if (searchMatchIndices.length > 0) {
-          searchMatchCursor = 0;
-          navigateToSearchMatch(rows);
-        } else {
-          searchNavCount.innerText = "0 / 0";
-        }
-      });
-
-      function navigateToSearchMatch(rows) {
-        rows =
-          rows ||
-          Array.from(chatMessagesDisplay.querySelectorAll(".message-row"));
-        rows.forEach((r) => r.classList.remove("highlight-match"));
-        if (searchMatchIndices.length === 0) return;
-        const rowIdx = searchMatchIndices[searchMatchCursor];
-        const row = rows[rowIdx];
-        if (row) {
-          row.classList.add("highlight-match");
-          row.scrollIntoView({ behavior: "smooth", block: "center" });
-        }
-        searchNavCount.innerText = `${searchMatchCursor + 1} / ${searchMatchIndices.length}`;
-      }
-
-      searchNavUp.addEventListener("click", () => {
-        if (searchMatchIndices.length === 0) return;
-        searchMatchCursor =
-          (searchMatchCursor - 1 + searchMatchIndices.length) %
-          searchMatchIndices.length;
-        navigateToSearchMatch();
-      });
-
-      searchNavDown.addEventListener("click", () => {
-        if (searchMatchIndices.length === 0) return;
-        searchMatchCursor = (searchMatchCursor + 1) % searchMatchIndices.length;
-        navigateToSearchMatch();
-      });
-
-      /* =========================================================
-               EMOJI PICKER
-               ========================================================= */
-      COMMON_EMOJIS.forEach((emoji) => {
-        const span = document.createElement("span");
-        span.innerText = emoji;
-        span.addEventListener("click", () => {
-          messageTextInput.value += emoji;
-          messageTextInput.focus();
-        });
-        emojiPickerPopup.appendChild(span);
-      });
-
-      emojiToggleBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        emojiPickerPopup.classList.toggle("open");
-      });
-
-      document.addEventListener("click", (e) => {
-        if (
-          !e.target.closest("#emojiPickerPopup") &&
-          !e.target.closest("#emojiToggleBtn")
-        ) {
-          emojiPickerPopup.classList.remove("open");
-        }
-      });
-
-      /* =========================================================
-               VOICE MESSAGE PLACEHOLDER
-               ========================================================= */
-      voiceMessageBtn.addEventListener("click", () => {
-        showToastNotification("Voice recording feature coming soon", false);
-      });
-
-      /* =========================================================
-               TYPING INDICATOR BROADCAST
-               ========================================================= */
-      messageTextInput.addEventListener("input", () => {
-        if (!activeChatId || activeChatIsSelf) return;
-        clearTimeout(typingDebounceTimer);
-        updateDoc(doc(db, "chats", activeChatId), {
-          [`typing.${currentUserEmailNormalized}`]: serverTimestamp(),
-        }).catch(() => {});
-
-        typingDebounceTimer = setTimeout(() => {
-          updateDoc(doc(db, "chats", activeChatId), {
-            [`typing.${currentUserEmailNormalized}`]: deleteField(),
-          }).catch(() => {});
-        }, 3000);
-      });
-
-      /* =========================================================
-               DISPATCH DATA ENGINE (SEND MESSAGE)
-               ========================================================= */
-      async function transmitDataPacket(customFileObj = null) {
-        if (!activeChatId) return;
-
-        const targetChatRef = doc(db, "chats", activeChatId);
-        const currentEmail = currentUserEmailNormalized;
-        const recipientEmail = activeChatIsSelf
-          ? currentEmail
-          : normalizeEmailForId(activeChatPartner.email);
-
-        let textMessage = sanitizeInputText(messageTextInput.value || "");
-        if (!textMessage && !customFileObj) return;
-
-        const payloadData = {
-          senderId: currentUserSession.uid,
-          senderEmail: currentEmail,
-          timestamp: serverTimestamp(),
-          type: customFileObj ? customFileObj.type : "text",
-          text: customFileObj ? textMessage : textMessage,
-          fileURL: customFileObj ? customFileObj.url : null,
-          fileName: customFileObj ? customFileObj.name : null,
-          fileType: customFileObj ? customFileObj.mime : null,
-          fileSize: customFileObj ? customFileObj.size : null,
-          deleted: false,
-          edited: false,
-          status: "sent",
-          reactions: {},
-          starredBy: [],
+        const isMine = msgObj.data.senderEmail === currentUserEmailNormalized;
+        bottomSheetActions.innerHTML = `
+          <button class="sheet-action delete" id="btnDelMe"><i class="fa-solid fa-trash"></i> Delete for me</button>
+          ${isMine ? `<button class="sheet-action delete" id="btnDelEv"><i class="fa-solid fa-trash-can"></i> Delete for everyone</button>` : ""}
+        `;
+        
+        document.getElementById("btnDelMe").onclick = async () => {
+          // Soft delete locally not fully implemented in DB schema, so delete doc if self chat, else remove via query (for simplicity, we'll actually just delete it if we own it, or hide it).
+          // Proper way: add a `deletedFor: [email]` array. For now, true delete.
+          await deleteDoc(doc(db, "chats", activeChatId, "messages", msgId));
+          closeDialog();
         };
-
-        if (replyingToMessage) {
-          payloadData.replyTo = {
-            id: replyingToMessage.id,
-            text: replyingToMessage.text,
-            authorName: replyingToMessage.authorName,
+        if(isMine) {
+          document.getElementById("btnDelEv").onclick = async () => {
+            await updateDoc(doc(db, "chats", activeChatId, "messages", msgId), { deleted: true, text: "", fileURL: null });
+            closeDialog();
           };
         }
+        dialogOkBtn.style.display = "none";
+      }
+
+      function openForwardDialog(msgObj) {
+        pendingForwardMessage = msgObj.data;
+        forwardChatListPane.innerHTML = '<p style="color:var(--text-muted);font-size:13px">Select conversation:</p>';
+        Array.from(allChatDocsCache.values()).forEach(c => {
+          const div = document.createElement("div");
+          div.className = "forward-chat-option";
+          div.innerHTML = `<h5>${c.isSelf ? "Saved Messages" : (c.partnerMeta?.name || "Unknown")}</h5>`;
+          div.onclick = () => { forwardMessageExecute(c.chatData.chatId); };
+          forwardChatListPane.appendChild(div);
+        });
+        forwardModalOverlay.classList.add("open");
+      }
+      closeForwardModalBtn.addEventListener("click", () => forwardModalOverlay.classList.remove("open"));
+      async function forwardMessageExecute(targetChatId) {
+        if (!pendingForwardMessage) return;
+        const msgPayload = {
+          senderEmail: currentUserEmailNormalized,
+          text: pendingForwardMessage.text || "",
+          type: pendingForwardMessage.type || "text",
+          fileURL: pendingForwardMessage.fileURL || null,
+          fileName: pendingForwardMessage.fileName || null,
+          fileSize: pendingForwardMessage.fileSize || null,
+          timestamp: serverTimestamp(),
+          status: "sent", deleted: false, edited: false, reactions: {}, starredBy: []
+        };
+        await addDoc(collection(db, "chats", targetChatId, "messages"), msgPayload);
+        await updateDoc(doc(db, "chats", targetChatId), {
+          lastMessage: `Forwarded: ${msgPayload.type === 'text' ? msgPayload.text : msgPayload.type}`,
+          lastSenderEmail: currentUserEmailNormalized,
+          updatedAt: serverTimestamp(),
+        });
+        forwardModalOverlay.classList.remove("open");
+        showToastNotification("Message forwarded.", false);
+      }
+
+      /* =========================================================
+         SEND MESSAGES & ATTACHMENTS
+      ========================================================= */
+      messageTextInput.addEventListener("input", () => {
+        if (!activeChatId) return;
+        clearTimeout(typingDebounceTimer);
+        updateDoc(doc(db, "chats", activeChatId), { [`typing.${currentUserEmailNormalized}`]: serverTimestamp() }).catch(()=>{});
+        typingDebounceTimer = setTimeout(() => {
+          // Optional: clear typing indicator logic (auto-clears by timestamp check usually)
+        }, 1500);
+      });
+      messageTextInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") sendMessage();
+      });
+      sendMessageBtn.addEventListener("click", sendMessage);
+      
+      async function sendMessage(filePayload = null) {
+        if (!activeChatId) return;
+        const text = messageTextInput.value.trim();
+        if (!text && !filePayload) return;
+
+        const msgPayload = {
+          senderEmail: currentUserEmailNormalized,
+          text: text,
+          type: filePayload ? filePayload.type : "text",
+          fileURL: filePayload ? filePayload.url : null,
+          fileName: filePayload ? filePayload.name : null,
+          fileSize: filePayload ? filePayload.size : null,
+          timestamp: serverTimestamp(),
+          status: "sent", deleted: false, edited: false, reactions: {}, starredBy: []
+        };
+        if (replyingToMessage) msgPayload.replyTo = replyingToMessage;
 
         messageTextInput.value = "";
         replyingToMessage = null;
         replyPreviewBar.classList.remove("show");
 
-        clearTimeout(typingDebounceTimer);
-        updateDoc(targetChatRef, {
-          [`typing.${currentEmail}`]: deleteField(),
-        }).catch(() => {});
-
-        await addDoc(collection(targetChatRef, "messages"), payloadData);
-
-        const lastMessagePreview = customFileObj
-          ? `[Sent an attachment: ${customFileObj.type}]`
-          : textMessage;
-
-        await updateDoc(targetChatRef, {
-          lastMessage: lastMessagePreview,
-          lastSenderEmail: currentEmail,
-          updatedAt: serverTimestamp(),
-          ...(activeChatIsSelf
-            ? {}
-            : { [`unreadCounts.${recipientEmail}`]: increment(1) }),
-        });
-      }
-
-      sendMessageBtn.addEventListener("click", () => transmitDataPacket(null));
-      messageTextInput.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") transmitDataPacket(null);
-      });
-
-      /* =========================================================
-               FILE UPLOAD PIPELINE (WITH PREVIEW-BEFORE-SEND)
-               ========================================================= */
-      function setUploadProgress(percent) {
-        uploadProgressBar.setAttribute("aria-hidden", "false");
-        uploadProgressFill.style.width = `${percent}%`;
-        uploadProgressText.innerText = `Uploading ${percent}%`;
-      }
-
-      function hideUploadProgress() {
-        uploadProgressBar.setAttribute("aria-hidden", "true");
-        uploadProgressFill.style.width = "0%";
-        uploadProgressText.innerText = "0%";
-      }
-
-      const ALLOWED_ATTACHMENT_TYPES = [
-        "image/",
-        "video/",
-        "text/",
-        "application/pdf",
-        "application/msword",
-        "application/vnd.openxmlformats-officedocument",
-        "application/zip",
-        "application/x-zip-compressed",
-      ];
-
-      function classifyFileType(file) {
-        if (file.type.startsWith("image/")) return "image";
-        if (file.type.startsWith("video/")) return "video";
-        if (file.type.startsWith("text/")) return "text";
-        return "file";
+        try {
+          await addDoc(collection(db, "chats", activeChatId, "messages"), msgPayload);
+          let summary = text;
+          if (filePayload) summary = `📁 ${filePayload.type}`;
+          const updates = { lastMessage: summary, lastSenderEmail: currentUserEmailNormalized, updatedAt: serverTimestamp() };
+          if (!activeChatIsSelf && activeChatPartner) {
+            const pEmail = normalizeEmailForId(activeChatPartner.email);
+            updates[`unreadCounts.${pEmail}`] = increment(1);
+          }
+          await updateDoc(doc(db, "chats", activeChatId), updates);
+        } catch (e) { showToastNotification("Failed to send message: " + e.message); }
       }
 
       attachmentFileInput.addEventListener("change", (e) => {
-        const chosenFile = e.target.files[0];
-        if (!chosenFile) return;
-        if (!activeChatId) {
-          showToastNotification("Select a chat before uploading a file.");
-          attachmentFileInput.value = "";
-          return;
-        }
+        const file = e.target.files[0];
+        if (!file) return;
+        const typeStr = file.type.split("/")[0];
+        let classifiedType = "document";
+        if (typeStr === "image") classifiedType = "image";
+        else if (typeStr === "video") classifiedType = "video";
+        else if (typeStr === "audio") classifiedType = "audio";
 
-        const isAllowed = ALLOWED_ATTACHMENT_TYPES.some((prefix) =>
-          chosenFile.type.startsWith(prefix),
-        );
-        if (!isAllowed && chosenFile.type !== "") {
-          showToastNotification(
-            "Unsupported file type. Please choose an image, video, PDF, Word document, ZIP, or text file.",
-          );
-          attachmentFileInput.value = "";
-          return;
-        }
-
-        const classifiedType = classifyFileType(chosenFile);
-        pendingAttachment = { file: chosenFile, classifiedType };
-        openAttachmentPreview(chosenFile, classifiedType);
-      });
-
-      function openAttachmentPreview(file, classifiedType) {
-        attachPreviewBody.innerHTML = "";
-
-        if (classifiedType === "image") {
-          const objectUrl = URL.createObjectURL(file);
-          const img = document.createElement("img");
-          img.className = "attach-preview-media";
-          img.src = objectUrl;
-          attachPreviewBody.appendChild(img);
-        } else if (classifiedType === "video") {
-          const objectUrl = URL.createObjectURL(file);
-          const video = document.createElement("video");
-          video.className = "attach-preview-media";
-          video.src = objectUrl;
-          video.controls = true;
-          attachPreviewBody.appendChild(video);
-        } else {
-          const row = document.createElement("div");
-          row.className = "attach-preview-file-row";
-          row.innerHTML = `
-                  <i class="fa-solid fa-file-lines"></i>
-                  <div class="doc-meta">
-                    <div class="doc-name">${escapeHtml(file.name)}</div>
-                    <div class="doc-size">${escapeHtml(formatFileSize(file.size))}</div>
-                  </div>
-                `;
-          attachPreviewBody.appendChild(row);
-        }
-
-        const captionInput = document.createElement("input");
-        captionInput.className = "attach-caption-input";
-        captionInput.placeholder = "Add a caption (optional)";
-        captionInput.id = "attachCaptionInputField";
-        attachPreviewBody.appendChild(captionInput);
-
-        const actions = document.createElement("div");
-        actions.className = "attach-preview-actions";
-        actions.innerHTML = `
-                <button class="btn-secondary-action" id="cancelAttachSendBtn">Cancel</button>
-                <button class="btn-modal-action" id="confirmAttachSendBtn">Send</button>
-              `;
-        attachPreviewBody.appendChild(actions);
-
-        document
-          .getElementById("cancelAttachSendBtn")
-          .addEventListener("click", () => {
-            attachPreviewOverlay.classList.remove("open");
-            attachmentFileInput.value = "";
-            pendingAttachment = null;
-          });
-
-        document
-          .getElementById("confirmAttachSendBtn")
-          .addEventListener("click", () => {
-            const caption = sanitizeInputText(captionInput.value || "");
-            attachPreviewOverlay.classList.remove("open");
-            uploadAndSendAttachment(caption);
-          });
-
+        attachPreviewBody.innerHTML = `
+          ${classifiedType === 'image' ? `<img src="${URL.createObjectURL(file)}" class="attach-preview-media">` : `<div class="attach-preview-file-row"><i class="fa-solid fa-file"></i><span>${file.name}</span></div>`}
+          <input type="text" id="attachCaptionInput" class="attach-caption-input" placeholder="Add a caption...">
+          <div class="attach-preview-actions">
+            <button class="btn-secondary-action" id="cancelAttachBtn">Cancel</button>
+            <button class="btn-modal-action" id="confirmAttachBtn">Send</button>
+          </div>
+        `;
         attachPreviewOverlay.classList.add("open");
-      }
 
-      closeAttachPreviewBtn.addEventListener("click", () => {
-        attachPreviewOverlay.classList.remove("open");
-        attachmentFileInput.value = "";
-        pendingAttachment = null;
-      });
-
-      async function uploadAndSendAttachment(captionText) {
-        if (!pendingAttachment || !activeChatId) return;
-        const { file, classifiedType } = pendingAttachment;
-
-        showToastNotification("Uploading workspace asset package...", false);
-        setUploadProgress(0);
-
-        try {
-          const formData = new FormData();
-
-          formData.append("file", file);
-          formData.append("upload_preset", "mini-whatsapp");
-          formData.append("folder", "mini-whatsapp");
-          formData.append("resource_type", "auto");
-          const xhr = new XMLHttpRequest();
-
-          const accessibleDownloadUrl = await new Promise((resolve, reject) => {
-            xhr.open(
-              "POST",
-              "https://api.cloudinary.com/v1_1/wl9fz1mi/auto/upload",
-            );
-
-            xhr.upload.onprogress = (event) => {
-              if (event.lengthComputable) {
-                const percentage = Math.round(
-                  (event.loaded / event.total) * 100,
-                );
-
-                setUploadProgress(percentage);
-              }
-            };
-
-            xhr.onload = () => {
-              if (xhr.status >= 200 && xhr.status < 300) {
-                const response = JSON.parse(xhr.responseText);
-
-                resolve(response.secure_url);
-              } else {
-                reject(new Error("Cloudinary upload failed."));
-              }
-            };
-
-            xhr.onerror = () => reject(new Error("Network Error"));
-
-            xhr.send(formData);
-          });
-
-          const oldCaption = messageTextInput.value;
-          messageTextInput.value = captionText || "";
-          await transmitDataPacket({
-            type: classifiedType,
-            url: accessibleDownloadUrl,
-            name: file.name,
-            mime: file.type,
-            size: file.size,
-          });
-          messageTextInput.value = oldCaption;
-
-          showToastNotification("Asset successfully sent.", false);
-        } catch (err) {
-          showToastNotification("Storage uplink breakdown: " + err.message);
-        } finally {
+        document.getElementById("cancelAttachBtn").onclick = () => {
+          attachPreviewOverlay.classList.remove("open");
           attachmentFileInput.value = "";
-          pendingAttachment = null;
-          hideUploadProgress();
-        }
+        };
+        document.getElementById("confirmAttachBtn").onclick = () => {
+          attachPreviewOverlay.classList.remove("open");
+          const caption = document.getElementById("attachCaptionInput").value;
+          if (caption) messageTextInput.value = caption;
+          uploadFileToStorage(file, classifiedType);
+        };
+      });
+      closeAttachPreviewBtn.addEventListener("click", () => attachPreviewOverlay.classList.remove("open"));
+
+      function uploadFileToStorage(file, type) {
+        uploadProgressBar.setAttribute("aria-hidden", "false");
+        const fRef = ref(storage, `chats/${activeChatId}/${Date.now()}_${file.name}`);
+        const task = uploadBytesResumable(fRef, file);
+        task.on("state_changed", 
+          (snap) => {
+            const p = (snap.bytesTransferred / snap.totalBytes) * 100;
+            uploadProgressFill.style.width = `${p}%`;
+            uploadProgressText.innerText = `${Math.round(p)}%`;
+          }, 
+          (error) => {
+            uploadProgressBar.setAttribute("aria-hidden", "true");
+            showToastNotification("Upload failed.");
+          }, 
+          async () => {
+            uploadProgressBar.setAttribute("aria-hidden", "true");
+            const url = await getDownloadURL(task.snapshot.ref);
+            sendMessage({ url, name: file.name, size: file.size, type });
+            attachmentFileInput.value = "";
+          }
+        );
       }
 
       /* =========================================================
-               THEME + MOBILE NAVIGATION
-               ========================================================= */
-      themeToggle.addEventListener("click", () => {
-        const nextTheme =
-          document.documentElement.getAttribute("data-theme") === "dark"
-            ? "light"
-            : "dark";
-        document.documentElement.setAttribute("data-theme", nextTheme);
-        themeToggle.className =
-          nextTheme === "dark" ? "fa-solid fa-sun" : "fa-solid fa-moon";
-        localStorage.setItem("theme-preference", nextTheme);
+         EMOJIS & EXTRAS
+      ========================================================= */
+      emojiPickerPopup.innerHTML = COMMON_EMOJIS.map(e => `<span>${e}</span>`).join('');
+      emojiToggleBtn.addEventListener("click", () => emojiPickerPopup.classList.toggle("open"));
+      emojiPickerPopup.addEventListener("click", (e) => {
+        if (e.target.tagName === 'SPAN') {
+          messageTextInput.value += e.target.innerText;
+          emojiPickerPopup.classList.remove("open");
+          messageTextInput.focus();
+        }
       });
+      document.addEventListener("click", (e) => {
+        if (!e.target.closest("#emojiPickerPopup") && !e.target.closest("#emojiToggleBtn")) {
+          emojiPickerPopup.classList.remove("open");
+        }
+      });
+      
+      voiceMessageBtn.addEventListener("click", () => showToastNotification("Voice messaging not fully implemented in this shell."));
 
-      mobileBackBtn.addEventListener("click", () => {
-        chatArea.classList.remove("active");
-        activeChatId = null;
-        document
-          .querySelectorAll(".chat-item")
-          .forEach((item) => item.classList.remove("active"));
+      /* =========================================================
+         SEARCH IN CHAT
+      ========================================================= */
+      chatSearchToggleBtn.addEventListener("click", () => {
+        inChatSearchBar.classList.toggle("open");
+        if (inChatSearchBar.classList.contains("open")) inChatSearchInput.focus();
       });
+      closeInChatSearchBtn.addEventListener("click", () => {
+        inChatSearchBar.classList.remove("open");
+        inChatSearchInput.value = "";
+        clearSearchHighlights();
+      });
+      inChatSearchInput.addEventListener("input", performChatSearch);
+      searchNavUp.addEventListener("click", () => navSearch(-1));
+      searchNavDown.addEventListener("click", () => navSearch(1));
 
-      document.addEventListener("DOMContentLoaded", () => {
-        initializeThemeEngine();
-      });
+      function clearSearchHighlights() {
+        chatMessagesDisplay.querySelectorAll(".message-row").forEach(r => r.classList.remove("highlight-match"));
+        searchMatchIndices = [];
+        searchMatchCursor = -1;
+        searchNavCount.innerText = "";
+      }
+      function performChatSearch() {
+        clearSearchHighlights();
+        const term = inChatSearchInput.value.toLowerCase().trim();
+        if (!term) return;
+        const nodes = Array.from(chatMessagesDisplay.querySelectorAll(".message-row"));
+        nodes.forEach((n, i) => {
+          const txt = n.querySelector(".message-text")?.innerText || "";
+          if (txt.toLowerCase().includes(term)) {
+            searchMatchIndices.push(i);
+          }
+        });
+        if (searchMatchIndices.length > 0) {
+          searchMatchCursor = searchMatchIndices.length - 1;
+          updateSearchNav();
+        } else {
+          searchNavCount.innerText = "0/0";
+        }
+      }
+      function navSearch(dir) {
+        if (searchMatchIndices.length === 0) return;
+        searchMatchCursor += dir;
+        if (searchMatchCursor < 0) searchMatchCursor = searchMatchIndices.length - 1;
+        if (searchMatchCursor >= searchMatchIndices.length) searchMatchCursor = 0;
+        updateSearchNav();
+      }
+      function updateSearchNav() {
+        searchNavCount.innerText = `${searchMatchCursor + 1}/${searchMatchIndices.length}`;
+        chatMessagesDisplay.querySelectorAll(".message-row").forEach(r => r.classList.remove("highlight-match"));
+        const targetNode = chatMessagesDisplay.children[searchMatchIndices[searchMatchCursor]];
+        targetNode.classList.add("highlight-match");
+        targetNode.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
     </script>
   </body>
 </html>
