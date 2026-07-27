@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sign In - Mail Dialog</title>
+    <title>Sign In - Collabe</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
@@ -14,27 +14,17 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XJEVTX2306"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
     
-      gtag('config', 'G-XJEVTX2306');
-    </script>
-    
-    <meta name="description" content="Sign in to MailDialog to securely chat with friends and colleagues using only an email address.">
-     <link rel="manifest" href="manifest.json">
-    <link rel="icon" href="favicon.ico.png">
-    <meta name="theme-color" content="#2563EB">
+    <!-- EmailJS Library for Welcome Email -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
     <style>
       /* --- CSS VARIABLES & THEMING --- */
       :root {
         --bg-base: #f8fafc;
-        --orb-1: rgba(37, 99, 235, 0.2); /* Professional Blue */
-        --orb-2: rgba(56, 189, 248, 0.25); /* Technology Cyan */
-        --orb-3: rgba(168, 85, 247, 0.15); /* Tech Purple Accent */
+        --orb-1: rgba(37, 99, 235, 0.2);
+        --orb-2: rgba(56, 189, 248, 0.25);
+        --orb-3: rgba(168, 85, 247, 0.15);
         --bg-card: rgba(255, 255, 255, 0.65);
         --text-main: #111827;
         --text-muted: #64748b;
@@ -140,42 +130,22 @@
       }
 
       @keyframes driftOrbOne {
-        0% {
-          transform: translate(0px, 0px) scale(1);
-        }
-        33% {
-          transform: translate(150px, 120px) scale(1.1);
-        }
-        66% {
-          transform: translate(50px, 200px) scale(0.95);
-        }
-        100% {
-          transform: translate(0px, 0px) scale(1);
-        }
+        0% { transform: translate(0px, 0px) scale(1); }
+        33% { transform: translate(150px, 120px) scale(1.1); }
+        66% { transform: translate(50px, 200px) scale(0.95); }
+        100% { transform: translate(0px, 0px) scale(1); }
       }
 
       @keyframes driftOrbTwo {
-        0% {
-          transform: translate(0px, 0px) scale(1.05);
-        }
-        50% {
-          transform: translate(-180px, -140px) scale(0.9);
-        }
-        100% {
-          transform: translate(0px, 0px) scale(1.05);
-        }
+        0% { transform: translate(0px, 0px) scale(1.05); }
+        50% { transform: translate(-180px, -140px) scale(0.9); }
+        100% { transform: translate(0px, 0px) scale(1.05); }
       }
 
       @keyframes driftOrbThree {
-        0% {
-          transform: translate(0px, 0px) rotate(0deg);
-        }
-        50% {
-          transform: translate(100px, -80px) rotate(180deg);
-        }
-        100% {
-          transform: translate(-60px, 40px) rotate(360deg);
-        }
+        0% { transform: translate(0px, 0px) rotate(0deg); }
+        50% { transform: translate(100px, -80px) rotate(180deg); }
+        100% { transform: translate(-60px, 40px) rotate(360deg); }
       }
 
       .theme-toggle {
@@ -202,6 +172,205 @@
 
       .theme-toggle:hover {
         transform: translateY(-2px) rotate(-8deg);
+      }
+
+      /* --- AI FLOATING ASSISTANT (AUTH PAGE) --- */
+      .ai-assistant-fab {
+        position: fixed;
+      
+        bottom: 1rem;
+        right: 2rem;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #2563eb, #7c3aed);
+        color: #fff;
+        font-size: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+        z-index: 5000;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: none;
+      }
+      .ai-assistant-fab:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5); }
+
+      .ai-assistant-overlay {
+        position: fixed;
+        bottom: 85px;
+        right: 20px;
+        width: 380px;
+        max-width: 90vw;
+        max-height: 500px;
+        background: var(--bg-card);
+        backdrop-filter: var(--card-blur);
+        -webkit-backdrop-filter: var(--card-blur);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        box-shadow: var(--shadow);
+        display: none;
+        flex-direction: column;
+        z-index: 4999;
+        overflow: hidden;
+        animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .ai-assistant-overlay.open { display: flex; }
+
+      .ai-header {
+        padding: 16px 20px;
+        background: var(--bg-base);
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .ai-header h4 { 
+        font-size: 15px; 
+        margin: 0; 
+        display: flex; 
+        align-items: center; 
+        gap: 8px; 
+        color: var(--text-main); 
+        font-weight: 600;
+      }
+      .ai-header h4 i { color: var(--secondary); }
+      
+      .ai-header .close-ai-btn {
+        cursor: pointer;
+        color: var(--text-muted);
+        background: transparent;
+        border: none;
+        font-size: 18px;
+        padding: 4px;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: background 0.2s, color 0.2s;
+      }
+      .ai-header .close-ai-btn:hover {
+        background: var(--border-color);
+        color: var(--text-main);
+      }
+      
+      .ai-chat-container {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        background: var(--bg-base);
+        min-height: 250px;
+        max-height: 400px;
+        scroll-behavior: smooth;
+      }
+      
+      .ai-message-row { display: flex; width:100%; }
+      .ai-message-row.ai-out { justify-content: flex-end; }
+      .ai-message-row.ai-in { justify-content: flex-start; }
+      
+      .ai-bubble {
+        max-width: 85%;
+        padding: 12px 16px;
+        border-radius: 16px;
+        font-size: 14px;
+        line-height: 1.6;
+        background: var(--input-bg);
+        color: var(--text-main);
+        border: 1px solid var(--border-color);
+        box-shadow: var(--shadow-sm, 0 1px 2px rgba(0,0,0,0.05));
+        word-break: break-word;
+      }
+      .ai-message-row.ai-out .ai-bubble {
+        background: var(--secondary);
+        color: #fff;
+        border: none;
+      }
+      .ai-loading-dot {
+        display: inline-block;
+        width: 8px; height: 8px;
+        margin: 0 2px;
+        background: var(--text-muted);
+        border-radius: 50%;
+        animation: typingBlink 1.2s infinite ease-in-out;
+      }
+
+      .ai-footer {
+        padding: 14px 16px;
+        border-top: 1px solid var(--border-color);
+        display: flex;
+        gap: 10px;
+        background: var(--bg-card);
+      }
+      .ai-footer input {
+        flex: 1;
+        padding: 12px 16px;
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        outline: none;
+        background: var(--input-bg);
+        color: var(--text-main);
+        font-size: 14px;
+        transition: border-color 0.2s;
+      }
+      .ai-footer input:focus {
+        border-color: var(--secondary);
+        background: var(--bg-card);
+      }
+      .ai-footer button {
+        background: var(--secondary);
+        color: #fff;
+        border: none;
+        padding: 10px 18px;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: transform 0.1s;
+      }
+      .ai-footer button:active { transform: scale(0.95); }
+
+      @keyframes typingBlink {
+        0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+        30% { opacity: 1; transform: translateY(-2px); }
+      }
+
+      /* --- MOBILE FULLSCREEN FOR AI --- */
+      @media (max-width: 768px) {
+        .ai-assistant-overlay {
+          width: 100% !important;
+          max-width: 100% !important;
+          height: 100vh !important;
+          max-height: 100vh !important;
+          bottom: 0;
+          right: 0;
+          border-radius: 0;
+          border: none;
+          top: 0;
+          left: 0;
+          backdrop-filter: blur(40px);
+          -webkit-backdrop-filter: blur(40px);
+        }
+        .ai-chat-container {
+          max-height: none;
+          flex: 1;
+          padding: 24px 20px;
+        }
+        .ai-header .close-ai-btn {
+          width: 40px;
+          height: 40px;
+          font-size: 20px;
+        }
+        .ai-assistant-fab {
+          bottom: 1.5rem;
+          right: 1.5rem;
+          width: 52px;
+          height: 52px;
+          font-size: 22px;
+        }
       }
 
       /* --- 3D TILT WRAPPER --- */
@@ -234,19 +403,9 @@
         inset: 0;
         border-radius: 28px;
         padding: 1px;
-        background: linear-gradient(
-          135deg,
-          rgba(56, 189, 248, 0.5),
-          transparent 30%,
-          transparent 70%,
-          rgba(37, 99, 235, 0.5)
-        );
-        -webkit-mask:
-          linear-gradient(#fff 0 0) content-box,
-          linear-gradient(#fff 0 0);
-        mask:
-          linear-gradient(#fff 0 0) content-box,
-          linear-gradient(#fff 0 0);
+        background: linear-gradient(135deg, rgba(56, 189, 248, 0.5), transparent 30%, transparent 70%, rgba(37, 99, 235, 0.5));
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
         -webkit-mask-composite: xor;
         mask-composite: exclude;
         pointer-events: none;
@@ -254,24 +413,14 @@
       }
 
       @keyframes cardScaleIn {
-        from {
-          opacity: 0;
-          transform: translateY(30px) scale(0.96) rotateX(0deg);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0) scale(1) rotateX(0deg);
-        }
+        from { opacity: 0; transform: translateY(30px) scale(0.96) rotateX(0deg); }
+        to { opacity: 1; transform: translateY(0) scale(1) rotateX(0deg); }
       }
 
       .brand-logo {
         width: 68px;
         height: 68px;
-        background: linear-gradient(
-          135deg,
-          var(--secondary) 0%,
-          var(--accent) 100%
-        );
+        background: linear-gradient(135deg, var(--secondary) 0%, var(--accent) 100%);
         color: white;
         border-radius: 20px;
         display: flex;
@@ -285,528 +434,85 @@
       }
 
       @keyframes pulseLogo {
-        0%,
-        100% {
-          transform: translateZ(40px) scale(1);
-        }
-        50% {
-          transform: translateZ(40px) scale(1.04);
-          box-shadow: 0 15px 25px rgba(37, 99, 235, 0.35);
-        }
+        0%, 100% { transform: translateZ(40px) scale(1); }
+        50% { transform: translateZ(40px) scale(1.04); box-shadow: 0 15px 25px rgba(37, 99, 235, 0.35); }
       }
 
-      h1 {
-        font-size: 1.85rem;
-        font-weight: 700;
-        color: var(--text-main);
-        margin-bottom: 0.5rem;
-        letter-spacing: -0.025em;
-        transform: translateZ(30px);
-      }
-
-      .subtitle {
-        color: var(--text-muted);
-        font-size: 0.95rem;
-        line-height: 1.5;
-        margin-bottom: 2rem;
-        transform: translateZ(20px);
-      }
-
-      #loading-state {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 2rem 0;
-      }
-
-      #login-state {
-        display: none;
-        opacity: 0;
-        animation: fadeIn 0.4s ease forwards;
-        transform: translateZ(10px);
-      }
-
-      @keyframes fadeIn {
-        to {
-          opacity: 1;
-        }
-      }
-
-      .spinner {
-        width: 42px;
-        height: 42px;
-        border: 3.5px solid var(--border-color);
-        border-top-color: var(--secondary);
-        border-radius: 50%;
-        animation: spin 0.8s linear infinite;
-        margin-bottom: 1.25rem;
-      }
-
-      .auth-form {
-        text-align: left;
-        margin-bottom: 1.5rem;
-      }
-
-      .input-group {
-        position: relative;
-        margin-bottom: 1.25rem;
-      }
-
-      .input-group i.leading-icon {
-        position: absolute;
-        left: 1rem;
-        top: 50%;
-        transform: translateY(-50%);
-        color: var(--text-muted);
-        font-size: 1rem;
-        pointer-events: none;
-      }
-
-      .input-group input {
-        width: 100%;
-        padding: 0.875rem 1rem 0.875rem 2.75rem;
-        background: var(--input-bg);
-        border: 1px solid var(--border-color);
-        border-radius: 12px;
-        color: var(--text-main);
-        font-size: 0.95rem;
-        outline: none;
-        transition: all 0.2s ease;
-      }
-
-      .input-group input.has-toggle {
-        padding-right: 2.75rem;
-      }
-
-      .input-group input:focus {
-        border-color: var(--secondary);
-        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
-        background: var(--bg-card);
-      }
-
-      .input-group input.field-error {
-        border-color: var(--danger);
-        box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.12);
-      }
-
-      .toggle-visibility {
-        position: absolute;
-        right: 1rem;
-        top: 50%;
-        transform: translateY(-50%);
-        color: var(--text-muted);
-        background: none;
-        border: none;
-        cursor: pointer;
-        padding: 0.25rem;
-        font-size: 0.95rem;
-        width: auto;
-      }
-
-      .toggle-visibility:hover {
-        color: var(--secondary);
-      }
-
-      .field-hint {
-        font-size: 0.8rem;
-        color: var(--text-muted);
-        margin: -0.9rem 0 1rem 0.25rem;
-      }
-
-      .password-actions {
-        display: flex;
-        justify-content: flex-end;
-        margin: -0.25rem 0 1rem;
-      }
-
-      .forgot-link {
-        color: var(--secondary);
-        font-size: 0.9rem;
-        font-weight: 600;
-        text-decoration: none;
-        background: none;
-        border: none;
-        cursor: pointer;
-        width: auto;
-        padding: 0;
-      }
-
-      .forgot-link:hover {
-        text-decoration: underline;
-      }
-
-      .reset-password-section {
-        display: none;
-        margin-top: 0.25rem;
-        animation: fadeIn 0.3s ease forwards;
-      }
-
-      .btn-secondary {
-        width: 100%;
-        background: #e2e8f0;
-        color: var(--text-main);
-        border: none;
-        padding: 0.875rem 1.5rem;
-        border-radius: 12px;
-        font-size: 0.95rem;
-        font-weight: 600;
-        cursor: pointer;
-        margin-top: 0.25rem;
-      }
-
-      [data-theme="dark"] .btn-secondary {
-        background: rgba(148, 163, 184, 0.15);
-        color: var(--text-main);
-      }
-
-      .btn-secondary:hover:not(:disabled) {
-        background: #cbd5e1;
-      }
-      [data-theme="dark"] .btn-secondary:hover:not(:disabled) {
-        background: rgba(148, 163, 184, 0.25);
-      }
-
-      .btn-link {
-        width: 100%;
-        background: transparent;
-        color: var(--secondary);
-        border: none;
-        padding: 0.75rem 1rem;
-        font-size: 0.9rem;
-        font-weight: 600;
-        cursor: pointer;
-        margin-top: 0.25rem;
-      }
-
-      .separator {
-        display: flex;
-        align-items: center;
-        text-align: center;
-        color: var(--text-muted);
-        font-size: 0.85rem;
-        font-weight: 500;
-        margin: 1.5rem 0;
-      }
-
-      .separator::before,
-      .separator::after {
-        content: "";
-        flex: 1;
-        border-bottom: 1px solid var(--border-color);
-      }
-
-      .separator:not(:empty)::before {
-        margin-right: 0.75rem;
-      }
-      .separator:not(:empty)::after {
-        margin-left: 0.75rem;
-      }
-
-      .btn-primary {
-        width: 100%;
-        background: linear-gradient(135deg, var(--secondary) 0%, #1d4ed8 100%);
-        color: #ffffff;
-        border: none;
-        padding: 0.875rem 1.5rem;
-        border-radius: 12px;
-        font-size: 0.95rem;
-        font-weight: 600;
-        cursor: pointer;
-        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-      }
-
-      .btn-primary:hover:not(:disabled) {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
-      }
-
-      .btn-google {
-        width: 100%;
-        background-color: var(--primary);
-        color: #ffffff;
-        border: 1px solid transparent;
-        padding: 0.875rem 1.5rem;
-        border-radius: 12px;
-        font-size: 0.95rem;
-        font-weight: 600;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.75rem;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-      }
-
-      [data-theme="dark"] .btn-google {
-        background-color: #ffffff;
-        color: #0f172a;
-      }
-
-      .install-popup{
-
-    position:fixed;
-
-    inset:0;
-
-    background:rgba(0,0,0,.45);
-
-    display:none;
-
-    justify-content:center;
-
-    align-items:center;
-
-    z-index:999999;
-
-}
-
-.popup-card{
-
-    width:360px;
-
-    background:#fff;
-
-    border-radius:18px;
-
-    padding:28px;
-
-    text-align:center;
-
-    box-shadow:0 25px 50px rgba(0,0,0,.25);
-
-}
-
-.popup-logo{
-
-    width:80px;
-
-    height:80px;
-
-    border-radius:18px;
-
-    margin-bottom:18px;
-
-}
-
-.popup-card h2{
-
-    margin-bottom:10px;
-
-    color:#2563EB;
-
-}
-
-.popup-card p{
-
-    line-height:1.6;
-
-    color:#555;
-
-    margin-bottom:25px;
-
-}
-
-.popup-buttons{
-
-    display:flex;
-
-    gap:12px;
-
-}
-
-.popup-buttons button{
-
-    flex:1;
-
-    padding:12px;
-
-    border:none;
-
-    border-radius:10px;
-
-    cursor:pointer;
-
-    font-size:15px;
-
-}
-
-#installBtn{
-
-    background:#2563EB;
-
-    color:white;
-
-}
-
-#laterBtn{
-
-    background:#E5E7EB;
-
-}
-      .btn-google:hover:not(:disabled) {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(15, 23, 42, 0.15);
-      }
-
-      button:active:not(:disabled) {
-        transform: translateY(0) !important;
-      }
-      button:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-      }
-
-      .modal-overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(2, 6, 23, 0.74);
-        backdrop-filter: blur(12px);
-        display: none;
-        align-items: center;
-        justify-content: center;
-        z-index: 200;
-        padding: 1.5rem;
-      }
-
-      .modal-card {
-        width: min(100%, 460px);
-        background: var(--bg-card);
-        backdrop-filter: var(--card-blur);
-        -webkit-backdrop-filter: var(--card-blur);
-        border: 1px solid var(--border-color);
-        border-radius: 24px;
-        padding: 2.25rem;
-        text-align: center;
-        box-shadow: var(--shadow);
-        animation: cardScaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-      }
-
-      .modal-card .spinner {
-        margin: 0 auto 1rem;
-      }
-      .modal-card h3 {
-        font-size: 1.2rem;
-        margin-bottom: 0.6rem;
-      }
-      .modal-card p {
-        color: var(--text-muted);
-        line-height: 1.6;
-        font-size: 0.92rem;
-      }
-
-      .modal-card .modal-icon {
-        width: 56px;
-        height: 56px;
-        border-radius: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 1.1rem;
-        font-size: 1.4rem;
-        background: linear-gradient(
-          135deg,
-          var(--secondary) 0%,
-          var(--accent) 100%
-        );
-        color: #fff;
-      }
-
-      .modal-body {
-        text-align: left;
-        margin-top: 1.25rem;
-      }
-
-      .toast-container {
-        position: fixed;
-        bottom: 2rem;
-        right: 2rem;
-        z-index: 300;
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
-        max-width: 360px;
-        width: 100%;
-      }
-
-      .toast {
-        background: var(--bg-card);
-        backdrop-filter: var(--card-blur);
-        border-left: 4px solid var(--secondary);
-        border-top: 1px solid var(--border-color);
-        border-right: 1px solid var(--border-color);
-        border-bottom: 1px solid var(--border-color);
-        padding: 1rem 1.25rem;
-        border-radius: 12px;
-        box-shadow: var(--shadow);
-        color: var(--text-main);
-        display: flex;
-        align-items: flex-start;
-        gap: 0.75rem;
-        font-size: 0.9rem;
-        font-weight: 500;
-        line-height: 1.4;
-        animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-      }
-
-      .toast i {
-        margin-top: 0.15rem;
-      }
-      .toast.error {
-        border-left-color: var(--danger);
-      }
-      .toast.error i {
-        color: var(--danger);
-      }
-      .toast.success {
-        border-left-color: var(--success);
-      }
-      .toast.success i {
-        color: var(--success);
-      }
-
-      @keyframes spin {
-        to {
-          transform: rotate(360deg);
-        }
-      }
-      @keyframes slideIn {
-        from {
-          transform: translateX(120%);
-          opacity: 0;
-        }
-        to {
-          transform: translateX(0);
-          opacity: 1;
-        }
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        *,
-        .auth-card,
-        .orb,
-        .brand-logo {
-          animation: none !important;
-          transition: none !important;
-        }
-      }
-
+      h1 { font-size: 1.85rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.5rem; letter-spacing: -0.025em; transform: translateZ(30px); }
+      .subtitle { color: var(--text-muted); font-size: 0.95rem; line-height: 1.5; margin-bottom: 2rem; transform: translateZ(20px); }
+
+      #loading-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem 0; }
+      #login-state { display: none; opacity: 0; animation: fadeIn 0.4s ease forwards; transform: translateZ(10px); }
+      @keyframes fadeIn { to { opacity: 1; } }
+
+      .spinner { width: 42px; height: 42px; border: 3.5px solid var(--border-color); border-top-color: var(--secondary); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 1.25rem; }
+      @keyframes spin { to { transform: rotate(360deg); } }
+
+      .auth-form { text-align: left; margin-bottom: 1.5rem; }
+
+      .input-group { position: relative; margin-bottom: 1.25rem; }
+      .input-group i.leading-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 1rem; pointer-events: none; }
+      .input-group input { width: 100%; padding: 0.875rem 1rem 0.875rem 2.75rem; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 12px; color: var(--text-main); font-size: 0.95rem; outline: none; transition: all 0.2s ease; }
+      .input-group input.has-toggle { padding-right: 2.75rem; }
+      .input-group input:focus { border-color: var(--secondary); box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15); background: var(--bg-card); }
+      .input-group input.field-error { border-color: var(--danger); box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.12); }
+
+      .toggle-visibility { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); background: none; border: none; cursor: pointer; padding: 0.25rem; font-size: 0.95rem; width: auto; }
+      .toggle-visibility:hover { color: var(--secondary); }
+      .field-hint { font-size: 0.8rem; color: var(--text-muted); margin: -0.9rem 0 1rem 0.25rem; }
+
+      .password-actions { display: flex; justify-content: flex-end; margin: -0.25rem 0 1rem; }
+      .forgot-link { color: var(--secondary); font-size: 0.9rem; font-weight: 600; text-decoration: none; background: none; border: none; cursor: pointer; width: auto; padding: 0; }
+      .forgot-link:hover { text-decoration: underline; }
+
+      .reset-password-section { display: none; margin-top: 0.25rem; animation: fadeIn 0.3s ease forwards; }
+
+      .btn-secondary { width: 100%; background: #e2e8f0; color: var(--text-main); border: none; padding: 0.875rem 1.5rem; border-radius: 12px; font-size: 0.95rem; font-weight: 600; cursor: pointer; margin-top: 0.25rem; }
+      [data-theme="dark"] .btn-secondary { background: rgba(148, 163, 184, 0.15); color: var(--text-main); }
+      .btn-secondary:hover:not(:disabled) { background: #cbd5e1; }
+      [data-theme="dark"] .btn-secondary:hover:not(:disabled) { background: rgba(148, 163, 184, 0.25); }
+
+      .btn-link { width: 100%; background: transparent; color: var(--secondary); border: none; padding: 0.75rem 1rem; font-size: 0.9rem; font-weight: 600; cursor: pointer; margin-top: 0.25rem; }
+      .btn-link:hover { text-decoration: underline; }
+
+      .separator { display: flex; align-items: center; text-align: center; color: var(--text-muted); font-size: 0.85rem; font-weight: 500; margin: 1.5rem 0; }
+      .separator::before, .separator::after { content: ""; flex: 1; border-bottom: 1px solid var(--border-color); }
+      .separator:not(:empty)::before { margin-right: 0.75rem; }
+      .separator:not(:empty)::after { margin-left: 0.75rem; }
+
+      .btn-primary { width: 100%; background: linear-gradient(135deg, var(--secondary) 0%, #1d4ed8 100%); color: #ffffff; border: none; padding: 0.875rem 1.5rem; border-radius: 12px; font-size: 0.95rem; font-weight: 600; cursor: pointer; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2); display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+      .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3); }
+
+      .btn-google { width: 100%; background-color: var(--primary); color: #ffffff; border: 1px solid transparent; padding: 0.875rem 1.5rem; border-radius: 12px; font-size: 0.95rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.75rem; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); }
+      [data-theme="dark"] .btn-google { background-color: #ffffff; color: #0f172a; }
+      .btn-google:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(15, 23, 42, 0.15); }
+
+      button:active:not(:disabled) { transform: translateY(0) !important; }
+      button:disabled { opacity: 0.6; cursor: not-allowed; }
+
+      .modal-overlay { position: fixed; inset: 0; background: rgba(2, 6, 23, 0.74); backdrop-filter: blur(12px); display: none; align-items: center; justify-content: center; z-index: 200; padding: 1.5rem; }
+      .modal-card { width: min(100%, 460px); background: var(--bg-card); backdrop-filter: var(--card-blur); -webkit-backdrop-filter: var(--card-blur); border: 1px solid var(--border-color); border-radius: 24px; padding: 2.25rem; text-align: center; box-shadow: var(--shadow); animation: cardScaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+      .modal-card .spinner { margin: 0 auto 1rem; }
+      .modal-card h3 { font-size: 1.2rem; margin-bottom: 0.6rem; }
+      .modal-card p { color: var(--text-muted); line-height: 1.6; font-size: 0.92rem; }
+      .modal-card .modal-icon { width: 56px; height: 56px; border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.1rem; font-size: 1.4rem; background: linear-gradient(135deg, var(--secondary) 0%, var(--accent) 100%); color: #fff; }
+      .modal-body { text-align: left; margin-top: 1.25rem; }
+
+      .toast-container { position: fixed; bottom: 2rem; right: 2rem; z-index: 300; display: flex; flex-direction: column; gap: 0.75rem; max-width: 360px; width: 100%; }
+      .toast { background: var(--bg-card); backdrop-filter: var(--card-blur); border-left: 4px solid var(--secondary); border-top: 1px solid var(--border-color); border-right: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); padding: 1rem 1.25rem; border-radius: 12px; box-shadow: var(--shadow); color: var(--text-main); display: flex; align-items: flex-start; gap: 0.75rem; font-size: 0.9rem; font-weight: 500; line-height: 1.4; animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+      .toast i { margin-top: 0.15rem; }
+      .toast.error { border-left-color: var(--danger); }
+      .toast.error i { color: var(--danger); }
+      .toast.success { border-left-color: var(--success); }
+      .toast.success i { color: var(--success); }
+
+      @keyframes slideIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+      @media (prefers-reduced-motion: reduce) { *, .auth-card, .orb, .brand-logo { animation: none !important; transition: none !important; } }
       @media (max-width: 480px) {
-        .auth-container {
-          padding: 1rem;
-        }
-        .auth-card {
-          padding: 2.5rem 1.5rem;
-        }
-        .toast-container {
-          left: 1rem;
-          right: 1rem;
-          max-width: none;
-        }
+        .auth-container { padding: 1rem; }
+        .auth-card { padding: 2.5rem 1.5rem; }
+        .toast-container { left: 1rem; right: 1rem; max-width: none; }
       }
     </style>
   </head>
@@ -826,86 +532,52 @@
         <div class="brand-logo"><i class="fa-solid fa-bolt"></i></div>
         <h1 id="panelTitle">Welcome back</h1>
         <p class="subtitle" id="panelSubtitle">
-          Sign in to continue to your Mail Dialog workspace.
+          Sign in to continue to your Collabe workspace.
         </p>
 
         <div id="loading-state">
           <div class="spinner"></div>
-          <p
-            style="
-              color: var(--text-muted);
-              font-size: 0.9rem;
-              font-weight: 500;
-            "
-          >
-            Loading your session...
-          </p>
+          <p style="color: var(--text-muted); font-size: 0.9rem; font-weight: 500;">Loading your session...</p>
         </div>
 
         <div id="login-state">
+          <!-- Sign In Form -->
           <form class="auth-form" id="emailLoginForm" novalidate>
+            <!-- Sign Up / Sign In Toggle -->
+            <div style="text-align: center; margin-bottom: 1rem; font-size: 0.9rem; color: var(--text-muted);">
+              <span id="formToggleText">Don't have an account?</span>
+              <button type="button" id="authModeToggleBtn" class="btn-link" style="width: auto; padding: 0 0.25rem; font-size: 0.9rem; display: inline-block;">
+                Sign Up
+              </button>
+            </div>
+
             <div class="input-group">
               <i class="fa-solid fa-envelope leading-icon"></i>
-              <input
-                type="email"
-                id="authEmailInput"
-                placeholder="Email address"
-                required
-                autocomplete="email"
-              />
+              <input type="email" id="authEmailInput" placeholder="Email address" required autocomplete="email" />
             </div>
+            
             <div class="input-group">
               <i class="fa-solid fa-lock leading-icon"></i>
-              <input
-                type="password"
-                id="authPasswordInput"
-                class="has-toggle"
-                placeholder="Password"
-                required
-                autocomplete="current-password"
-              />
-              <button
-                type="button"
-                class="toggle-visibility"
-                id="togglePasswordBtn"
-                aria-label="Show password"
-                tabindex="-1"
-              >
+              <input type="password" id="authPasswordInput" class="has-toggle" placeholder="Password" required autocomplete="current-password" />
+              <button type="button" class="toggle-visibility" id="togglePasswordBtn" aria-label="Show password" tabindex="-1">
                 <i class="fa-solid fa-eye"></i>
               </button>
             </div>
-            <div class="password-actions">
-              <button type="button" id="forgotPasswordLink" class="forgot-link">
-                Forgot password?
-              </button>
+
+            <div class="password-actions" id="forgotPasswordRow">
+              <button type="button" id="forgotPasswordLink" class="forgot-link">Forgot password?</button>
             </div>
+
             <div id="resetPasswordSection" class="reset-password-section">
-              <p
-                style="
-                  font-size: 0.9rem;
-                  color: var(--text-muted);
-                  margin-bottom: 0.75rem;
-                "
-              >
-                Enter the email address for the account you want to recover.
-              </p>
+              <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.75rem;">Enter the email address for the account you want to recover.</p>
               <div class="input-group">
                 <i class="fa-solid fa-envelope leading-icon"></i>
-                <input
-                  type="email"
-                  id="resetEmailInput"
-                  placeholder="Email address"
-                  autocomplete="email"
-                  required
-                />
+                <input type="email" id="resetEmailInput" placeholder="Email address" autocomplete="email" required />
               </div>
-              <button type="button" class="btn-secondary" id="resetPasswordBtn">
-                Send reset link
-              </button>
-              <button type="button" class="btn-link" id="backToLoginBtn">
-                Back to sign in
-              </button>
+              <button type="button" class="btn-secondary" id="resetPasswordBtn">Send reset link</button>
+              <button type="button" class="btn-link" id="backToLoginBtn">Back to sign in</button>
             </div>
+
             <button type="submit" class="btn-primary" id="emailAuthBtn">
               <span id="emailBtnText">Sign in</span>
               <i class="fa-solid fa-arrow-right"></i>
@@ -922,132 +594,70 @@
       </div>
     </div>
 
-    <!-- Full-screen overlay shown when redirecting to Google (makes sign-in feel full-page) -->
-    <div
-      id="googleRedirectOverlay"
-      class="google-redirect-overlay"
-      style="display: none"
-    >
+    <!-- Google Redirect Overlay -->
+    <div id="googleRedirectOverlay" class="google-redirect-overlay" style="display: none">
       <div class="redirect-card">
-        <i
-          class="fa-solid fa-circle-notch fa-spin"
-          style="font-size: 28px; margin-bottom: 0.75rem"
-        ></i>
-        <p style="font-size: 1.05rem; margin: 0; color: var(--text-main)">
-          Redirecting to Google sign-in...
-        </p>
-        <p
-          style="
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-top: 0.5rem;
-          "
-        >
-          You may be asked to choose an account. This page will return when
-          complete.
-        </p>
+        <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 28px; margin-bottom: 0.75rem"></i>
+        <p style="font-size: 1.05rem; margin: 0; color: var(--text-main)">Redirecting to Google sign-in...</p>
+        <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.5rem;">You may be asked to choose an account. This page will return when complete.</p>
       </div>
     </div>
 
-    <!-- Password linking modal: shown once, after a Google user's first sign-in -->
+    <!-- Password linking modal -->
     <div class="modal-overlay" id="passwordSetupOverlay">
       <div class="modal-card">
         <div class="modal-icon"><i class="fa-solid fa-key"></i></div>
         <h3>Want to sign in with a password too?</h3>
-        <p>
-          You're signed in with Google. If you'd like to also be able to sign in
-          with your email and a password on any device, set one up now. This is
-          completely optional.
-        </p>
+        <p>You're signed in with Google. If you'd like to also be able to sign in with your email and a password on any device, set one up now. This is completely optional.</p>
         <div class="modal-body">
           <div class="input-group">
             <i class="fa-solid fa-lock leading-icon"></i>
-            <input
-              type="password"
-              id="newPasswordInput"
-              placeholder="Create a password"
-              autocomplete="new-password"
-            />
+            <input type="password" id="newPasswordInput" placeholder="Create a password" autocomplete="new-password" />
           </div>
           <div class="input-group" style="margin-bottom: 0.5rem">
             <i class="fa-solid fa-lock leading-icon"></i>
-            <input
-              type="password"
-              id="confirmPasswordInput"
-              placeholder="Confirm password"
-              autocomplete="new-password"
-            />
+            <input type="password" id="confirmPasswordInput" placeholder="Confirm password" autocomplete="new-password" />
           </div>
-          <p class="field-hint" style="margin-left: 0.25rem">
-            Use at least 6 characters.
-          </p>
+          <p class="field-hint" style="margin-left: 0.25rem;">Use at least 6 characters.</p>
         </div>
-        <button
-          type="button"
-          class="btn-primary"
-          id="savePasswordBtn"
-          style="margin-top: 0.5rem"
-        >
-          Save password
-        </button>
-        <button type="button" class="btn-link" id="skipPasswordBtn">
-          Skip for now
-        </button>
+        <button type="button" class="btn-primary" id="savePasswordBtn" style="margin-top: 0.5rem;">Save password</button>
+        <button type="button" class="btn-link" id="skipPasswordBtn">Skip for now</button>
       </div>
     </div>
 
     <div class="toast-container" id="toastContainer"></div>
 
-    <div id="installPopup" class="install-popup">
-
-    <div class="popup-card">
-
-        <img src="favicon.ico.png" class="popup-logo">
-
-        <h2>Install MailDialog</h2>
-
-        <p>
-            Install MailDialog for a faster and smoother messaging experience.
-            Access your chats directly from your desktop or home screen.
-        </p>
-
-        <div class="popup-buttons">
-
-            <button id="installBtn">
-                Install
-            </button>
-
-            <button id="laterBtn">
-                Maybe Later
-            </button>
-
-        </div>
-
+    <!-- ==================== AI ASSISTANT ==================== -->
+    <div class="ai-assistant-fab" id="aiFabBtn">
+        <i class="fa-solid fa-wand-magic-sparkles"></i>
     </div>
 
-</div>
-    
+    <div class="ai-assistant-overlay" id="aiAssistantOverlay">
+        <div class="ai-header">
+            <h4><i class="fa-solid fa-robot"></i> Collabe AI</h4>
+            <button class="close-ai-btn" id="closeAiOverlayBtn" title="Close AI Assistant">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="ai-chat-container" id="aiChatContainer">
+            <div class="ai-message-row ai-in">
+                <div class="ai-bubble">Hello! I am Collabe's AI assistant. I can tell you all about this platform, its founder, and how you can get started.</div>
+            </div>
+        </div>
+        <div class="ai-footer">
+            <input type="text" id="aiUserInput" placeholder="Ask me about Collabe..." />
+            <button id="aiSendBtn"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+    </div>
+
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
       import {
-        getAuth,
-        onAuthStateChanged,
-        signInWithEmailAndPassword,
-        GoogleAuthProvider,
-        signInWithPopup,
-        signInWithRedirect,
-        getRedirectResult,
-        EmailAuthProvider,
-        linkWithCredential,
-        sendPasswordResetEmail,
+        getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword,
+        GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult,
+        EmailAuthProvider, linkWithCredential, sendPasswordResetEmail,
       } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-      import {
-        getFirestore,
-        doc,
-        getDoc,
-        setDoc,
-        serverTimestamp,
-      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+      import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
       const firebaseConfig = {
         apiKey: "AIzaSyCutP1u8y7zuYw5Je_GNyRppkdtLbbmM2o",
@@ -1063,6 +673,460 @@
       const auth = getAuth(app);
       const db = getFirestore(app);
 
+      // ================================================================
+      // EMAILJS CONFIGURATION (Welcome Email)
+      // ================================================================
+      const EMAILJS_PUBLIC_KEY = "t0v3FDz1rKDraZcLg"; 
+      const EMAILJS_SERVICE_ID = "service_3u4wuxs";     
+      const EMAILJS_TEMPLATE_ID = "template_mo8hnh9";   
+      const AUTHOR_PICTURE_URL = "https://res-console.cloudinary.com/sxzdnyqs/thumbnails/transform/v1/image/upload/Y19maWxsLGhfMjAwLHdfMjAw/v1/ZW1tYThfZ283eXJ5/template_primary";
+
+      emailjs.init(EMAILJS_PUBLIC_KEY);
+
+      async function sendWelcomeEmail(userEmail, userName) {
+          const templateParams = {
+              to_email: userEmail,
+              user_name: userName || "New User",
+              author_picture_url: AUTHOR_PICTURE_URL
+          };
+          try {
+              await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams);
+              console.log("Welcome email sent successfully!");
+          } catch (error) {
+              console.error("Failed to send welcome email:", error.text);
+          }
+      }
+
+      // ================================================================
+      // AI CONFIGURATION (GROQ CLOUD)
+      // ================================================================
+      const AI_API_KEY = "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"; // <--- YOUR GROQ KEY HERE
+      let aiChatHistory = [];
+
+      // 🔥 UPDATED: Massive AI System Prompt with Collabe details
+      const aiSystemInstruction = `You are **Collabe AI**, the official AI assistant built into the Collabe platform.
+
+## Identity
+Your name is **Collabe AI**.
+You are not ChatGPT, Claude, Gemini, Grok, DeepSeek, or any other AI assistant. You are the intelligent assistant created specifically for Collabe.
+Your primary goal is to help users communicate, collaborate, learn, solve problems, organize work, and become more productive while using the Collabe platform. You always represent the values and vision of Collabe.
+
+## About Collabe
+Collabe is a modern communication and collaboration platform designed to make working with others simple, fast, and intelligent.
+Collabe combines messaging, collaboration, productivity tools, file sharing, and artificial intelligence into one platform.
+The vision is to create more than another chat application. It aims to become a complete collaboration ecosystem where people can:
+* Communicate instantly
+* Share ideas
+* Work on projects
+* Learn together
+* Build communities
+* Exchange files
+* Use AI assistance
+* Stay productive
+Collabe continues to evolve with new features and improvements.
+
+## Founder
+Collabe was founded by **Emmanuel Ajibade**.
+Emmanuel Ajibade is a Nigerian student, graphic designer, software developer, and technology enthusiast.
+He is passionate about:
+* Software engineering
+* Backend development
+* Artificial Intelligence
+* Communication systems
+* UI/UX Design
+* Building useful digital products
+* Helping people through technology
+His long-term vision is to build software that improves communication, collaboration, education, and productivity. Whenever users ask about the founder, answer confidently using this information.
+
+## About Emmanuel Ajibade
+If someone asks: "Who created Collabe?"
+Reply: > Collabe was created by Emmanuel Ajibade, a Nigerian student, graphic designer, and software developer who is passionate about building modern communication platforms powered by artificial intelligence.
+If users ask more about him, explain that he enjoys building software that solves real-world problems and continues improving Collabe. Do not invent achievements, degrees, companies, or work experience that have not been provided.
+
+## Mission
+The mission of Collabe is: "To make communication, collaboration, and productivity accessible to everyone through intelligent technology."
+
+## Vision
+The vision of Collabe is: "To become one of the world's leading AI-powered communication and collaboration platforms."
+
+## Core Values
+Collabe values:
+* Simplicity
+* Innovation
+* Privacy
+* Security
+* Creativity
+* Productivity
+* Accessibility
+* Continuous improvement
+* User-first design
+
+##Educational Background
+Emmanuel Ajibade is currently a student at Tomia Community Senior Secondary School, Alagbado, Lagos State, Nigeria, where he is in Senior Secondary School 2 (SS2). Alongside his academic studies, he dedicates a significant amount of his time to learning software development, artificial intelligence, graphic design, and modern technologies through self-study and practical projects. He believes that learning extends beyond the classroom and values continuous personal growth.
+
+##Age:
+Emmanuel is a young student developer. If users ask for his exact age, provide it only if it has been explicitly configured by the Collabe administrators. Otherwise, politely explain that his exact age is not publicly available.
+
+## What You Can Help With
+You can help users with: Messaging, Writing, Programming, Coding, Debugging, Graphic Design, Learning, Research, Brainstorming, Summarizing, Translation, Emails, Documents, Project planning, Problem solving, File explanations, Productivity, Mathematics, General knowledge, Collabe features, Technical support.
+
+## More Details About Emmanuel Ajibade
+
+## Overview
+
+Emmanuel Ajibade is a Nigerian student, software developer, graphic designer, technology enthusiast, and the founder of Collabe. He is currently a student at **Tomia Community Senior Secondary School, Alagbado, Lagos State, Nigeria**, where he is pursuing his secondary education while independently building real-world software projects.
+
+From an early stage in his learning journey, Emmanuel developed a strong interest in technology and digital creativity. Rather than limiting himself to classroom education, he believes in learning by building practical solutions. He spends much of his time studying programming, software architecture, artificial intelligence, communication systems, graphic design, and modern web technologies through hands-on experience, technical documentation, and continuous experimentation.
+
+## Educational Background
+
+Emmanuel is currently studying at **Tomia Community Senior Secondary School, Alagbado, Lagos State, Nigeria**, where he is in **Senior Secondary School 2 (SS2)**.
+
+Alongside his academic education, he actively pursues self-learning in software engineering, artificial intelligence, web development, backend technologies, and graphic design. He believes education is a lifelong journey and that the best way to learn is by building practical solutions to real-world problems.
+
+## Professional Identity
+
+Emmanuel is the founder and lead developer of **Collabe**, an AI-powered communication and collaboration platform.
+
+He is also an aspiring Software Engineer and AI Communication Systems Engineer whose primary focus is designing intelligent software that improves communication, productivity, collaboration, and learning.
+
+His mission is to build technology that is useful, accessible, secure, and capable of making a positive impact on millions of people around the world.
+
+## Technical Interests
+
+Emmanuel has a strong interest in:
+
+- Software Engineering
+- Backend Development
+- Frontend Development
+- Artificial Intelligence (AI)
+- AI Communication Systems
+- System Programming
+- Full Stack Development
+- Real-Time Communication Platforms
+- Database Design
+- Cloud Computing
+- API Development
+- Cybersecurity Fundamentals
+- UI/UX Design
+- Graphic Design
+- Human-Computer Interaction
+- Productivity Software
+- Open Source Technologies
+
+## Technical Skills
+
+### Programming Languages
+
+- HTML
+- CSS
+- JavaScript
+- Python (Foundational Knowledge)
+
+### Frameworks & Technologies
+
+- Firebase Authentication
+- Cloud Firestore
+- Firebase Storage
+- Cloudinary
+- Progressive Web Apps (PWA)
+- Git
+- GitHub
+- Vite
+- REST APIs
+
+### Graphic Design Tools
+
+- Adobe Illustrator
+- Adobe Photoshop
+- Adobe InDesign
+- CorelDRAW
+
+## About Collabe
+
+Collabe is Emmanuel's flagship software project.
+
+The platform was created to redefine digital communication by combining messaging, collaboration, productivity tools, and artificial intelligence into a single platform.
+
+The long-term vision for Collabe includes:
+
+- Real-time messaging
+- AI-powered conversations
+- Team collaboration
+- File sharing
+- Voice communication
+- Productivity tools
+- Knowledge sharing
+- Community building
+- Smart workspaces
+- Intelligent assistants
+
+Collabe is continuously evolving, with new features and improvements being added regularly.
+
+## Personal Philosophy
+
+Emmanuel believes that technology should solve meaningful problems rather than simply demonstrate technical complexity.
+
+He strongly believes in:
+
+- Continuous Learning
+- Hard Work
+- Creativity
+- Simplicity
+- Discipline
+- Innovation
+- Integrity
+- Collaboration
+- Lifelong Education
+- Excellence
+
+He enjoys learning by building practical applications rather than only studying theoretical concepts.
+
+## Learning Journey
+
+Emmanuel is largely self-taught in software development.
+
+He improves his knowledge through:
+
+- Building real-world applications
+- Reading official documentation
+- Practicing programming every day
+- Experimenting with new technologies
+- Solving programming challenges
+- Learning software architecture
+- Exploring Artificial Intelligence
+- Reviewing and improving previous projects
+
+He believes consistency is more important than speed and that every project is an opportunity to become a better developer.
+
+## Design Philosophy
+
+Because Emmanuel is both a software developer and graphic designer, he approaches software differently.
+
+He believes every product should be:
+
+- Beautiful
+- Fast
+- Secure
+- Reliable
+- Accessible
+- User-Friendly
+- Modern
+- Scalable
+- Easy to Understand
+
+He combines creativity with engineering to deliver software that people genuinely enjoy using.
+
+## Vision for Artificial Intelligence
+
+Emmanuel believes Artificial Intelligence should assist people rather than replace them.
+
+His vision is to build AI systems that:
+
+- Improve communication
+- Increase productivity
+- Help users learn faster
+- Automate repetitive tasks
+- Support collaboration
+- Make technology more accessible
+
+This philosophy is reflected throughout the development of Collabe AI.
+
+## Career Vision
+
+Emmanuel's long-term ambition is to become a world-class Software Engineer specializing in:
+
+- Artificial Intelligence
+- AI Communication Systems
+- Backend Engineering
+- System Programming
+- Distributed Systems
+- Intelligent Productivity Software
+- Developer Tools
+
+His goal is to create technology that positively impacts millions of people across the world.
+
+## Personal Values
+
+Emmanuel values:
+
+- Integrity
+- Honesty
+- Innovation
+- Simplicity
+- Curiosity
+- Creativity
+- Teamwork
+- Respect
+- Excellence
+- Continuous Improvement
+
+These values influence both his personal life and the products he creates.
+
+## Interests Outside Programming
+
+Outside software development, Emmanuel enjoys:
+
+- Graphic Design
+- Learning about AI
+- Reading technical documentation
+- Exploring new technologies
+- Solving logical problems
+- Building personal projects
+- Improving user experiences
+- Learning modern software architecture
+
+## About the Founder
+
+When users ask about Emmanuel Ajibade, explain that he is the founder of Collabe, a passionate Nigerian student developer who combines software engineering, artificial intelligence, and graphic design to build practical technology that helps people communicate, collaborate, and solve real-world problems.
+
+## Important Guidelines
+
+- Never invent employment history.
+- Never invent university degrees.
+- Never invent certifications.
+- Never invent awards.
+- Never invent companies Emmanuel has worked for.
+- Never invent achievements that have not been publicly shared.
+- If information is unavailable, politely explain that it is not publicly available instead of guessing.
+
+Founder Contact Information:
+Phone Number: +234 09067502619 (both whatsapp and telegram)
+Email: aduraemmanuel123@gmail.com
+`;
+
+      async function sendAIMessage(inputVal) {
+          if (!inputVal) return;
+
+          aiChatHistory.push({ role: 'user', content: inputVal });
+          renderAIPopupMessages();
+          aiUserInput.value = "";
+
+          const loadingRow = document.createElement("div");
+          loadingRow.className = "ai-message-row ai-in";
+          loadingRow.innerHTML = `<div class="ai-bubble"><span class="ai-loading-dot"></span><span class="ai-loading-dot"></span><span class="ai-loading-dot"></span></div>`;
+          aiChatContainer.appendChild(loadingRow);
+          aiChatContainer.scrollTop = aiChatContainer.scrollHeight;
+
+          try {
+              const groqMessages = [
+                  { role: 'system', content: aiSystemInstruction },
+                  ...aiChatHistory.map(m => ({ role: m.role, content: m.content }))
+              ];
+
+              const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                  method: 'POST',
+                  headers: {
+                      'Authorization': `Bearer ${AI_API_KEY}`,
+                      'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({
+                      model: "llama-3.1-8b-instant", 
+                      messages: groqMessages,
+                      stream: true
+                  })
+              });
+
+              if (!response.ok) {
+                  let errorMessage = response.statusText;
+                  try {
+                      const errorData = await response.json();
+                      if (errorData.error && errorData.error.message) {
+                          errorMessage = errorData.error.message;
+                      }
+                  } catch (e) {}
+                  throw new Error(`Groq API error: ${errorMessage}`);
+              }
+
+              const reader = response.body.getReader();
+              const decoder = new TextDecoder();
+              let aiResponse = "";
+              loadingRow.remove();
+
+              const row = document.createElement("div");
+              row.className = "ai-message-row ai-in";
+              const bubble = document.createElement("div");
+              bubble.className = "ai-bubble";
+              row.appendChild(bubble);
+              aiChatContainer.appendChild(row);
+
+              while (true) {
+                  const { value, done } = await reader.read();
+                  if (done) break;
+                  const chunk = decoder.decode(value, { stream: true });
+                  const lines = chunk.split('\n');
+                  for (const line of lines) {
+                      if (line.startsWith('data: ') && line !== 'data: [DONE]') {
+                          try {
+                              const parsed = JSON.parse(line.slice(6));
+                              const content = parsed.choices[0]?.delta?.content || "";
+                              if (content) {
+                                  aiResponse += content;
+                                  bubble.innerText = aiResponse;
+                                  aiChatContainer.scrollTop = aiChatContainer.scrollHeight;
+                              }
+                          } catch (e) {}
+                      }
+                  }
+              }
+
+              aiChatHistory.push({ role: 'assistant', content: aiResponse });
+          } catch (e) {
+              loadingRow.remove();
+              const row = document.createElement("div");
+              row.className = "ai-message-row ai-in";
+              row.innerHTML = `<div class="ai-bubble" style="color:var(--danger);">Error connecting to AI: ${e.message}</div>`;
+              aiChatContainer.appendChild(row);
+              aiChatHistory.pop(); 
+          }
+      }
+
+      function renderAIPopupMessages() {
+          aiChatContainer.innerHTML = "";
+          aiChatHistory.forEach((msg) => {
+              const row = document.createElement("div");
+              row.className = `ai-message-row ${msg.role === 'user' ? 'ai-out' : 'ai-in'}`;
+              const bubble = document.createElement("div");
+              bubble.className = "ai-bubble";
+              bubble.innerText = msg.content;
+              row.appendChild(bubble);
+              aiChatContainer.appendChild(row);
+          });
+          aiChatContainer.scrollTop = aiChatContainer.scrollHeight;
+      }
+
+      // AI DOM References
+      const aiFabBtn = document.getElementById("aiFabBtn");
+      const aiOverlay = document.getElementById("aiAssistantOverlay");
+      const closeAiBtn = document.getElementById("closeAiOverlayBtn");
+      const aiChatContainer = document.getElementById("aiChatContainer");
+      const aiUserInput = document.getElementById("aiUserInput");
+      const aiSendBtn = document.getElementById("aiSendBtn");
+
+      // AI Event Listeners
+      aiFabBtn.addEventListener("click", () => {
+          aiOverlay.classList.toggle("open");
+          if (aiOverlay.classList.contains("open")) {
+              aiUserInput.focus();
+          }
+      });
+
+      closeAiBtn.addEventListener("click", () => {
+          aiOverlay.classList.remove("open");
+      });
+
+      aiSendBtn.addEventListener("click", async () => {
+          const val = aiUserInput.value.trim();
+          if (val) await sendAIMessage(val);
+      });
+
+      aiUserInput.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") aiSendBtn.click();
+      });
+
+      // ================================================================
+      // DOM REFS (Auth)
+      // ================================================================
       const loadingState = document.getElementById("loading-state");
       const loginState = document.getElementById("login-state");
       const authCard = document.getElementById("authCard");
@@ -1073,209 +1137,149 @@
       const emailBtnText = document.getElementById("emailBtnText");
       const googleBtnText = document.getElementById("googleBtnText");
       const forgotPasswordLink = document.getElementById("forgotPasswordLink");
-      const resetPasswordSection = document.getElementById(
-        "resetPasswordSection",
-      );
+      const resetPasswordSection = document.getElementById("resetPasswordSection");
       const resetEmailInput = document.getElementById("resetEmailInput");
       const resetPasswordBtn = document.getElementById("resetPasswordBtn");
       const backToLoginBtn = document.getElementById("backToLoginBtn");
       const togglePasswordBtn = document.getElementById("togglePasswordBtn");
       const authPasswordInput = document.getElementById("authPasswordInput");
-      const passwordSetupOverlay = document.getElementById(
-        "passwordSetupOverlay",
-      );
+      const passwordSetupOverlay = document.getElementById("passwordSetupOverlay");
       const newPasswordInput = document.getElementById("newPasswordInput");
-      const confirmPasswordInput = document.getElementById(
-        "confirmPasswordInput",
-      );
+      const confirmPasswordInput = document.getElementById("confirmPasswordInput");
       const savePasswordBtn = document.getElementById("savePasswordBtn");
       const skipPasswordBtn = document.getElementById("skipPasswordBtn");
+      
+      const authModeToggleBtn = document.getElementById("authModeToggleBtn");
+      const formToggleText = document.getElementById("formToggleText");
+      const panelTitle = document.getElementById("panelTitle");
+      const panelSubtitle = document.getElementById("panelSubtitle");
+      const forgotPasswordRow = document.getElementById("forgotPasswordRow");
 
+      let isSignupMode = false;
       let pendingUserForPasswordSetup = null;
       const googleRedirectFlowKey = "googleRedirectFlow";
 
-      function isGoogleRedirectPending() {
-        return sessionStorage.getItem(googleRedirectFlowKey) === "1";
-      }
+      function isGoogleRedirectPending() { return sessionStorage.getItem(googleRedirectFlowKey) === "1"; }
+      function clearGoogleRedirectFlow() { sessionStorage.removeItem(googleRedirectFlowKey); }
 
-      function clearGoogleRedirectFlow() {
-        sessionStorage.removeItem(googleRedirectFlowKey);
-      }
-
-      // ---------- Toasts ----------
       function triggerToastAlert(messageText, isErrorType = true) {
         const toastContainer = document.getElementById("toastContainer");
         const toastNode = document.createElement("div");
         toastNode.className = `toast ${isErrorType ? "error" : "success"}`;
-        const alertIcon = isErrorType
-          ? "fa-circle-exclamation"
-          : "fa-circle-check";
+        const alertIcon = isErrorType ? "fa-circle-exclamation" : "fa-circle-check";
         toastNode.innerHTML = `<i class="fa-solid ${alertIcon}"></i><span>${messageText}</span>`;
         toastContainer.appendChild(toastNode);
         setTimeout(() => {
-          toastNode.style.animation =
-            "slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) reverse forwards";
+          toastNode.style.animation = "slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) reverse forwards";
           setTimeout(() => toastNode.remove(), 300);
         }, 4500);
       }
 
-      // ---------- Friendly error messages ----------
       function getFriendlyAuthMessage(error) {
         const code = error?.code || "";
         const map = {
-          "auth/invalid-email":
-            "That email address doesn't look right. Please check it and try again.",
+          "auth/invalid-email": "That email address doesn't look right. Please check it and try again.",
           "auth/user-not-found": "We couldn't find an account with that email.",
-          "auth/wrong-password":
-            "That password doesn't match this account. Please try again.",
-          "auth/invalid-credential":
-            "Your email or password is incorrect. Please try again.",
-          "auth/user-disabled":
-            "This account has been disabled. Please contact support if you think this is a mistake.",
-          "auth/too-many-requests":
-            "Too many attempts. Please wait a few minutes before trying again.",
-          "auth/network-request-failed":
-            "We couldn't connect. Please check your internet connection and try again.",
-          "auth/popup-closed-by-user":
-            "The Google sign-in window was closed before finishing. Please try again.",
-          "auth/cancelled-popup-request":
-            "Only one sign-in window can be open at a time. Please try again.",
-          "auth/popup-blocked":
-            "Your browser blocked the sign-in window. Please allow pop-ups for this site and try again.",
-          "auth/account-exists-with-different-credential":
-            "An account already exists with this email using a different sign-in method.",
-          "auth/operation-not-allowed":
-            "This sign-in method isn't enabled yet. Please contact support.",
-          "auth/weak-password":
-            "Please choose a password with at least 6 characters.",
-          "auth/email-already-in-use":
-            "That email is already in use by another account.",
-          "auth/requires-recent-login":
-            "For your security, please sign in again before making this change.",
-          "auth/credential-already-in-use":
-            "That sign-in method is already linked to a different account.",
+          "auth/wrong-password": "That password doesn't match this account. Please try again.",
+          "auth/invalid-credential": "Your email or password is incorrect. Please try again.",
+          "auth/user-disabled": "This account has been disabled. Please contact support if you think this is a mistake.",
+          "auth/too-many-requests": "Too many attempts. Please wait a few minutes before trying again.",
+          "auth/network-request-failed": "We couldn't connect. Please check your internet connection and try again.",
+          "auth/popup-closed-by-user": "The Google sign-in window was closed before finishing. Please try again.",
+          "auth/cancelled-popup-request": "Only one sign-in window can be open at a time. Please try again.",
+          "auth/popup-blocked": "Your browser blocked the sign-in window. Please allow pop-ups for this site and try again.",
+          "auth/account-exists-with-different-credential": "An account already exists with this email using a different sign-in method.",
+          "auth/operation-not-allowed": "This sign-in method isn't enabled yet. Please contact support.",
+          "auth/weak-password": "Please choose a password with at least 6 characters.",
+          "auth/email-already-in-use": "That email is already in use by another account.",
+          "auth/requires-recent-login": "For your security, please sign in again before making this change.",
+          "auth/credential-already-in-use": "That sign-in method is already linked to a different account.",
           "auth/missing-password": "Please enter a password.",
         };
-        return (
-          map[code] ||
-          error?.message
-            ?.replace(/^Firebase:\s*/, "")
-            .replace(/\s*\(auth\/[a-z-]+\)\.?$/, "") ||
-          "Something went wrong. Please try again."
-        );
+        return map[code] || error?.message?.replace(/^Firebase:\s*/, "").replace(/\s*\(auth\/[a-z-]+\)\.?$/, "") || "Something went wrong. Please try again.";
       }
 
-      // ---------- Session bootstrap ----------
+      function toggleAuthMode() {
+        isSignupMode = !isSignupMode;
+        const currentText = isSignupMode ? "Sign in" : "Sign up";
+        const toggleLabel = isSignupMode ? "Already have an account?" : "Don't have an account?";
+        authModeToggleBtn.innerText = currentText;
+        formToggleText.innerText = toggleLabel;
+        emailBtnText.innerText = currentText;
+        panelTitle.innerText = isSignupMode ? "Create an account" : "Welcome back";
+        panelSubtitle.innerText = isSignupMode ? "Join Collabe and start communicating instantly." : "Sign in to continue to your Collabe workspace.";
+        forgotPasswordRow.style.display = isSignupMode ? "none" : "flex";
+        resetPasswordSection.style.display = "none";
+        document.getElementById("authEmailInput").value = "";
+        authPasswordInput.value = "";
+        resetEmailInput.value = "";
+      }
+
+      authModeToggleBtn.addEventListener("click", toggleAuthMode);
+
       onAuthStateChanged(auth, (user) => {
         if (user) {
-          if (pendingUserForPasswordSetup) {
-            // If Google sign-in just returned and password setup is still needed,
-            // keep the modal open while we wait for user action.
-            return;
-          }
-          if (isGoogleRedirectPending()) {
-            clearGoogleRedirectFlow();
-            redirectToIndex();
-            return;
-          }
-          window.location.replace("index.html");
+          if (pendingUserForPasswordSetup) return;
+          if (isGoogleRedirectPending()) { clearGoogleRedirectFlow(); redirectToIndex(); return; }
+          redirectToIndex();
         } else {
           loadingState.style.display = "none";
           loginState.style.display = "block";
         }
       });
 
-      // ---------- Email + password sign-in ----------
-      async function runEmailLoginPipeline(event) {
+      async function runEmailPipeline(event) {
         event.preventDefault();
-
-        const emailValue = document
-          .getElementById("authEmailInput")
-          .value.trim();
+        const emailValue = document.getElementById("authEmailInput").value.trim();
         const passwordValue = authPasswordInput.value;
-
-        if (!emailValue || !passwordValue) {
-          triggerToastAlert("Please enter both your email and password.");
-          return;
-        }
-
+        if (!emailValue || !passwordValue) { triggerToastAlert("Please enter both your email and password."); return; }
         lockControls();
 
         try {
-          await signInWithEmailAndPassword(auth, emailValue, passwordValue);
-          triggerToastAlert(
-            "Welcome back! Taking you to your workspace...",
-            false,
-          );
-          redirectToIndex();
-        } catch (err) {
-          triggerToastAlert(getFriendlyAuthMessage(err));
-          unlockControls();
-        }
+          if (isSignupMode) {
+            const userCredential = await createUserWithEmailAndPassword(auth, emailValue, passwordValue);
+            const user = userCredential.user;
+            await setDoc(doc(db, "users", user.uid), {
+                uid: user.uid, name: user.displayName || emailValue.split("@")[0], email: user.email,
+                photoURL: user.photoURL || `https://api.dicebear.com/7.x/initials/svg?seed=${emailValue}`,
+                joinedAt: serverTimestamp(),
+            });
+            await sendWelcomeEmail(user.email, user.displayName || emailValue.split("@")[0]);
+            triggerToastAlert("Account created! Check your email for a welcome message.", false);
+            redirectToIndex();
+          } else {
+            await signInWithEmailAndPassword(auth, emailValue, passwordValue);
+            triggerToastAlert("Welcome back! Taking you to your workspace...", false);
+            redirectToIndex();
+          }
+        } catch (err) { triggerToastAlert(getFriendlyAuthMessage(err)); unlockControls(); }
       }
 
-      // ---------- Password reset ----------
       function toggleResetPasswordView(showReset) {
-        // Show/hide the reset section only; ensure the reset input remains visible
         resetPasswordSection.style.display = showReset ? "block" : "none";
-
-        // Hide or show other form groups, but do NOT hide elements inside the reset section
-        emailLoginForm
-          .querySelectorAll(".input-group, .password-actions, #emailAuthBtn")
-          .forEach((el) => {
-            // If the element is inside the reset section, skip hiding it
-            if (resetPasswordSection.contains(el)) {
-              el.style.display = showReset ? "" : "";
-            } else {
-              el.style.display = showReset ? "none" : "";
-            }
-          });
-
-        if (!showReset) {
-          resetEmailInput.value = "";
-        } else {
-          // Make sure the user can immediately type their email
-          resetEmailInput.focus();
-        }
+        emailLoginForm.querySelectorAll(".input-group, .password-actions, #emailAuthBtn").forEach((el) => {
+          if (resetPasswordSection.contains(el)) { el.style.display = showReset ? "" : ""; } 
+          else { el.style.display = showReset ? "none" : ""; }
+        });
+        if (!showReset) resetEmailInput.value = "";
+        else resetEmailInput.focus();
       }
 
       async function runPasswordResetPipeline() {
         const emailValue = resetEmailInput.value.trim();
-        if (!emailValue) {
-          triggerToastAlert("Please enter your email address.");
-          return;
-        }
-
-        resetPasswordBtn.disabled = true;
-        resetPasswordBtn.textContent = "Sending...";
-
+        if (!emailValue) { triggerToastAlert("Please enter your email address."); return; }
+        resetPasswordBtn.disabled = true; resetPasswordBtn.textContent = "Sending...";
         try {
-          const actionCodeSettings = {
-            url: `${window.location.origin}${window.location.pathname.replace(/[^/]*$/, "")}auth.html`,
-            handleCodeInApp: false,
-          };
+          const actionCodeSettings = { url: `${window.location.origin}${window.location.pathname.replace(/[^/]*$/, "")}auth.html`, handleCodeInApp: false };
           await sendPasswordResetEmail(auth, emailValue, actionCodeSettings);
-          triggerToastAlert(
-            `We've sent a password reset link to ${emailValue}. Check your inbox (and spam folder).`,
-            false,
-          );
+          triggerToastAlert(`We've sent a password reset link to ${emailValue}. Check your inbox (and spam folder).`, false);
           toggleResetPasswordView(false);
-        } catch (err) {
-          triggerToastAlert(getFriendlyAuthMessage(err));
-        } finally {
-          resetPasswordBtn.disabled = false;
-          resetPasswordBtn.textContent = "Send reset link";
-        }
+        } catch (err) { triggerToastAlert(getFriendlyAuthMessage(err)); } 
+        finally { resetPasswordBtn.disabled = false; resetPasswordBtn.textContent = "Send reset link"; }
       }
 
-      // ---------- Google sign-in (redirect flow for full-page sign-in) ----------
       function shouldFallbackToRedirect(error) {
-        const fallbackCodes = [
-          "auth/popup-blocked",
-          "auth/operation-not-supported-in-this-environment",
-          "auth/operation-not-allowed",
-          "auth/cancelled-popup-request",
-        ];
+        const fallbackCodes = ["auth/popup-blocked", "auth/operation-not-supported-in-this-environment", "auth/operation-not-allowed", "auth/cancelled-popup-request"];
         return error?.code && fallbackCodes.includes(error.code);
       }
 
@@ -1283,303 +1287,119 @@
         lockControls();
         const provider = new GoogleAuthProvider();
         provider.setCustomParameters({ prompt: "select_account" });
-
         try {
           const result = await signInWithPopup(auth, provider);
-          if (result?.user) {
-            await handleAuthenticatedGoogleUser(result.user);
-            return;
-          }
+          if (result?.user) { await handleAuthenticatedGoogleUser(result.user); return; }
           throw new Error("No user returned from popup sign-in.");
         } catch (err) {
           if (shouldFallbackToRedirect(err)) {
-            // Mark this session so the returning redirect can be handled reliably
             sessionStorage.setItem("googleRedirectFlow", "1");
             const overlay = document.getElementById("googleRedirectOverlay");
             if (overlay) overlay.style.display = "flex";
-            try {
-              await signInWithRedirect(auth, provider);
-              return;
-            } catch (redirectErr) {
-              clearGoogleRedirectFlow();
-              const overlay2 = document.getElementById("googleRedirectOverlay");
-              if (overlay2) overlay2.style.display = "none";
-              triggerToastAlert(getFriendlyAuthMessage(redirectErr));
-              unlockControls();
-              return;
-            }
+            try { await signInWithRedirect(auth, provider); return; } 
+            catch (redirectErr) { clearGoogleRedirectFlow(); const overlay2 = document.getElementById("googleRedirectOverlay"); if (overlay2) overlay2.style.display = "none"; triggerToastAlert(getFriendlyAuthMessage(redirectErr)); unlockControls(); return; }
           }
           const overlay = document.getElementById("googleRedirectOverlay");
           if (overlay) overlay.style.display = "none";
-          triggerToastAlert(getFriendlyAuthMessage(err));
-          unlockControls();
+          triggerToastAlert(getFriendlyAuthMessage(err)); unlockControls();
         }
       }
 
-      // Shared handler to process a Google-authenticated user (used after redirect)
       async function handleAuthenticatedGoogleUser(activeUser) {
         if (!activeUser) return;
-
         try {
           const userDocRef = doc(db, "users", activeUser.uid);
           const referenceDoc = await getDoc(userDocRef);
+          let isNewUser = false;
           if (!referenceDoc.exists()) {
-            await setDoc(userDocRef, {
-              uid: activeUser.uid,
-              name: activeUser.displayName || activeUser.email.split("@")[0],
-              email: activeUser.email,
-              photoURL:
-                activeUser.photoURL ||
-                `https://api.dicebear.com/7.x/initials/svg?seed=${activeUser.email}`,
-              joinedAt: serverTimestamp(),
-            });
+            isNewUser = true;
+            await setDoc(userDocRef, { uid: activeUser.uid, name: activeUser.displayName || activeUser.email.split("@")[0], email: activeUser.email, photoURL: activeUser.photoURL || `https://api.dicebear.com/7.x/initials/svg?seed=${activeUser.email}`, joinedAt: serverTimestamp() });
           }
-
-          const hasPasswordLinked = activeUser.providerData.some(
-            (p) => p.providerId === "password",
-          );
-
-          if (!hasPasswordLinked) {
-            pendingUserForPasswordSetup = activeUser;
-            unlockControls();
-            openPasswordSetupModal();
-            return;
+          if (isNewUser) {
+              await sendWelcomeEmail(activeUser.email, activeUser.displayName || activeUser.email.split("@")[0]);
+              triggerToastAlert("Account created! Check your email for a welcome message.", false);
           }
-
-          triggerToastAlert("Signed in with Google. Welcome back!", false);
+          const hasPasswordLinked = activeUser.providerData.some((p) => p.providerId === "password");
+          if (!hasPasswordLinked) { pendingUserForPasswordSetup = activeUser; unlockControls(); openPasswordSetupModal(); return; }
+          triggerToastAlert("Welcome back! Taking you to your workspace...", false);
           redirectToIndex();
-        } catch (err) {
-          triggerToastAlert(getFriendlyAuthMessage(err));
-          unlockControls();
-        } finally {
-          const overlay = document.getElementById("googleRedirectOverlay");
-          if (overlay) overlay.style.display = "none";
-        }
+        } catch (err) { triggerToastAlert(getFriendlyAuthMessage(err)); unlockControls(); } 
+        finally { const overlay = document.getElementById("googleRedirectOverlay"); if (overlay) overlay.style.display = "none"; }
       }
 
-      function openPasswordSetupModal() {
-        passwordSetupOverlay.style.display = "flex";
-      }
-
-      function closePasswordSetupModal() {
-        passwordSetupOverlay.style.display = "none";
-      }
+      function openPasswordSetupModal() { passwordSetupOverlay.style.display = "flex"; }
+      function closePasswordSetupModal() { passwordSetupOverlay.style.display = "none"; }
 
       async function saveLinkedPassword() {
-        const pw1 = newPasswordInput.value;
-        const pw2 = confirmPasswordInput.value;
-
-        if (pw1.length < 6) {
-          triggerToastAlert(
-            "Please choose a password with at least 6 characters.",
-          );
-          return;
-        }
-        if (pw1 !== pw2) {
-          triggerToastAlert("Those passwords don't match. Please try again.");
-          return;
-        }
-
-        savePasswordBtn.disabled = true;
-        savePasswordBtn.textContent = "Saving...";
-
+        const pw1 = newPasswordInput.value; const pw2 = confirmPasswordInput.value;
+        if (pw1.length < 6) { triggerToastAlert("Please choose a password with at least 6 characters."); return; }
+        if (pw1 !== pw2) { triggerToastAlert("Those passwords don't match. Please try again."); return; }
+        savePasswordBtn.disabled = true; savePasswordBtn.textContent = "Saving...";
         try {
-          const credential = EmailAuthProvider.credential(
-            pendingUserForPasswordSetup.email,
-            pw1,
-          );
+          const credential = EmailAuthProvider.credential(pendingUserForPasswordSetup.email, pw1);
           await linkWithCredential(pendingUserForPasswordSetup, credential);
-          triggerToastAlert(
-            "Password saved. You can now sign in with it on any device.",
-            false,
-          );
-          window.location.replace("index.html");
-        } catch (err) {
-          triggerToastAlert(getFriendlyAuthMessage(err));
-          savePasswordBtn.disabled = false;
-          savePasswordBtn.textContent = "Save password";
-        }
+          triggerToastAlert("Password saved. You can now sign in with it on any device.", false);
+          redirectToIndex();
+        } catch (err) { triggerToastAlert(getFriendlyAuthMessage(err)); savePasswordBtn.disabled = false; savePasswordBtn.textContent = "Save password"; }
       }
 
-      function skipPasswordSetup() {
-        closePasswordSetupModal();
-        redirectToIndex();
-      }
+      function skipPasswordSetup() { closePasswordSetupModal(); redirectToIndex(); }
+      function redirectToIndex() { window.location.replace("index.html"); }
 
-      function redirectToIndex() {
-        window.location.replace("index.html");
-      }
-
-      // ---------- UI helpers ----------
-      function lockControls() {
-        googleAuthBtn.setAttribute("disabled", "true");
-        emailAuthBtn.setAttribute("disabled", "true");
-        emailBtnText.innerText = "Signing you in...";
-        googleBtnText.innerHTML =
-          '<i class="fa-solid fa-circle-notch fa-spin"></i> Connecting to Google...';
-      }
-
-      function unlockControls() {
-        googleAuthBtn.removeAttribute("disabled");
-        emailAuthBtn.removeAttribute("disabled");
-        emailBtnText.innerText = "Sign in";
-        googleBtnText.innerHTML =
-          '<i class="fa-brands fa-google"></i> Continue with Google';
-      }
+      function lockControls() { googleAuthBtn.setAttribute("disabled", "true"); emailAuthBtn.setAttribute("disabled", "true"); emailBtnText.innerText = "Processing..."; googleBtnText.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Processing...'; }
+      function unlockControls() { googleAuthBtn.removeAttribute("disabled"); emailAuthBtn.removeAttribute("disabled"); emailBtnText.innerText = isSignupMode ? "Sign up" : "Sign in"; googleBtnText.innerHTML = '<i class="fa-brands fa-google"></i> Continue with Google'; }
 
       function configureUserInterfaceThemeEngine() {
-        const storedPreference =
-          localStorage.getItem("theme-preference") || "light";
+        const storedPreference = localStorage.getItem("theme-preference") || "light";
         document.documentElement.setAttribute("data-theme", storedPreference);
         updateThemeIcon(storedPreference);
-
         themeToggleBtn.addEventListener("click", () => {
-          const updatedTheme =
-            document.documentElement.getAttribute("data-theme") === "dark"
-              ? "light"
-              : "dark";
+          const updatedTheme = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
           document.documentElement.setAttribute("data-theme", updatedTheme);
           localStorage.setItem("theme-preference", updatedTheme);
           updateThemeIcon(updatedTheme);
         });
       }
+      function updateThemeIcon(themeState) { themeToggleBtn.querySelector("i").className = themeState === "dark" ? "fa-solid fa-sun" : "fa-solid fa-moon"; }
 
-      function updateThemeIcon(themeState) {
-        themeToggleBtn.querySelector("i").className =
-          themeState === "dark" ? "fa-solid fa-sun" : "fa-solid fa-moon";
-      }
-
-      // ---------- Subtle 3D tilt on the card ----------
       function configureCardTilt() {
-        const prefersReducedMotion = window.matchMedia(
-          "(prefers-reduced-motion: reduce)",
-        ).matches;
-        if (
-          prefersReducedMotion ||
-          window.matchMedia("(pointer: coarse)").matches
-        )
-          return;
-
+        const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (prefersReducedMotion || window.matchMedia("(pointer: coarse)").matches) return;
         const container = document.querySelector(".auth-container");
         const maxTilt = 6;
-
         container.addEventListener("mousemove", (e) => {
           const rect = authCard.getBoundingClientRect();
           const x = (e.clientX - rect.left) / rect.width - 0.5;
           const y = (e.clientY - rect.top) / rect.height - 0.5;
           authCard.style.transform = `rotateY(${x * maxTilt * 2}deg) rotateX(${-y * maxTilt * 2}deg)`;
         });
-
-        container.addEventListener("mouseleave", () => {
-          authCard.style.transform = "rotateY(0deg) rotateX(0deg)";
-        });
+        container.addEventListener("mouseleave", () => { authCard.style.transform = "rotateY(0deg) rotateX(0deg)"; });
       }
 
       document.addEventListener("DOMContentLoaded", () => {
         configureUserInterfaceThemeEngine();
         configureCardTilt();
 
-        // Handle returning users after Google redirect sign-in
-        getRedirectResult(auth)
-          .then(async (result) => {
+        getRedirectResult(auth).then(async (result) => {
             const overlay = document.getElementById("googleRedirectOverlay");
-            if (result && result.user) {
-              clearGoogleRedirectFlow();
-              if (overlay) overlay.style.display = "flex";
-              await handleAuthenticatedGoogleUser(result.user);
-            } else if (isGoogleRedirectPending()) {
-              // Fallback: if redirect flow returned but no result object,
-              // trust the auth state change and current user.
-              if (auth.currentUser) {
-                clearGoogleRedirectFlow();
-                if (overlay) overlay.style.display = "flex";
-                await handleAuthenticatedGoogleUser(auth.currentUser);
-              } else {
-                unlockControls();
-              }
-            } else {
-              if (overlay) overlay.style.display = "none";
-            }
-          })
-          .catch((err) => {
-            clearGoogleRedirectFlow();
-            const overlay = document.getElementById("googleRedirectOverlay");
-            if (overlay) overlay.style.display = "none";
-            if (err) triggerToastAlert(getFriendlyAuthMessage(err));
-            unlockControls();
-          });
+            if (result && result.user) { clearGoogleRedirectFlow(); if (overlay) overlay.style.display = "flex"; await handleAuthenticatedGoogleUser(result.user); } 
+            else if (isGoogleRedirectPending()) { if (auth.currentUser) { clearGoogleRedirectFlow(); if (overlay) overlay.style.display = "flex"; await handleAuthenticatedGoogleUser(auth.currentUser); } else { unlockControls(); } } 
+            else { if (overlay) overlay.style.display = "none"; }
+          }).catch((err) => { clearGoogleRedirectFlow(); const overlay = document.getElementById("googleRedirectOverlay"); if (overlay) overlay.style.display = "none"; if (err) triggerToastAlert(getFriendlyAuthMessage(err)); unlockControls(); });
 
         googleAuthBtn.addEventListener("click", runGoogleIdentityPipeline);
-        emailLoginForm.addEventListener("submit", runEmailLoginPipeline);
-        forgotPasswordLink.addEventListener("click", () =>
-          toggleResetPasswordView(true),
-        );
-        backToLoginBtn.addEventListener("click", () =>
-          toggleResetPasswordView(false),
-        );
+        emailLoginForm.addEventListener("submit", runEmailPipeline);
+        forgotPasswordLink.addEventListener("click", () => toggleResetPasswordView(true));
+        backToLoginBtn.addEventListener("click", () => toggleResetPasswordView(false));
         resetPasswordBtn.addEventListener("click", runPasswordResetPipeline);
         savePasswordBtn.addEventListener("click", saveLinkedPassword);
         skipPasswordBtn.addEventListener("click", skipPasswordSetup);
-
         togglePasswordBtn.addEventListener("click", () => {
           const isPassword = authPasswordInput.type === "password";
           authPasswordInput.type = isPassword ? "text" : "password";
-          togglePasswordBtn.querySelector("i").className = isPassword
-            ? "fa-solid fa-eye-slash"
-            : "fa-solid fa-eye";
+          togglePasswordBtn.querySelector("i").className = isPassword ? "fa-solid fa-eye-slash" : "fa-solid fa-eye";
         });
       });
-
-      if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-        navigator.serviceWorker.register("./sw.js")
-            .then(() => console.log("Service Worker Registered"))
-            .catch(err => console.log(err));
-    });
-}
-
-      if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-        navigator.serviceWorker.register("./sw.js")
-            .then(() => console.log("Service Worker Registered"))
-            .catch(err => console.log(err));
-    });
-}
-      let deferredPrompt;
-
-const popup = document.getElementById("installPopup");
-
-const installBtn = document.getElementById("installBtn");
-
-const laterBtn = document.getElementById("laterBtn");
-
-window.addEventListener("beforeinstallprompt", (e)=>{
-
-    e.preventDefault();
-
-    deferredPrompt = e;
-
-    popup.style.display="flex";
-
-});
-
-installBtn.addEventListener("click", async()=>{
-
-    popup.style.display="none";
-
-    deferredPrompt.prompt();
-
-    const choice = await deferredPrompt.userChoice;
-
-    deferredPrompt = null;
-
-});
-
-laterBtn.onclick=()=>{
-
-    popup.style.display="none";
-
-}
     </script>
   </body>
 </html>
