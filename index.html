@@ -921,7 +921,7 @@
 
     <!-- ==================== JAVASCRIPT ==================== -->
     <script type="module">
-    // ================================================================
+   // ================================================================
 // IMPORTS
 // ================================================================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -4877,9 +4877,9 @@ async function sendEmailInvite(recipientEmail, senderName) {
   try {
     const templateParams = {
       to_email: recipientEmail,
-      from_name: senderName || "Collabe Team",
-      reply_to: "aduraemmanuel123@gmail.com", // your email
+      from_name: senderName || "Collabe User",
       message: `You have been invited to join Collabe! Start chatting by signing up at ${window.location.origin}/auth.html`,
+      // Add any other variables your template expects (e.g., invite_link)
     };
 
     const response = await emailjs.send(
@@ -4888,9 +4888,17 @@ async function sendEmailInvite(recipientEmail, senderName) {
       templateParams
     );
 
-    // ... rest of the function
+    console.log("EmailJS response:", response);
+
+    if (response.status === 200 && response.data?.status === "sent") {
+      showToastNotification(`Invite sent to ${recipientEmail}`, false);
+    } else {
+      console.error("EmailJS warning:", response);
+      showToastNotification("Invite sent but may not be delivered. Check template.", true);
+    }
   } catch (error) {
-    // ...
+    console.error("EmailJS error:", error);
+    showToastNotification("Error sending invite: " + error.message, true);
   }
 }
 </body>
