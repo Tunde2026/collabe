@@ -18,39 +18,14 @@
     
     <title>Collabe – Real-Time Email Messaging Platform</title>
     <meta property="og:title" content="Collabe" />
-    <!-- Replace or add this tag in your <head> -->
-   
-
-    <!-- Replace or supplement the deprecated tag -->
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    
-    <meta name="robots" content="index, follow">
     <meta name="description" content="Collabe is a real-time messaging platform that lets users chat, share images, and send files using email addresses instead of phone numbers. No SIM card required—just an email account to connect instantly." />
     <meta name="keywords" content="Collabe, email messaging, real-time chat, communication, collaboration, messaging app, email chat, file sharing" />
     <meta name="author" content="Emmanuel Ajibade" />
-
-    <meta property="og:title"
-    content="Collabe">
-    
-    <meta property="og:description"
-    content="AI Communication Platform">
-    
-    <meta property="og:image"
-    content="https://github.com/Tunde2026/collabe/blob/e91c7f72c897de874168c5dd5f9872245649b109/favicon.ico.png">
-    
-    
-    <meta property="og:url"
-    content="https://tunde2026.github.io/collabe/">
-    
-    <meta property="og:type"
-    content="website">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="canonical" href="https://tunde2026.github.io/collabe/">
 
     <!-- EmailJS Library for Invites -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
@@ -921,7 +896,7 @@
 
     <!-- ==================== JAVASCRIPT ==================== -->
     <script type="module">
-   // ================================================================
+// ================================================================
 // IMPORTS
 // ================================================================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -2398,6 +2373,12 @@ document.getElementById("laterBtn")?.addEventListener("click", () => {
 // Application Startup
 // ================================================================
 async function startApp() {
+  // 🔥 IMMEDIATE REDIRECT CHECK: if already determined not signed in, redirect now
+  if (!auth.currentUser) {
+    window.location.href = "auth.html";
+    return;
+  }
+
   // Initialize theme first (non-blocking)
   initializeThemeEngine();
 
@@ -2552,6 +2533,8 @@ function listenToRecentConversations(userEmail) {
     },
     (error) => {
       console.error("Sidebar listener error:", error);
+      // 🔥 FIX: complete the chats task even if the query fails to hide loading overlay
+      loadingManager.complete("chats");
       chatListContainer.innerHTML = `
         <div style="padding:24px;margin:16px;background:var(--bg-chat);border-radius:14px;text-align:center;">
           <h4 style="color:var(--text-muted);">Failed to load chats.</h4>
@@ -4901,5 +4884,6 @@ async function sendEmailInvite(recipientEmail, senderName) {
     showToastNotification("Error sending invite: " + error.message, true);
   }
 }
+    </script>
 </body>
 </html>
