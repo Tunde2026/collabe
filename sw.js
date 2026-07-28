@@ -1,4 +1,4 @@
-const CACHE_NAME = "maildialog-v1";
+const CACHE_NAME = "collabe-v1";
 
 const urlsToCache = [
   "./",
