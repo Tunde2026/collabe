@@ -2373,71 +2373,65 @@ document.getElementById("laterBtn")?.addEventListener("click", () => {
 // Application Startup
 // ================================================================
 async function startApp() {
-  // 🔥 IMMEDIATE REDIRECT CHECK: if already determined not signed in, redirect now
-  if (!auth.currentUser) {
+  // Initialize theme (non-blocking)
+  initializeThemeEngine();
+
+  // 🔥 Wait for Firebase Auth to be fully settled
+  await auth.authStateReady();
+
+  const authenticatedUser = auth.currentUser;
+  if (!authenticatedUser) {
+    // No user – redirect to auth page
     window.location.href = "auth.html";
     return;
   }
 
-  // Initialize theme first (non-blocking)
-  initializeThemeEngine();
+  // --- User is confirmed logged in ---
+  currentUserSession = authenticatedUser;
+  currentUserEmailNormalized = normalizeEmailForId(currentUserSession.email);
 
-  // Wait for auth to be ready
-  onAuthStateChanged(auth, async (authenticatedUser) => {
-    if (!authenticatedUser) {
-      // Redirect to auth page if not signed in
-      window.location.href = "auth.html";
-      return;
-    }
+  // Update UI
+  userName.innerText = currentUserSession.displayName || "Workspace Engineer";
+  userEmail.innerText = currentUserSession.email;
+  userAvatar.src =
+    currentUserSession.photoURL ||
+    `https://api.dicebear.com/7.x/initials/svg?seed=${currentUserEmailNormalized}`;
 
-    currentUserSession = authenticatedUser;
-    currentUserEmailNormalized = normalizeEmailForId(currentUserSession.email);
+  loadingManager.complete("auth");
+  loadingManager.complete("user");
 
-    // Update user UI
-    userName.innerText = currentUserSession.displayName || "Workspace Engineer";
-    userEmail.innerText = currentUserSession.email;
-    userAvatar.src =
-      currentUserSession.photoURL ||
-      `https://api.dicebear.com/7.x/initials/svg?seed=${currentUserEmailNormalized}`;
+  // Set online status
+  await setUserOnlineFootprint(currentUserSession, true);
 
-    loadingManager.complete("auth");
-    loadingManager.complete("user");
-
-    // Set online status
-    await setUserOnlineFootprint(currentUserSession, true);
-
-    // Initialize repositories and engines
-    aiRepository = new AIRepository(db);
-    migrationService = new MigrationService(aiRepository);
-    aiStateManager = new AIStateManager();
-    aiEngine = new AIEngine({
-      repository: aiRepository,
-      stateManager: aiStateManager,
-      migrationService: migrationService,
-    });
-    chatEngine = new ChatEngine();
-
-    // Initialize AI (non-blocking, runs in background)
-    try {
-      await aiEngine.initialize(authenticatedUser.uid);
-      loadingManager.complete("ai");
-    } catch (error) {
-      console.error("AI initialization error:", error);
-      // Continue anyway – AI will be initialized on first open
-      loadingManager.complete("ai");
-    }
-
-    // Ensure self chat exists
-    await ensureSelfChatExists();
-
-    // Load conversations
-    listenToRecentConversations(currentUserSession.email);
-
-    // Mark DOM ready
-    loadingManager.complete("dom");
+  // Initialize repositories and engines
+  aiRepository = new AIRepository(db);
+  migrationService = new MigrationService(aiRepository);
+  aiStateManager = new AIStateManager();
+  aiEngine = new AIEngine({
+    repository: aiRepository,
+    stateManager: aiStateManager,
+    migrationService: migrationService,
   });
+  chatEngine = new ChatEngine();
 
-  // Set up logout
+  // Initialize AI (background, non-blocking)
+  try {
+    await aiEngine.initialize(authenticatedUser.uid);
+    loadingManager.complete("ai");
+  } catch (error) {
+    console.error("AI initialization error:", error);
+    loadingManager.complete("ai");
+  }
+
+  // Ensure self chat exists
+  await ensureSelfChatExists();
+
+  // Load conversations
+  listenToRecentConversations(currentUserSession.email);
+
+  loadingManager.complete("dom");
+
+  // --- Logout and cleanup handlers ---
   logoutBtn.addEventListener("click", async () => {
     await setUserOnlineFootprint(currentUserSession, false);
     signOut(auth).then(() => (window.location.href = "auth.html"));
