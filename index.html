@@ -2388,6 +2388,7 @@ async function startApp() {
 
   // --- User is confirmed logged in ---
   currentUserSession = authenticatedUser;
+    await currentUserSession.getIdToken(true); // force refresh
   currentUserEmailNormalized = normalizeEmailForId(currentUserSession.email);
 
   // Update UI
