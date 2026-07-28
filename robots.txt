@@ -2,4 +2,4 @@ User-agent: *
 
 Allow: /
 
-Sitemap: https://tunde2026.github.io/mail-dialog/sitemap.xml
+Sitemap: https://tunde2026.github.io/collabe/sitemap.xml
