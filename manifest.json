@@ -1,6 +1,6 @@
 {
-  "name": "MailDialog",
-  "short_name": "MailDialog",
+  "name": "Collabe",
+  "short_name": "Collabe",
   "description": "A real-time messaging platform that lets users communicate using email addresses instead of phone numbers.",
   "start_url": "./",
   "scope": "./",
