@@ -1016,6 +1016,7 @@ window.addEventListener('unhandledrejection', (event) => {
     console.warn('Suppressed Firestore permission error (handled by fallback)');
   }
 });
+
 // ================================================================
 // FIREBASE CONFIG & INIT
 // ================================================================
@@ -2544,144 +2545,6 @@ async function startApp() {
   }
 }
 
-    // --- User is confirmed logged in ---
-    currentUserSession = authenticatedUser;
-    await currentUserSession.getIdToken(true); // force refresh
-    currentUserEmailNormalized = normalizeEmailForId(currentUserSession.email);
-
-    // Update UI
-    userName.innerText = currentUserSession.displayName || "Workspace Engineer";
-    userEmail.innerText = currentUserSession.email;
-    userAvatar.src =
-      currentUserSession.photoURL ||
-      `https://api.dicebear.com/7.x/initials/svg?seed=${currentUserEmailNormalized}`;
-
-    loadingManager.complete("auth");
-    loadingManager.complete("user");
-
-    // Set online status
-    await setUserOnlineFootprint(currentUserSession, true);
-
-    // Initialize repositories and engines
-    aiRepository = new AIRepository(db);
-    migrationService = new MigrationService(aiRepository);
-    aiStateManager = new AIStateManager();
-    aiEngine = new AIEngine({
-      repository: aiRepository,
-      stateManager: aiStateManager,
-      migrationService: migrationService,
-    });
-    chatEngine = new ChatEngine();
-
-    // Initialize AI (background, non-blocking)
-    try {
-      await aiEngine.initialize(authenticatedUser.uid);
-      loadingManager.complete("ai");
-    } catch (error) {
-      console.error("AI initialization error:", error);
-      loadingManager.complete("ai");
-    }
-
-    // Ensure self chat exists – UPDATED to avoid permission errors
-    await ensureSelfChatExists();
-
-    // Load conversations
-    listenToRecentConversations(currentUserSession.email);
-
-    // Initialize voice recorder (if not already done)
-    if (!voiceRecorder) {
-      voiceRecorder = new VoiceRecorder();
-    }
-
-    loadingManager.complete("dom");
-
-    // --- Logout and cleanup handlers ---
-    logoutBtn.addEventListener("click", async () => {
-      if (voiceRecorder) voiceRecorder.cleanup();
-      await setUserOnlineFootprint(currentUserSession, false);
-      signOut(auth).then(() => (window.location.href = "auth.html"));
-    });
-
-    window.addEventListener("beforeunload", () => {
-      if (voiceRecorder) voiceRecorder.cleanup();
-      setUserOnlineFootprint(currentUserSession, false);
-    });
-
-  } catch (error) {
-    console.error("Startup error:", error);
-    loadingManager.showError(error.message || "Failed to load workspace.");
-    // Still mark tasks as complete to hide overlay (so user can see error)
-    loadingManager.complete("auth");
-    loadingManager.complete("user");
-    loadingManager.complete("chats");
-    loadingManager.complete("ai");
-    loadingManager.complete("theme");
-    loadingManager.complete("dom");
-  }
-}
-
-  // --- User is confirmed logged in ---
-  currentUserSession = authenticatedUser;
-    await currentUserSession.getIdToken(true); // force refresh
-  currentUserEmailNormalized = normalizeEmailForId(currentUserSession.email);
-
-  // Update UI
-  userName.innerText = currentUserSession.displayName || "Workspace Engineer";
-  userEmail.innerText = currentUserSession.email;
-  userAvatar.src =
-    currentUserSession.photoURL ||
-    `https://api.dicebear.com/7.x/initials/svg?seed=${currentUserEmailNormalized}`;
-
-  loadingManager.complete("auth");
-  loadingManager.complete("user");
-
-  // Set online status
-  await setUserOnlineFootprint(currentUserSession, true);
-
-  // Initialize repositories and engines
-  aiRepository = new AIRepository(db);
-  migrationService = new MigrationService(aiRepository);
-  aiStateManager = new AIStateManager();
-  aiEngine = new AIEngine({
-    repository: aiRepository,
-    stateManager: aiStateManager,
-    migrationService: migrationService,
-  });
-  chatEngine = new ChatEngine();
-
-  // Initialize AI (background, non-blocking)
-  try {
-    await aiEngine.initialize(authenticatedUser.uid);
-    loadingManager.complete("ai");
-  } catch (error) {
-    console.error("AI initialization error:", error);
-    loadingManager.complete("ai");
-  }
-
-  // Ensure self chat exists
-  await ensureSelfChatExists();
-
-  // Load conversations
-  listenToRecentConversations(currentUserSession.email);
-
-  // Initialize voice recorder
-  voiceRecorder = new VoiceRecorder();
-
-  loadingManager.complete("dom");
-
-  // --- Logout and cleanup handlers ---
-  logoutBtn.addEventListener("click", async () => {
-    if (voiceRecorder) voiceRecorder.cleanup();
-    await setUserOnlineFootprint(currentUserSession, false);
-    signOut(auth).then(() => (window.location.href = "auth.html"));
-  });
-
-  window.addEventListener("beforeunload", () => {
-    if (voiceRecorder) voiceRecorder.cleanup();
-    setUserOnlineFootprint(currentUserSession, false);
-  });
-}
-
 // ================================================================
 // Self Chat & Permanent Pins
 // ================================================================
@@ -3769,14 +3632,6 @@ function renderMessageList() {
   if (atBottom) {
     chatMessagesDisplay.scrollTop = chatMessagesDisplay.scrollHeight;
   }
-
-  // Re-attach event listeners for voice players
-  document.querySelectorAll(".voice-player .play-btn").forEach((btn) => {
-    // listeners are already attached in createVoicePlayer, but we need to re-attach because of innerHTML replacement?
-    // Actually, the play-btn's click listener is attached inside createVoicePlayer, which is called fresh for each new node.
-    // However, if we replace innerHTML, the listeners might be lost. But we are using createVoicePlayer which returns a DOM element with its own event listeners attached.
-    // So we don't need to re-attach.
-  });
 }
 
 // ================================================================
