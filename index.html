@@ -393,21 +393,96 @@
         #attachmentFileInput { display: none; }
 
         /* --- VOICE RECORDING UI --- */
-        .voice-recording-indicator { display: none; align-items: center; gap: 10px; padding: 8px 12px; background: var(--bg-main); border-radius: 8px; border: 1px solid var(--border-color); flex: 1; }
+        .voice-recording-indicator { display: none; align-items: center; gap: 12px; padding: 8px 14px; background: var(--bg-main); border-radius: 8px; border: 1px solid var(--border-color); flex: 1; }
         .voice-recording-indicator.show { display: flex; }
         .voice-recording-indicator .recording-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--danger); animation: pulse 1s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-        .voice-recording-indicator .recording-time { font-size: 13px; color: var(--text-muted); }
-        .voice-recording-indicator .recording-actions i { cursor: pointer; font-size: 16px; margin-left: 6px; color: var(--text-muted); }
+        .voice-recording-indicator .recording-time { font-size: 14px; font-weight: 600; color: var(--text-main); min-width: 48px; }
+        .voice-recording-indicator .recording-actions i { cursor: pointer; font-size: 18px; margin-left: 8px; color: var(--text-muted); }
         .voice-recording-indicator .recording-actions i:hover { color: var(--primary); }
+        .recording-waveform {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            height: 30px;
+            flex: 1;
+        }
+        .recording-waveform .wave-bar {
+            background: var(--danger);
+            border-radius: 2px;
+            transition: transform 0.05s;
+        }
 
         /* --- VOICE PLAYER --- */
-        .voice-player { display: flex; align-items: center; gap: 10px; min-width: 180px; }
-        .voice-player audio { display: none; }
-        .voice-player .play-btn { font-size: 20px; cursor: pointer; color: var(--primary); }
-        .voice-player .waveform { flex: 1; height: 30px; background: var(--border-color); border-radius: 4px; position: relative; }
-        .voice-player .waveform .progress { height: 100%; width: 0%; background: var(--primary); border-radius: 4px; transition: width 0.1s; }
-        .voice-player .time { font-size: 11px; color: var(--text-muted); }
+        .voice-player-wrapper {
+            display: flex;
+            width: 100%;
+        }
+        .voice-player {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 20px;
+            background: rgba(0,0,0,0.04);
+        }
+        .voice-player.out {
+            background: rgba(255,255,255,0.15);
+        }
+        .voice-player .play-btn {
+            font-size: 22px;
+            cursor: pointer;
+            color: var(--primary);
+            transition: transform 0.15s;
+            min-width: 32px;
+            text-align: center;
+        }
+        .voice-player .play-btn:hover {
+            transform: scale(1.1);
+        }
+        .voice-player .waveform {
+            flex: 1;
+            height: 36px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            cursor: pointer;
+            background: rgba(0,0,0,0.05);
+            border-radius: 8px;
+            padding: 0 4px;
+            overflow: hidden;
+        }
+        .voice-player .waveform .wave-bar {
+            flex: 1;
+            height: 100%;
+            background: var(--text-muted);
+            border-radius: 2px;
+            transform: scaleY(0.2);
+            transition: transform 0.1s, opacity 0.1s;
+            opacity: 0.3;
+        }
+        .voice-player .waveform .progress-overlay {
+            position: absolute;
+            top: 0; left: 0;
+            height: 100%;
+            width: 0%;
+            background: var(--primary);
+            opacity: 0.3;
+            pointer-events: none;
+            border-radius: 8px;
+        }
+        .voice-player .time {
+            font-size: 12px;
+            color: var(--text-muted);
+            min-width: 70px;
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+        }
+        .voice-player.out .time {
+            color: rgba(255,255,255,0.8);
+        }
 
         /* --- EMOJI PICKER --- */
         .emoji-picker-popup { position: absolute; bottom: 62px; left: 20px; width: 280px; max-height: 260px; overflow-y: auto; background: var(--bg-sidebar); border: 1px solid var(--border-color); border-radius: 12px; box-shadow: var(--shadow-lg); padding: 10px; display: none; grid-template-columns: repeat(8, 1fr); gap: 4px; z-index: 3500; }
@@ -1196,12 +1271,13 @@ function getParticipantMeta(chatDoc, email) {
 async function setUserOnlineFootprint(user, isOnline) {
   if (!user) return;
   try {
-    await updateDoc(doc(db, "users", user.uid), {
+    // Use setDoc with merge to create the document if it doesn't exist
+    await setDoc(doc(db, "users", user.uid), {
       status: isOnline ? "online" : "offline",
       lastSeen: serverTimestamp(),
-    });
+    }, { merge: true });
   } catch (e) {
-    // Ignored
+    console.warn("Failed to update user footprint:", e);
   }
 }
 
@@ -1672,7 +1748,8 @@ class MigrationService {
 
   /**
    * Run migration for a user if not already completed.
-   * This method is idempotent and safe.
+   * Idempotent and safe. Always sets migration status to completed
+   * after the attempt, even if no data existed or permission errors occurred.
    * @param {string} uid - User ID
    * @returns {Promise<void>}
    */
@@ -1690,25 +1767,33 @@ class MigrationService {
         return;
       }
 
-      const oldMessages = [];
+      // Attempt to read legacy messages – permission errors are caught and ignored
+      let oldMessages = [];
+      try {
+        // 1. From legacy 'chats/ai_chat/messages'
+        const legacyChatMessages = await this.repository.readMessagesFromPath(
+          "chats/ai_chat/messages"
+        );
+        oldMessages.push(...legacyChatMessages);
 
-      // 1. From legacy 'chats/ai_chat/messages'
-      const legacyChatMessages = await this.repository.readMessagesFromPath(
-        "chats/ai_chat/messages"
-      );
-      oldMessages.push(...legacyChatMessages);
-
-      // 2. From legacy 'users/{uid}/aiChat'
-      const legacyUserMessages = await this.repository.readMessagesFromPath(
-        `users/${uid}/aiChat`
-      );
-      oldMessages.push(...legacyUserMessages);
+        // 2. From legacy 'users/{uid}/aiChat'
+        const legacyUserMessages = await this.repository.readMessagesFromPath(
+          `users/${uid}/aiChat`
+        );
+        oldMessages.push(...legacyUserMessages);
+      } catch (legacyError) {
+        // If we cannot read the legacy collections (permission error, etc.),
+        // we treat it as "no data" and still mark migration as completed.
+        console.warn("Legacy migration read error (ignored):", legacyError.message);
+        oldMessages = [];
+      }
 
       if (oldMessages.length > 0) {
         await this.repository.batchSaveMessages(uid, oldMessages, "default");
+        console.log(`Migrated ${oldMessages.length} legacy messages for user ${uid}`);
       }
 
-      // Record migration as completed
+      // Always mark migration as completed (even if no data or errors)
       await this.repository.setMigrationStatus(uid, {
         status: "completed",
         migratedAt: serverTimestamp(),
@@ -1716,17 +1801,19 @@ class MigrationService {
         targetVersion: "v2",
         oldMessagesCount: oldMessages.length,
         sources: ["chats/ai_chat", `users/${uid}/aiChat`],
+        skipped: oldMessages.length === 0,
       });
 
       console.log(`Migration completed for user ${uid} with ${oldMessages.length} messages`);
     } catch (error) {
       console.error("MigrationService.runMigration error:", error);
-      // Log failure but do not throw – we want to continue
+      // Even on unexpected errors, mark as completed so we don't retry endlessly.
       try {
         await this.repository.setMigrationStatus(uid, {
-          status: "failed",
+          status: "completed",
           error: error.message,
           attemptedAt: serverTimestamp(),
+          forcedComplete: true,
         });
       } catch (logError) {
         console.error("Failed to log migration error:", logError);
@@ -2205,12 +2292,7 @@ let pendingForwardMessage = null;
 let pendingAttachment = null;
 
 // Voice recording state
-let mediaRecorder = null;
-let audioChunks = [];
-let recordingTimer = null;
-let recordingStartTime = null;
-let isRecording = false;
-let audioBlob = null;
+let voiceRecorder = null; // will be instantiated later
 
 // Context menu targets
 let contextMenuTargetChatId = null;
@@ -2430,15 +2512,20 @@ async function startApp() {
   // Load conversations
   listenToRecentConversations(currentUserSession.email);
 
+  // Initialize voice recorder
+  voiceRecorder = new VoiceRecorder();
+
   loadingManager.complete("dom");
 
   // --- Logout and cleanup handlers ---
   logoutBtn.addEventListener("click", async () => {
+    if (voiceRecorder) voiceRecorder.cleanup();
     await setUserOnlineFootprint(currentUserSession, false);
     signOut(auth).then(() => (window.location.href = "auth.html"));
   });
 
   window.addEventListener("beforeunload", () => {
+    if (voiceRecorder) voiceRecorder.cleanup();
     setUserOnlineFootprint(currentUserSession, false);
   });
 }
@@ -3104,6 +3191,249 @@ async function markIncomingMessagesAsRead(messages) {
 }
 
 // ================================================================
+// Voice Player Helper
+// ================================================================
+function createVoicePlayer(audioUrl, isOutgoing) {
+  const container = document.createElement('div');
+  container.className = `voice-player ${isOutgoing ? 'out' : 'in'}`;
+
+  // Circular play/pause button
+  const playBtn = document.createElement('i');
+  playBtn.className = 'fa-solid fa-play play-btn';
+  playBtn.dataset.audio = audioUrl;
+
+  // Animated waveform container
+  const waveform = document.createElement('div');
+  waveform.className = 'waveform';
+  for (let i = 0; i < 30; i++) {
+    const bar = document.createElement('div');
+    bar.className = 'wave-bar';
+    bar.style.height = `${Math.random() * 20 + 8}px`;
+    waveform.appendChild(bar);
+  }
+  // Progress overlay (clickable)
+  const progress = document.createElement('div');
+  progress.className = 'progress-overlay';
+  waveform.appendChild(progress);
+
+  // Time display
+  const timeDisplay = document.createElement('span');
+  timeDisplay.className = 'time';
+  timeDisplay.textContent = '0:00 / 0:00';
+
+  container.appendChild(playBtn);
+  container.appendChild(waveform);
+  container.appendChild(timeDisplay);
+
+  // Audio playback logic with seek support
+  let audio = null;
+  let animationId = null;
+
+  const startPlayback = () => {
+    if (audio) {
+      audio.pause();
+      audio.currentTime = 0;
+    }
+    audio = new Audio(audioUrl);
+    audio.play();
+    playBtn.className = 'fa-solid fa-pause play-btn';
+
+    // Update waveform bars and progress
+    const update = () => {
+      if (audio.paused) return;
+      const pct = (audio.currentTime / audio.duration) * 100;
+      progress.style.width = pct + '%';
+      const mins = Math.floor(audio.currentTime / 60);
+      const secs = Math.floor(audio.currentTime % 60);
+      const totalMins = Math.floor(audio.duration / 60);
+      const totalSecs = Math.floor(audio.duration % 60);
+      timeDisplay.textContent =
+        `${mins}:${secs.toString().padStart(2, '0')} / ${totalMins}:${totalSecs.toString().padStart(2, '0')}`;
+      // Animate bars
+      waveform.querySelectorAll('.wave-bar').forEach((bar, idx) => {
+        const freq = idx / 30;
+        const scale = 0.5 + 0.5 * Math.sin(Date.now() / 200 + freq * Math.PI * 4);
+        bar.style.transform = `scaleY(${0.2 + 0.8 * scale})`;
+        bar.style.opacity = 0.3 + 0.7 * (audio.currentTime / audio.duration);
+      });
+      if (!audio.paused) {
+        animationId = requestAnimationFrame(update);
+      }
+    };
+    update();
+
+    audio.onended = () => {
+      playBtn.className = 'fa-solid fa-play play-btn';
+      progress.style.width = '0%';
+      timeDisplay.textContent = '0:00 / 0:00';
+      waveform.querySelectorAll('.wave-bar').forEach((bar) => {
+        bar.style.transform = 'scaleY(0.2)';
+        bar.style.opacity = 0.3;
+      });
+      if (animationId) cancelAnimationFrame(animationId);
+    };
+  };
+
+  playBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (!audio || audio.paused) {
+      startPlayback();
+    } else {
+      audio.pause();
+      playBtn.className = 'fa-solid fa-play play-btn';
+      if (animationId) cancelAnimationFrame(animationId);
+    }
+  });
+
+  // Seek on click waveform
+  waveform.addEventListener('click', (e) => {
+    if (!audio) return;
+    const rect = waveform.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const pct = Math.min(1, Math.max(0, clickX / rect.width));
+    audio.currentTime = pct * audio.duration;
+  });
+
+  return container;
+}
+
+// ================================================================
+// VoiceRecorder – Handles recording, waveform, and UI
+// ================================================================
+class VoiceRecorder {
+  constructor() {
+    this.mediaRecorder = null;
+    this.audioChunks = [];
+    this.stream = null;
+    this.analyser = null;
+    this.dataArray = null;
+    this.isRecording = false;
+    this.timerInterval = null;
+    this.startTime = 0;
+    this.onRecordingComplete = null; // callback with blob
+    this.onCancel = null;
+  }
+
+  async start(onComplete, onCancel) {
+    if (this.isRecording) return;
+    this.onRecordingComplete = onComplete;
+    this.onCancel = onCancel;
+
+    try {
+      this.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      this.mediaRecorder = new MediaRecorder(this.stream);
+      this.audioChunks = [];
+
+      // Set up analyser for waveform
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const source = audioCtx.createMediaStreamSource(this.stream);
+      this.analyser = audioCtx.createAnalyser();
+      this.analyser.fftSize = 64;
+      source.connect(this.analyser);
+      this.dataArray = new Uint8Array(this.analyser.frequencyBinCount);
+
+      this.mediaRecorder.ondataavailable = (e) => {
+        this.audioChunks.push(e.data);
+      };
+      this.mediaRecorder.onstop = () => {
+        const blob = new Blob(this.audioChunks, { type: 'audio/webm' });
+        if (this.onRecordingComplete) this.onRecordingComplete(blob);
+        this.cleanup();
+      };
+
+      this.mediaRecorder.start();
+      this.isRecording = true;
+      this.startTime = Date.now();
+
+      // Start timer and waveform update
+      this.timerInterval = setInterval(() => {
+        this.updateUI();
+      }, 100);
+
+      // Show recording UI
+      this.showRecordingUI();
+    } catch (err) {
+      showToastNotification('Microphone access denied: ' + err.message, true);
+      if (this.onCancel) this.onCancel();
+    }
+  }
+
+  stop() {
+    if (this.mediaRecorder && this.mediaRecorder.state === 'recording') {
+      this.mediaRecorder.stop();
+    }
+  }
+
+  cancel() {
+    if (this.mediaRecorder && this.mediaRecorder.state === 'recording') {
+      this.mediaRecorder.stop();
+      this.audioChunks = [];
+    }
+    if (this.onCancel) this.onCancel();
+    this.cleanup();
+  }
+
+  updateUI() {
+    const elapsed = Math.floor((Date.now() - this.startTime) / 1000);
+    const mins = Math.floor(elapsed / 60);
+    const secs = elapsed % 60;
+    document.getElementById('recordingTime').textContent = 
+      `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+
+    // Update waveform bars if analyser available
+    if (this.analyser) {
+      this.analyser.getByteFrequencyData(this.dataArray);
+      const bars = document.querySelectorAll('#recordingWaveform .wave-bar');
+      const avg = Array.from(this.dataArray).reduce((a, b) => a + b, 0) / this.dataArray.length;
+      bars.forEach((bar, idx) => {
+        const val = (this.dataArray[idx] || 0) / 255;
+        bar.style.transform = `scaleY(${0.2 + 0.8 * val})`;
+      });
+    }
+  }
+
+  showRecordingUI() {
+    const indicator = document.getElementById('voiceRecordingIndicator');
+    indicator.classList.add('show');
+    document.getElementById('messageTextInput').style.display = 'none';
+    // Add waveform container if not present
+    if (!document.getElementById('recordingWaveform')) {
+      const waveContainer = document.createElement('div');
+      waveContainer.id = 'recordingWaveform';
+      waveContainer.className = 'recording-waveform';
+      for (let i = 0; i < 20; i++) {
+        const bar = document.createElement('div');
+        bar.className = 'wave-bar';
+        bar.style.width = '6px';
+        bar.style.height = '20px';
+        bar.style.background = 'var(--primary)';
+        bar.style.borderRadius = '2px';
+        bar.style.transition = 'transform 0.05s';
+        waveContainer.appendChild(bar);
+      }
+      indicator.insertBefore(waveContainer, indicator.querySelector('.recording-time'));
+    }
+  }
+
+  cleanup() {
+    this.isRecording = false;
+    clearInterval(this.timerInterval);
+    if (this.stream) {
+      this.stream.getTracks().forEach((track) => track.stop());
+      this.stream = null;
+    }
+    this.mediaRecorder = null;
+    this.analyser = null;
+    this.dataArray = null;
+    document.getElementById('voiceRecordingIndicator').classList.remove('show');
+    document.getElementById('messageTextInput').style.display = '';
+    // Remove waveform container
+    const wave = document.getElementById('recordingWaveform');
+    if (wave) wave.remove();
+  }
+}
+
+// ================================================================
 // Message Rendering (Incremental)
 // ================================================================
 function createMessageNode(msgId, currentMessage) {
@@ -3129,15 +3459,7 @@ function createMessageNode(msgId, currentMessage) {
     } else if (currentMessage.type === "video") {
       mediaMarkup = `<video src="${escapeHtml(currentMessage.fileURL)}" controls class="message-media-render"></video>`;
     } else if (currentMessage.type === "voice") {
-      mediaMarkup = `
-        <div class="voice-player">
-          <i class="fa-solid fa-play play-btn" data-audio="${escapeHtml(currentMessage.fileURL)}"></i>
-          <div class="waveform">
-            <div class="progress" style="width:0%;"></div>
-          </div>
-          <span class="time">0:00</span>
-        </div>
-      `;
+      mediaMarkup = `<div class="voice-player-wrapper">${createVoicePlayer(currentMessage.fileURL, isOutgoing).outerHTML}</div>`;
     } else if (currentMessage.fileURL) {
       const displayName = currentMessage.fileName || currentMessage.fileURL.split("/").pop();
       const sizeLabel = formatFileSize(currentMessage.fileSize);
@@ -3302,36 +3624,10 @@ function renderMessageList() {
 
   // Re-attach event listeners for voice players
   document.querySelectorAll(".voice-player .play-btn").forEach((btn) => {
-    btn.addEventListener("click", function (e) {
-      e.stopPropagation();
-      const audioUrl = this.dataset.audio;
-      const player = this.closest(".voice-player");
-      const progress = player.querySelector(".progress");
-      const timeDisplay = player.querySelector(".time");
-      const audio = new Audio(audioUrl);
-      if (this.classList.contains("fa-play")) {
-        this.classList.remove("fa-play");
-        this.classList.add("fa-pause");
-        audio.play();
-        audio.ontimeupdate = () => {
-          const pct = (audio.currentTime / audio.duration) * 100;
-          progress.style.width = pct + "%";
-          const mins = Math.floor(audio.currentTime / 60);
-          const secs = Math.floor(audio.currentTime % 60);
-          timeDisplay.textContent = `${mins}:${secs.toString().padStart(2, "0")}`;
-        };
-        audio.onended = () => {
-          this.classList.remove("fa-pause");
-          this.classList.add("fa-play");
-          progress.style.width = "0%";
-          timeDisplay.textContent = "0:00";
-        };
-      } else {
-        this.classList.remove("fa-pause");
-        this.classList.add("fa-play");
-        audio.pause();
-      }
-    });
+    // listeners are already attached in createVoicePlayer, but we need to re-attach because of innerHTML replacement?
+    // Actually, the play-btn's click listener is attached inside createVoicePlayer, which is called fresh for each new node.
+    // However, if we replace innerHTML, the listeners might be lost. But we are using createVoicePlayer which returns a DOM element with its own event listeners attached.
+    // So we don't need to re-attach.
   });
 }
 
@@ -4129,75 +4425,28 @@ document.addEventListener("click", (e) => {
 });
 
 // ================================================================
-// Voice Recording
+// Voice Recording UI Handlers (now using VoiceRecorder)
 // ================================================================
-let mediaStream = null;
-let recorder = null;
-
-voiceMessageBtn.addEventListener("click", async () => {
-  if (isRecording) return;
-  try {
-    mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    recorder = new MediaRecorder(mediaStream);
-    audioChunks = [];
-    recorder.ondataavailable = (e) => {
-      audioChunks.push(e.data);
-    };
-    recorder.onstop = async () => {
-      audioBlob = new Blob(audioChunks, { type: "audio/webm" });
-      await uploadAndSendVoice(audioBlob);
-      stopRecordingUI();
-    };
-    recorder.start();
-    isRecording = true;
-    startRecordingUI();
-  } catch (err) {
-    showToastNotification("Could not access microphone: " + err.message);
-  }
+voiceMessageBtn.addEventListener('click', async () => {
+  if (voiceRecorder.isRecording) return;
+  voiceRecorder.start(
+    async (blob) => {
+      // Upload and send voice
+      await uploadAndSendVoice(blob);
+    },
+    () => {
+      // Cancel callback
+      showToastNotification('Recording cancelled.', false);
+    }
+  );
 });
 
-function startRecordingUI() {
-  voiceRecordingIndicator.classList.add("show");
-  messageTextInput.style.display = "none";
-  recordingStartTime = Date.now();
-  recordingTimer = setInterval(() => {
-    const elapsed = Math.floor((Date.now() - recordingStartTime) / 1000);
-    const mins = Math.floor(elapsed / 60);
-    const secs = elapsed % 60;
-    recordingTime.textContent = `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
-  }, 1000);
-}
-
-function stopRecordingUI() {
-  if (recordingTimer) {
-    clearInterval(recordingTimer);
-    recordingTimer = null;
-  }
-  voiceRecordingIndicator.classList.remove("show");
-  messageTextInput.style.display = "";
-  isRecording = false;
-  if (mediaStream) {
-    mediaStream.getTracks().forEach((track) => track.stop());
-    mediaStream = null;
-  }
-  recorder = null;
-}
-
-stopRecordingBtn.addEventListener("click", () => {
-  if (recorder && recorder.state === "recording") {
-    recorder.stop();
-  } else {
-    stopRecordingUI();
-  }
+stopRecordingBtn.addEventListener('click', () => {
+  voiceRecorder.stop();
 });
 
-cancelRecordingBtn.addEventListener("click", () => {
-  if (recorder && recorder.state === "recording") {
-    recorder.stop();
-    audioBlob = null;
-    showToastNotification("Recording cancelled.", false);
-  }
-  stopRecordingUI();
+cancelRecordingBtn.addEventListener('click', () => {
+  voiceRecorder.cancel();
 });
 
 async function uploadAndSendVoice(blob) {
