@@ -2455,18 +2455,95 @@ document.getElementById("laterBtn")?.addEventListener("click", () => {
 // Application Startup
 // ================================================================
 async function startApp() {
-  // Initialize theme (non-blocking)
-  initializeThemeEngine();
+  try {
+    // Initialize theme (non-blocking)
+    initializeThemeEngine();
 
-  // 🔥 Wait for Firebase Auth to be fully settled
-  await auth.authStateReady();
+    // 🔥 Wait for Firebase Auth to be fully settled
+    await auth.authStateReady();
 
-  const authenticatedUser = auth.currentUser;
-  if (!authenticatedUser) {
-    // No user – redirect to auth page
-    window.location.href = "auth.html";
-    return;
+    const authenticatedUser = auth.currentUser;
+    if (!authenticatedUser) {
+      // No user – redirect to auth page
+      window.location.href = "auth.html";
+      return;
+    }
+
+    // --- User is confirmed logged in ---
+    currentUserSession = authenticatedUser;
+    await currentUserSession.getIdToken(true); // force refresh
+    currentUserEmailNormalized = normalizeEmailForId(currentUserSession.email);
+
+    // Update UI
+    userName.innerText = currentUserSession.displayName || "Workspace Engineer";
+    userEmail.innerText = currentUserSession.email;
+    userAvatar.src =
+      currentUserSession.photoURL ||
+      `https://api.dicebear.com/7.x/initials/svg?seed=${currentUserEmailNormalized}`;
+
+    loadingManager.complete("auth");
+    loadingManager.complete("user");
+
+    // Set online status
+    await setUserOnlineFootprint(currentUserSession, true);
+
+    // Initialize repositories and engines
+    aiRepository = new AIRepository(db);
+    migrationService = new MigrationService(aiRepository);
+    aiStateManager = new AIStateManager();
+    aiEngine = new AIEngine({
+      repository: aiRepository,
+      stateManager: aiStateManager,
+      migrationService: migrationService,
+    });
+    chatEngine = new ChatEngine();
+
+    // Initialize AI (background, non-blocking)
+    try {
+      await aiEngine.initialize(authenticatedUser.uid);
+      loadingManager.complete("ai");
+    } catch (error) {
+      console.error("AI initialization error:", error);
+      loadingManager.complete("ai");
+    }
+
+    // Ensure self chat exists – UPDATED to avoid permission errors
+    await ensureSelfChatExists();
+
+    // Load conversations
+    listenToRecentConversations(currentUserSession.email);
+
+    // Initialize voice recorder (if not already done)
+    if (!voiceRecorder) {
+      voiceRecorder = new VoiceRecorder();
+    }
+
+    loadingManager.complete("dom");
+
+    // --- Logout and cleanup handlers ---
+    logoutBtn.addEventListener("click", async () => {
+      if (voiceRecorder) voiceRecorder.cleanup();
+      await setUserOnlineFootprint(currentUserSession, false);
+      signOut(auth).then(() => (window.location.href = "auth.html"));
+    });
+
+    window.addEventListener("beforeunload", () => {
+      if (voiceRecorder) voiceRecorder.cleanup();
+      setUserOnlineFootprint(currentUserSession, false);
+    });
+
+  } catch (error) {
+    console.error("Startup error:", error);
+    loadingManager.showError(error.message || "Failed to load workspace.");
+    // Still mark tasks as complete to hide overlay (so user can see error)
+    loadingManager.complete("auth");
+    loadingManager.complete("user");
+    loadingManager.complete("chats");
+    loadingManager.complete("ai");
+    loadingManager.complete("theme");
+    loadingManager.complete("dom");
   }
+}
 
   // --- User is confirmed logged in ---
   currentUserSession = authenticatedUser;
@@ -2537,34 +2614,30 @@ async function ensureSelfChatExists() {
   const email = currentUserEmailNormalized;
   const selfChatId = buildSelfChatId(email);
   const selfChatRef = doc(db, "chats", selfChatId);
-  const existing = await getDoc(selfChatRef);
-  if (!existing.exists()) {
-    await setDoc(selfChatRef, {
-      chatId: selfChatId,
-      isSelfChat: true,
-      participantsEmails: [email],
-      participantsUids: [currentUserSession.uid],
-      participantMeta: {
-        [email]: {
-          name: currentUserSession.displayName || email.split("@")[0],
-          email,
-          photoURL:
-            currentUserSession.photoURL ||
-            `https://api.dicebear.com/7.x/initials/svg?seed=${email}`,
-        },
+
+  // Create or update the self-chat document using merge.
+  // This works even if the document doesn't exist yet.
+  await setDoc(selfChatRef, {
+    chatId: selfChatId,
+    isSelfChat: true,
+    participantsEmails: [email],
+    participantsUids: [currentUserSession.uid],
+    participantMeta: {
+      [email]: {
+        name: currentUserSession.displayName || email.split("@")[0],
+        email,
+        photoURL: currentUserSession.photoURL || `https://api.dicebear.com/7.x/initials/svg?seed=${email}`,
       },
-      lastMessage: "Save notes, files and reminders here.",
-      updatedAt: serverTimestamp(),
-      unreadCounts: { [email]: 0 },
-      lastSenderEmail: null,
-      pinned: { [email]: true },
-      archived: {},
-      muted: {},
-      markedUnread: {},
-    });
-  } else {
-    await updateDoc(selfChatRef, { [`pinned.${email}`]: true });
-  }
+    },
+    lastMessage: "Save notes, files and reminders here.",
+    updatedAt: serverTimestamp(),
+    unreadCounts: { [email]: 0 },
+    lastSenderEmail: null,
+    pinned: { [email]: true },
+    archived: {},
+    muted: {},
+    markedUnread: {},
+  }, { merge: true });
 }
 
 // ================================================================
