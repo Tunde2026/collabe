@@ -5108,7 +5108,7 @@ async function sendEmailInvite(recipientEmail, senderName) {
     const templateParams = {
       to_email: recipientEmail,
       from_name: senderName || "Collabe User",
-      message: `You have been invited to join Collabe! Start chatting by signing up at ${window.location.origin}/auth.html`,
+      message: `You have been invited to join Collabe! Start chatting by signing up at ${window.location.origin}/collabe/auth.html`,
       // Add any other variables your template expects (e.g., invite_link)
     };
 
