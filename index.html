@@ -253,6 +253,23 @@
         .chat-header-actions i { cursor: pointer; transition: color 0.2s; }
         .chat-header-actions i:hover { color: var(--primary); }
 
+        /* --- PENDING BANNER (NEW) --- */
+        .pending-banner {
+            padding: 8px 16px;
+            background: #fef3c7;
+            color: #92400e;
+            border-bottom: 1px solid #f59e0b;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        [data-theme="dark"] .pending-banner {
+            background: #1e293b;
+            color: #fbbf24;
+            border-color: #f59e0b;
+        }
+
         /* --- MULTI-PINNED MESSAGE CONTAINER --- */
         .pinned-messages-container { 
             display: none;
@@ -699,6 +716,12 @@
                     <!-- 👆 -->
                     <i class="fa-solid fa-ellipsis-vertical" id="chatHeaderMenuBtn" title="More options"></i>
                 </div>
+                </div>
+
+                <!-- PENDING BANNER (NEW) -->
+                <div id="pendingBanner" class="pending-banner" style="display:none;">
+                    <i class="fa-solid fa-clock"></i>
+                    <span>This person hasn't joined Collabe yet. Your messages will be delivered after they create an account.</span>
                 </div>
 
                 <!-- Multi-Pinned Message Container -->
@@ -2146,6 +2169,7 @@ class ChatEngine {
     this.onMessagesCallback = null;
     this.onTypingCallback = null;
     this.onPinnedCallback = null;
+    this.onChatDataCallback = null; // NEW
   }
 
   /**
@@ -2156,9 +2180,10 @@ class ChatEngine {
    * @param {function} onMessages - Callback for messages
    * @param {function} onTyping - Callback for typing indicator
    * @param {function} onPinned - Callback for pinned messages
+   * @param {function} onChatData - Callback for full chat document data (NEW)
    * @returns {void}
    */
-  loadChat(chatId, partner, isSelf, onMessages, onTyping, onPinned) {
+  loadChat(chatId, partner, isSelf, onMessages, onTyping, onPinned, onChatData) {
     this.unsubscribeAll();
     this.currentChatId = chatId;
     this.currentPartner = partner;
@@ -2166,6 +2191,7 @@ class ChatEngine {
     this.onMessagesCallback = onMessages;
     this.onTypingCallback = onTyping;
     this.onPinnedCallback = onPinned;
+    this.onChatDataCallback = onChatData; // NEW
 
     const messagesRef = collection(db, "chats", chatId, "messages");
     const q = query(messagesRef, orderBy("timestamp", "desc"), limit(50));
@@ -2179,12 +2205,17 @@ class ChatEngine {
 
     const chatRef = doc(db, "chats", chatId);
     this.unsubscribeChatDoc = onSnapshot(chatRef, (snap) => {
-      if (snap.exists() && this.onTypingCallback) {
-        this.onTypingCallback(snap.data());
-      }
-      if (snap.exists() && this.onPinnedCallback) {
-        const pinnedIds = snap.data().pinnedMessages || [];
-        this.onPinnedCallback(pinnedIds);
+      if (snap.exists()) {
+        const data = snap.data();
+        if (this.onTypingCallback) {
+          this.onTypingCallback(data.typing || {});
+        }
+        if (this.onPinnedCallback) {
+          this.onPinnedCallback(data.pinnedMessages || []);
+        }
+        if (this.onChatDataCallback) { // NEW
+          this.onChatDataCallback(data);
+        }
       }
     });
   }
@@ -2371,6 +2402,7 @@ const voiceRecordingIndicator = document.getElementById("voiceRecordingIndicator
 const recordingTime = document.getElementById("recordingTime");
 const stopRecordingBtn = document.getElementById("stopRecordingBtn");
 const cancelRecordingBtn = document.getElementById("cancelRecordingBtn");
+const pendingBanner = document.getElementById("pendingBanner"); // NEW
 const pinnedMessagesContainer = document.getElementById("pinnedMessagesContainer");
 const searchModalOverlay = document.getElementById("searchModalOverlay");
 const openModalBtn = document.getElementById("openModalBtn");
@@ -2464,6 +2496,79 @@ document.getElementById("laterBtn")?.addEventListener("click", () => {
 });
 
 // ================================================================
+// NEW: Ensure user document exists (for pending migration)
+// ================================================================
+async function ensureUserDocument(user) {
+  const userRef = doc(db, "users", user.uid);
+  const snap = await getDoc(userRef);
+  if (!snap.exists()) {
+    await setDoc(userRef, {
+      uid: user.uid,
+      name: user.displayName || user.email.split("@")[0],
+      email: normalizeEmailForId(user.email),
+      photoURL: user.photoURL || `https://api.dicebear.com/7.x/initials/svg?seed=${normalizeEmailForId(user.email)}`,
+      status: "online",
+      createdAt: serverTimestamp(),
+    });
+  } else {
+    // Optionally update name/photo if changed
+    const data = snap.data();
+    if (data.photoURL !== user.photoURL || data.name !== user.displayName) {
+      await updateDoc(userRef, {
+        photoURL: user.photoURL,
+        name: user.displayName,
+      });
+    }
+  }
+}
+
+// ================================================================
+// NEW: Migrate pending chats for a newly registered user
+// ================================================================
+async function migratePendingChatsForUser(user) {
+  const email = normalizeEmailForId(user.email);
+  const chatsRef = collection(db, "chats");
+  const pendingQuery = query(chatsRef, where("pendingRecipientEmail", "==", email));
+  const snap = await getDocs(pendingQuery);
+
+  if (snap.empty) return;
+
+  const batch = writeBatch(db);
+
+  for (const docSnap of snap.docs) {
+    const chatData = docSnap.data();
+    const chatId = docSnap.id;
+
+    // Count messages from other participants (pending user hasn't sent any)
+    const messagesRef = collection(db, "chats", chatId, "messages");
+    const msgsQuery = query(messagesRef, where("senderEmail", "!=", email));
+    const msgsSnap = await getDocs(msgsQuery);
+    const unreadCount = msgsSnap.size;
+
+    // Build the real participant meta
+    const meta = {
+      name: user.displayName || email.split("@")[0],
+      email: email,
+      photoURL: user.photoURL || `https://api.dicebear.com/7.x/initials/svg?seed=${email}`,
+    };
+
+    // Update chat document
+    const chatRef = doc(db, "chats", chatId);
+    batch.update(chatRef, {
+      [`participantMeta.${email}`]: meta,
+      [`participantsUids`]: arrayUnion(user.uid),
+      pendingRecipientEmail: null,
+      invitedAt: null,
+      activatedAt: serverTimestamp(),
+      [`unreadCounts.${email}`]: unreadCount,
+    });
+  }
+
+  await batch.commit();
+  console.log(`Migrated ${snap.size} pending chats for ${email}`);
+}
+
+// ================================================================
 // Application Startup
 // ================================================================
 async function startApp() {
@@ -2479,8 +2584,6 @@ async function startApp() {
     }
 
     currentUserSession = authenticatedUser;
-    // DO NOT force a token refresh – let Firebase handle it automatically
-    // currentUserSession.getIdToken(true) was causing network errors.
     currentUserEmailNormalized = normalizeEmailForId(currentUserSession.email);
 
     // Update UI
@@ -2491,6 +2594,10 @@ async function startApp() {
 
     loadingManager.complete("auth");
     loadingManager.complete("user");
+
+    // NEW: Ensure user document exists and migrate pending chats
+    await ensureUserDocument(authenticatedUser);
+    await migratePendingChatsForUser(authenticatedUser);
 
     await setUserOnlineFootprint(currentUserSession, true);
 
@@ -3132,6 +3239,7 @@ function loadConversationInterface(chatId, recipientData, isSelf = false) {
     [`markedUnread.${currentUserEmailNormalized}`]: false,
   }).catch(() => {});
 
+  // NEW: Added onChatData callback to handle pending banner
   chatEngine.loadChat(
     chatId,
     recipientData,
@@ -3141,12 +3249,30 @@ function loadConversationInterface(chatId, recipientData, isSelf = false) {
       renderMessageList();
       markIncomingMessagesAsRead(messages);
     },
-    (data) => {
-      renderTypingIndicator(data);
+    (typing) => {
+      renderTypingIndicator(typing);
     },
     (pinnedIds) => {
       activeChatPinnedIds = pinnedIds;
       renderPinnedMessages();
+    },
+    (chatData) => {
+      // Update pending banner
+      const pendingEmail = chatData.pendingRecipientEmail;
+      const partnerEmail = normalizeEmailForId(recipientData.email);
+      const banner = document.getElementById("pendingBanner");
+      if (pendingEmail === partnerEmail) {
+        banner.style.display = "flex";
+        activeChatStatus.innerText = "Invitation sent – waiting for user to join";
+      } else {
+        banner.style.display = "none";
+        // Restore status based on presence (will be updated by other listeners)
+        if (recipientData.status === "online") {
+          activeChatStatus.innerText = "Online | Secure Pipeline Encrypted";
+        } else {
+          // Will be updated by the presence listener
+        }
+      }
     }
   );
 
@@ -3701,6 +3827,7 @@ function closeActiveConversation() {
   }
   activeMode = null;
 
+  pendingBanner.style.display = "none"; // NEW: hide banner
   pinnedMessagesContainer.classList.remove("show");
   pinnedMessagesContainer.innerHTML = "";
 
@@ -5025,7 +5152,7 @@ modalSearchBtn.addEventListener("click", async () => {
   }
 });
 
-// Handle Start Chat button (no automatic invite)
+// Handle Start Chat button
 modalStartChatBtn.addEventListener("click", async () => {
   if (!targetUserCache || !currentUserSession) return;
   const currentEmail = normalizeEmailForId(currentUserSession.email);
@@ -5035,7 +5162,7 @@ modalStartChatBtn.addEventListener("click", async () => {
   const existingChat = await getDoc(chatRef);
 
   if (!existingChat.exists()) {
-    await setDoc(chatRef, {
+    const chatData = {
       chatId,
       participantsEmails: [currentEmail, targetEmail],
       participantsUids: [currentUserSession.uid, targetUserCache.uid || null],
@@ -5061,8 +5188,20 @@ modalStartChatBtn.addEventListener("click", async () => {
       archived: {},
       muted: {},
       markedUnread: {},
-    });
-    // Do NOT send invite automatically here
+    };
+
+    // NEW: Add pending fields if recipient is a placeholder
+    if (targetUserCache.isShell) {
+      chatData.pendingRecipientEmail = targetEmail;
+      chatData.invitedAt = serverTimestamp();
+    }
+
+    await setDoc(chatRef, chatData);
+
+    // NEW: Send invitation automatically if placeholder
+    if (targetUserCache.isShell) {
+      await sendEmailInvite(targetEmail, currentUserSession.displayName || "Collabe User");
+    }
   }
 
   searchModalOverlay.classList.remove("open");
