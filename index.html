@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5110,6 +5111,7 @@ async function sendEmailInvite(recipientEmail, senderName) {
       from_name: senderName || "Collabe User",
       message: `You have been invited to join Collabe! Start chatting by signing up at ${window.location.origin}/collabe/auth.html`,
       // Add any other variables your template expects (e.g., invite_link)
+      invite_link: `https://tunde2026.github.io/collabe`,
     };
 
     const response = await emailjs.send(
